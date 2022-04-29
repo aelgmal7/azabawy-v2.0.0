@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "back-end": "node ./back-end/server.run.js" 
+    "back-end": "node ./back-end/server.run.js",
+    "back-end:nodemon": "nodemon ./back-end/server.run.js"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.17.3",
+    "nodemon": "^2.0.16",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
