@@ -1,0 +1,9 @@
+<h1>Todo List</h1>
+  <input type="text" [(ngModel)]="newEntry" />
+  <button (click)="addTask()">Add Task</button>
+<ul>
+  <li *ngFor="let task of tasks">{{ task }}</li>
+</ul>
+{{spam}}
+
+<button (click)="push()"> push</button>
