@@ -8,7 +8,8 @@
     "start:electron": "ng build --base-href ./ && electron .",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "back-end": "node ./back-end/server.run.js" 
   },
   "private": true,
   "dependencies": {
