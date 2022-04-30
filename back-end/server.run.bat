@@ -1,1 +1,1 @@
-node  -e 'require("./index").init()'
+node server.run.js
