@@ -3,6 +3,8 @@ const path = require("path");
 const express = require("express");
 const cors = require('cors')
 const bodyParser =require('body-parser')
+const temp = require('./temp.ts')
+temp.sayHi()
 const server = () => {
   
 const exp = express();
