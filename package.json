@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "back-end": "node ./back-end/server.run.js",
-    "back-end:nodemon": "nodemon ./back-end/server.run.js"
+    "back-end:nodemon": "nodemon   -r esm  ./back-end/server.run.js"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +25,7 @@
     "@types/electron": "^1.6.10",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
+    "esm": "^3.2.25",
     "express": "^4.17.3",
     "nodemon": "^2.0.16",
     "rxjs": "~7.5.0",
