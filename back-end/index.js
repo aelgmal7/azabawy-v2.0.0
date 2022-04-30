@@ -28,7 +28,7 @@ exp.use('/a',(req,res,next) => {
 }`)
 })
 exp.get('/tasks',(req,res,next) => {
-  res.send(tasks)
+  res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{title:tasks}))
 })
 exp.post('/tasks',(req,res,next) => {
   const r= req.body.title
