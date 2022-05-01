@@ -1,22 +1,20 @@
-const url = require("url");
-const path = require("path");
-const express = require("express");
-const cors = require('cors')
-const bodyParser =require('body-parser')
-const temp = require('./temp.ts')
+const url = require("url")
+const path = require("path")
+const express = require("express")
+const cors = require("cors")
+const bodyParser = require("body-parser")
+const temp = require("./temp.ts")
 temp.sayHi()
 const server = () => {
-  
-const exp = express();
-exp.use(express.json());
-exp.use(bodyParser.urlencoded({extended:false}))
+  const app = express()
+  app.use(express.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
 
+  app.use(cors())
+  const tasks = ["ahm3d", "aaa"]
 
-exp.use(cors());
-const tasks =['ahm3d','aaa']
-
-exp.use('/a',(req,res,next) => {
-  res.send(`{
+  app.use("/a", (req, res, next) => {
+    res.send(`{
     "name": "samy",
     "age": 48,
     "location": "tanta",
@@ -24,19 +22,17 @@ exp.use('/a',(req,res,next) => {
     "mentalStatus": "mt5lf",
     "photo": "https://i.ytimg.com/vi/N8WPmAvZNns/hqdefault.jpg"
 }`)
-})
-exp.get('/tasks',(req,res,next) => {
-  res.send(tasks)
-})
-exp.post('/tasks',(req,res,next) => {
-  const r= req.body.title
-  console.log(r)
-  tasks.push(r)
-  res.send(`{"title":"${tasks}"}`)
-})
-exp.listen(500)
-
-
+  })
+  app.get("/tasks", (req, res, next) => {
+    res.send(tasks)
+  })
+  app.post("/tasks", (req, res, next) => {
+    const r = req.body.title
+    console.log(r)
+    tasks.push(r)
+    res.send(`{"title":"${tasks}"}`)
+  })
+  app.listen(3000)
 }
 //server()
-module.exports= {server}
+module.exports = server
