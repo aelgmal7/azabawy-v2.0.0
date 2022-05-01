@@ -3,14 +3,13 @@
   "version": "0.0.0",
   "main": "app.js",
   "scripts": {
-    "ng": "ng",
     "start": "npm run start:electron",
-    "start:electron": "ng build --base-href ./ && electron .",
-    "start:frontend": "ng serve",
+    "start:electron": "cd ./frontend && ng build && cd .. && electron ./",
+    "start:frontend": "cd ./frontend && ng serve",
     "start:backend": "nodemon ./backend/server.run.js",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test:frontend": "cd ./frontend && ng test && cd ..",
+    "build:frontend": "cd ./frontend && ng build && cd .. ",
+    "watch:frontend": "cd ./frontend && ng build --watch --configuration development && cd .. "
   },
   "private": true,
   "dependencies": {

@@ -1,14 +1,15 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Compiled output and cache files
+**/.angular
+**/dist
+**/tmp
+**/out-tsc
+**/bazel-out
+**/Azabaway-v2.0.0-win32-x64
 
-/Azabaway-v2.0.0-win32-x64
 # Node
-/node_modules
+**/node_modules
 npm-debug.log
 yarn-error.log
 package-lock.json
@@ -23,7 +24,7 @@ package-lock.json
 *.sublime-workspace
 
 # Visual Studio Code
-.vscode/*
+**/.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
