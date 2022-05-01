@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "npm run start:electron",
+    "start": "npm run start:electron -r esm",
     "start:electron": "cd ./frontend && ng build && cd .. && electron ./",
     "start:frontend": "cd ./frontend && ng serve",
-    "start:backend": "nodemon ./backend/server.run.js",
+    "start:backend": "nodemon  -r esm ./backend/server.run.js",
     "test:frontend": "cd ./frontend && ng test && cd ..",
     "build:frontend": "cd ./frontend && ng build && cd .. ",
     "watch:frontend": "cd ./frontend && ng build --watch --configuration development && cd .. "

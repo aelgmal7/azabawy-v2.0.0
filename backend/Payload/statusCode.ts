@@ -1,4 +1,4 @@
-export const  HTTP_STATUS_CODES= {
+ const  HTTP_STATUS_CODES= {
   'CODE_200': 'OK',
   'CODE_201' : 'Created',
   'CODE_202' : 'Accepted',
@@ -38,3 +38,4 @@ export const  HTTP_STATUS_CODES= {
   'CODE_504' : 'Gateway Timeout',
   'CODE_505' : 'HTTP Version Not Supported'
 };
+module.exports={HTTP_STATUS_CODES}

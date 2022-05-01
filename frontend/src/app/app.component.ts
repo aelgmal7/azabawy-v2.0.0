@@ -25,19 +25,19 @@ export class AppComponent {
         { title: this.newEntry },
         { headers: this.httpHeaders }
       )
-      .subscribe((data: any) => {
-        console.log('data :>> ', data);
-        console.log('data :>> ', typeof data);
-        this.tasks = data.title.split(',');
+      .subscribe((response: any) => {
+        console.log('data :>> ', response);
+        console.log('data :>> ', typeof response);
+         this.tasks = response.result.title;
         console.log(this.tasks);
       });
   }
 
   ngOnInit() {
-    this.http.get('http://localhost:3000/tasks').subscribe((data: any) => {
-      console.log('data :>> ', data);
-      console.log('data :>> ', typeof data);
-      this.tasks = data;
+    this.http.get('http://localhost:3000/tasks').subscribe((response: any) => {
+      console.log('data :>> ', response);
+      console.log('data :>> ', typeof response);
+      this.tasks = response.result.title;
     });
   }
 

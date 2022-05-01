@@ -6,7 +6,7 @@ const cors = require("cors")
 const bodyParser = require("body-parser")
 const { executeCommand } = require("./helper-functions")
 
-const server = require("./backend")
+const {server} = require("./backend")
 server()
 
 let appWindow

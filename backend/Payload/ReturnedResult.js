@@ -1,5 +1,5 @@
- import {HTTP_STATUS_CODES} from './statusCode.ts' ;
- export class ReturnedResult {
+//  import {HTTP_STATUS_CODES} from './statusCode.ts' ;
+  class ReturnedResult {
 
    status ;
     succeeded;
@@ -12,7 +12,7 @@
   }
 }
 
-export const returnedResult =(status,succeeded,result) => {
+ const returnedResult =(status,succeeded,result) => {
   let tmp = new ReturnedResult(status,succeeded,result)
   return tmp; 
 }

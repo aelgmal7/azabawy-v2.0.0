@@ -4,8 +4,10 @@ const express = require("express");
 const cors = require('cors')
 const bodyParser =require('body-parser')
 const temp = require('./temp.ts')
-import {returnedResult} from './Payload/ReturnedResult.js'
-import {HTTP_STATUS_CODES} from './Payload/statusCode.ts' ;
+// import {returnedResult} from './Payload/ReturnedResult.js'
+// import {HTTP_STATUS_CODES} from './Payload/statusCode.ts' ;
+const HTTP_STATUS_CODES =require('./Payload/statusCode.ts')
+const {returnedResult} =require('./Payload/ReturnedResult')
 
 temp.sayHi()
 const server = () => {
@@ -46,4 +48,4 @@ const server = () => {
   app.listen(3000)
 }
 
-module.exports = server
+module.exports = {server}
