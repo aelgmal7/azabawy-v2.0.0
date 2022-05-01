@@ -4,13 +4,14 @@ const path = require("path")
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
+const { executeCommand } = require("./helper-functions")
 
 const server = require("./backend")
 server()
 
 let appWindow
 function initWindow() {
-  appWindow = new BrowserWindow({
+  let appWindow = new BrowserWindow({
     width: 1000,
     height: 800,
     webPreferences: {
@@ -31,9 +32,23 @@ function initWindow() {
   appWindow.on("closed", function () {
     appWindow = null
   })
+
+  return appWindow
 }
 
-app.on("ready", initWindow)
+// when app is ready, run the backend and init the window
+app.on("ready", function () {
+  executeCommand("npm run start:backend", (output) => {
+    console.log(output)
+  })
+  appWindow = initWindow()
+})
+
+app.on("activate", function () {
+  if (win === null) {
+    appWindow = initWindow()
+  }
+})
 
 // Close when all windows are closed.
 app.on("window-all-closed", function () {
@@ -43,10 +58,11 @@ app.on("window-all-closed", function () {
   }
 })
 
-app.on("activate", function () {
-  if (win === null) {
-    initWindow()
-  }
+// before quitting the app, kill all node instances to close the backend
+app.on("quit", function () {
+  executeCommand("taskkill /f /im node.exe", (output) => {
+    console.log(output)
+  })
 })
 
 ipcMain.on("db:add-task", (event, newTask) => {
