@@ -4,13 +4,13 @@
   "main": "app.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run start:electron",
     "start:electron": "ng build --base-href ./ && electron .",
+    "start:frontend": "ng serve",
+    "start:backend": "nodemon ./backend/server.run.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "back-end": "node ./back-end/server.run.js",
-    "back-end:nodemon": "nodemon ./back-end/server.run.js"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {

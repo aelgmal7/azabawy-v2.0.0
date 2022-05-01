@@ -2,11 +2,12 @@ const { app, BrowserWindow, ipcMain, IpcMessageEvent } = require("electron");
 const url = require("url");
 const path = require("path");
 const express = require("express");
-const cors = require('cors')
-const bodyParser =require('body-parser')
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
-const {server} = require('./back-end')
-server()
+const { server } = require("./backend");
+server();
+
 let appWindow;
 function initWindow() {
   appWindow = new BrowserWindow({
