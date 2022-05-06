@@ -2,7 +2,7 @@
   class ReturnedResult {
 
    status ;
-    succeeded;
+   succeeded;
    result;
   constructor(status, succeeded , result) {
     this.status=status;

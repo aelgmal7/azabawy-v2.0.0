@@ -8,15 +8,19 @@ const temp = require('./temp.ts')
 // import {HTTP_STATUS_CODES} from './Payload/statusCode.ts' ;
 const HTTP_STATUS_CODES =require('./Payload/statusCode.ts')
 const {returnedResult} =require('./Payload/ReturnedResult')
-
-temp.sayHi()
-const server = () => {
-  const app = express();
-
-  app.use(express.json());
-  app.use(bodyParser.urlencoded({extended:false}))
-  app.use(cors());
-
+const  {sequelize} = require('./DataBase/index')
+ const  {clientRouter} = require('./Controllers/ClientController')
+ 
+ temp.sayHi()
+ const server = () => {
+   const app = express();
+   
+   app.use(express.json());
+   app.use(bodyParser.urlencoded({extended:false}))
+   app.use(cors());
+   
+    app.use('/c',clientRouter);
+   // console.log(Client === sequelize.models.Client); // true
   const tasks =['ahm3d','aaa']
 
   app.use('/a',(req,res,next) => {
@@ -45,7 +49,12 @@ const server = () => {
     res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{title:tasks}))
   })
 
-  app.listen(3000)
+  sequelize.sync(
+    // {force: true}
+  ).then(result => {
+    app.listen(3000)
+
+  }).catch(error => console.log(error))
 }
 
 module.exports = {server}
