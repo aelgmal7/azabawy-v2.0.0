@@ -1,20 +1,20 @@
 const  {Client} = require('../Models/Client')
 const  {ClientModel} = require('../Classes/Client')
 
-const clientCreate = (payload) => {
+const clientCreate = ({clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying}) => {
 
     
     
     const client = new ClientModel(
-        payload.clientName,
-     payload.phoneNumber, 
-     payload.type,
-      payload.typeString,
-      payload.totalBalance,
-      payload.paid,
-      payload.remain,
-      payload.bills,
-      payload.paying
+        clientName,
+     phoneNumber, 
+     type,
+      typeString,
+      totalBalance,
+      paid,
+      remain,
+      bills,
+      paying
      
 
 
