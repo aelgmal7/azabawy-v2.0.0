@@ -34,7 +34,7 @@ OrderDetails.init(
     },
     enabled: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
+      defaultValue: true
     },
   },
   {

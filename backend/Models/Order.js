@@ -32,13 +32,13 @@ Order.init(
       type: DataTypes.NUMBER,
       allowNull: false,
     },
-    enabled: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
     date: {
       type: DataTypes.DATE,
       allowNull: false,
+    },
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     },
   },
   {
