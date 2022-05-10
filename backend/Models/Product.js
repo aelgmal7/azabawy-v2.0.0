@@ -18,21 +18,16 @@ Product.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    totalW: {
+    totalWeight: {
       type: DataTypes.NUMBER,
       allowNull: false,
     },
-    totalQ: {
+    totalAmount: {
       type: DataTypes.NUMBER,
       allowNull: false,
     },
-    productNeededWeight: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-
     unit: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
 
@@ -40,14 +35,14 @@ Product.init(
       type: DataTypes.NUMBER,
       allowNull: false,
     },
-    completed: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    delivered: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
+    // completed: {
+    //   type: DataTypes.BOOLEAN,
+    //   allowNull: false,
+    // },
+    // delivered: {
+    //   type: DataTypes.NUMBER,
+    //   allowNull: false,
+    // },
     supplierName: {
       type: DataTypes.STRING,
       allowNull: true,

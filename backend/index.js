@@ -10,6 +10,7 @@ const HTTP_STATUS_CODES =require('./Payload/statusCode.ts')
 const {returnedResult} =require('./Payload/ReturnedResult')
 const  {sequelize} = require('./DataBase/index')
  const  {clientRouter} = require('./Controllers/ClientController')
+ const  {productRouter} = require('./Controllers/ProductController')
  
  temp.sayHi()
  const server = () => {
@@ -19,7 +20,8 @@ const  {sequelize} = require('./DataBase/index')
    app.use(bodyParser.urlencoded({extended:false}))
    app.use(cors());
    
-    app.use('/c',clientRouter);
+    app.use('/client',clientRouter);
+    app.use('/product',productRouter);
    // console.log(Client === sequelize.models.Client); // true
   const tasks =['ahm3d','aaa']
 

@@ -1,7 +1,7 @@
 const { Client } = require("../Models/Client");
 const { ClientModel } = require("../Classes/Client");
 
-const clientCreate = ({
+const createClient = ({
   clientName,
   phoneNumber,
   type,
@@ -26,11 +26,11 @@ const clientCreate = ({
   );
   return Client.create(client);
 };
-const getClient = () => {
+const getClients = () => {
   return Client.findAll();
 };
 
 module.exports = {
-  clientCreate: clientCreate,
-  getClient: getClient,
+  createClient: createClient,
+  getClients : getClients,
 };

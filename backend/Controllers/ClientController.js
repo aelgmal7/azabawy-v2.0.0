@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router()
-const {getClient,clientCreate} = require('../Services/ClientService')
+const {getClients, createClient} = require('../Services/ClientService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
 
 
- router.get('/client',async (req, res, next) =>{
+ router.get('/',async (req, res, next) =>{
      
-    let result =await getClient()
+    let result =await getClients()
     try {
 
         res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{clients:result}))
@@ -16,11 +16,11 @@ const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
     }
  
  })
- router.post('/client', async (req, res) => {
+ router.post('/add-client', async (req, res) => {
      try {
          const {clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying} = req.body
 
-         const result = await clientCreate({clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying})
+         const result = await createClient({clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying})
          res.send(result)
          console.log(req.body)
         }catch (error){
