@@ -3,6 +3,11 @@ const {sequelize} = require('../DataBase')
 class Client extends Model {}
 
 Client.init({
+    id:{    
+        type:Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     clientName:{
         type:DataTypes.STRING,
         allowNull:false,
@@ -48,10 +53,10 @@ Client.init({
             }
         }
     },
-    orders:{
-        type:DataTypes.STRING,
-        defaultValue: ''
-    },
+    // orders:{
+    //     type:DataTypes.STRING,
+    //     defaultValue: ''
+    // },
     bills:{
         type:DataTypes.STRING,
         defaultValue: ''

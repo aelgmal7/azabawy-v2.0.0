@@ -1,21 +1,14 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const { sequelize } = require("../DataBase");
-class OrderDetails extends Model {}
+class OrderItem extends Model {}
 
-OrderDetails.init(
+OrderItem.init(
   {
-    productId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    productName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    OrderId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    id:{    
+      type: Sequelize.INTEGER,
+        allowNull: false,
+      primaryKey: true
+  },
     kiloPrice: {
       type: DataTypes.NUMBER,
       allowNull: false,
@@ -39,9 +32,9 @@ OrderDetails.init(
   },
   {
     sequelize,
-    modelName: "orderDetails",
+    modelName: "orderItem",
   }
 );
-OrderDetails.build();
+OrderItem.build();
 
-module.exports = { OrderDetails };
+module.exports = { OrderItem };

@@ -8,7 +8,7 @@ router.get('/',async (req, res) => {
 
     let result = await getProducts()
     try {
-        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{product:result}))
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{products:result}))
     }catch (err) {
         console.error(err)
         

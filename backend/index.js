@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require('cors')
 const bodyParser =require('body-parser')
 const temp = require('./temp.ts')
+const {relations} = require('./Relations')
+relations()
 // import {returnedResult} from './Payload/ReturnedResult.js'
 // import {HTTP_STATUS_CODES} from './Payload/statusCode.ts' ;
 const HTTP_STATUS_CODES =require('./Payload/statusCode.ts')
@@ -11,6 +13,7 @@ const {returnedResult} =require('./Payload/ReturnedResult')
 const  {sequelize} = require('./DataBase/index')
  const  {clientRouter} = require('./Controllers/ClientController')
  const  {productRouter} = require('./Controllers/ProductController')
+ const  {orderRouter} = require('./Controllers/OrderController')
  
  temp.sayHi()
  const server = () => {
@@ -22,6 +25,7 @@ const  {sequelize} = require('./DataBase/index')
    
     app.use('/client',clientRouter);
     app.use('/product',productRouter);
+    app.use('/order',orderRouter);
    // console.log(Client === sequelize.models.Client); // true
   const tasks =['ahm3d','aaa']
 
@@ -52,7 +56,7 @@ const  {sequelize} = require('./DataBase/index')
   })
 
   sequelize.sync(
-    // {force: true}
+    //{force: true}
   ).then(result => {
     app.listen(3000)
 

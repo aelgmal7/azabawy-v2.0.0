@@ -9,7 +9,7 @@ const createClient = ({
   totalBalance,
   paid,
   remain,
-  orders,
+  // orders,
   bills,
   paying,
 }) => {

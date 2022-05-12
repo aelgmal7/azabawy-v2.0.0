@@ -4,18 +4,12 @@ class Order extends Model {}
 
 Order.init(
   {
-    clientId: {
-      type: DataTypes.STRING,
+    id:{    
+      type: Sequelize.INTEGER,
       allowNull: false,
-    },
-    clientName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    orderDetailsId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+      autoIncrement: true,
+      primaryKey: true
+  },
     totalWeight: {
       type: DataTypes.NUMBER,
       allowNull: false,

@@ -7,7 +7,7 @@ class ClientModel {
     paid;
     remain;
     posVsNeg;
-    orders;
+    // orders;
     bills;
     paying;
     enabled;
@@ -19,7 +19,7 @@ class ClientModel {
         this.totalBalance = totalBalance;
         this.paid = paid;
         this.remain = remain;
-        this.orders = orders;
+        // this.orders = orders;
         this.bills= bills;
         this.paying= paying;
         this.posVsNeg = ( (totalBalance - paid)? true : false)
