@@ -1,0 +1,31 @@
+app-root {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+router-outlet {
+  background-color: gray;
+  display: block;
+  /* height: 400px; */
+  /* width: 100%; */
+}
+
+router-outlet + * {
+  background-color: blue;
+  display: block;
+  /* height: 400px; */
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+app-vertical-navbar {
+  display: block;
+  /* height: 400px; */
+  height: 100%;
+  width: 300px;
+  /* min-width: 500px; */
+  background-color: red;
+}
