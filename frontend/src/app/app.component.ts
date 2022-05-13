@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { IpcService } from './ipc.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
