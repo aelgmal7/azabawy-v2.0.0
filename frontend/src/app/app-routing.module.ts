@@ -1,10 +1,41 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AccountingComponent } from './pages/accounting/accounting.component';
+import { HomeComponent } from './pages/home/home.component';
+import { NewBillComponent } from './pages/new-bill/new-bill.component';
+import { NewOperationComponent } from './pages/new-operation/new-operation.component';
+import { OrdersManagementComponent } from './pages/orders-management/orders-management.component';
 
-const routes: Routes = [];
+// TODO some routes need children
+const routes: Routes = [
+  {
+    path: 'home',
+    component: HomeComponent,
+  },
+  {
+    path: 'accounting',
+    component: AccountingComponent,
+  },
+  {
+    path: 'new-bill',
+    component: NewBillComponent,
+  },
+  {
+    path: 'new-operation',
+    component: NewOperationComponent,
+  },
+  {
+    path: 'orders-management',
+    component: OrdersManagementComponent,
+  },
+  {
+    path: 'store',
+    component: OrdersManagementComponent,
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
