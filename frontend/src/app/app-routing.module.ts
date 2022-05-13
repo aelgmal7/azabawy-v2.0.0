@@ -9,7 +9,7 @@ import { OrdersManagementComponent } from './pages/orders-management/orders-mana
 // TODO some routes need children
 const routes: Routes = [
   {
-    path: 'home',
+    path: '.',
     component: HomeComponent,
   },
   {
@@ -31,6 +31,10 @@ const routes: Routes = [
   {
     path: 'store',
     component: OrdersManagementComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '.',
   },
 ];
 
