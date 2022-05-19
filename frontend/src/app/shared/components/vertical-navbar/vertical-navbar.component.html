@@ -1,1 +1,41 @@
-<p>vertical-navbar works!</p>
+<div id="logo-container">
+  <img src="../../../../assets/images/logo.png" alt="لوجو العزباوي" />
+</div>
+
+<ul>
+  <li><a routerLink=".">الرئيسية</a></li>
+  <li><a routerLink="/new-bill">فاتورة جديدة</a></li>
+  <li><a routerLink="/new-operation">عملية على الخزنة</a></li>
+  <li><a routerLink="/orders-management">إدارة الطلبيات</a></li>
+  <li>
+    <a
+      class="expandable"
+      [class.expanded]="isNavItemOpen.accounting"
+      id="accounting"
+      (click)="isNavItemOpen.accounting = !isNavItemOpen.accounting"
+      >الحسابات</a
+    >
+    <ul [style.display]="isNavItemOpen.accounting ? 'unset' : 'none'">
+      <li><a routerLink="">|-- سجل المعاملات</a></li>
+      <li><a routerLink="">|-- العملاء</a></li>
+      <li><a routerLink="">|-- الخزنة</a></li>
+      <li><a routerLink="./accounting">الكل</a></li>
+    </ul>
+  </li>
+  <li>
+    <a
+      class="expandable"
+      [class.expanded]="isNavItemOpen.store"
+      id="store"
+      (click)="isNavItemOpen.store = !isNavItemOpen.store"
+      >المخزن</a
+    >
+    <ul [style.display]="isNavItemOpen.store ? 'unset' : 'none'">
+      <li><a routerLink="">|-- المواد الخام</a></li>
+      <li><a routerLink="">|-- المنتجات بالمخزن</a></li>
+      <li><a routerLink="">|-- سجل المخزن</a></li>
+      <li><a routerLink="./store">الكل</a></li>
+    </ul>
+  </li>
+</ul>
+<!-- <i class="fa-solid fa-arrow-left"></i> -->
