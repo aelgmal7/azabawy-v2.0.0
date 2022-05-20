@@ -28,4 +28,5 @@ app-vertical-navbar {
   width: 300px;
   /* min-width: 500px; */
   background-color: beige;
+  overflow: auto;
 }

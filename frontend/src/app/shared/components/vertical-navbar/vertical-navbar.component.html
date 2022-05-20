@@ -3,39 +3,27 @@
 </div>
 
 <ul>
-  <li><a routerLink=".">الرئيسية</a></li>
-  <li><a routerLink="/new-bill">فاتورة جديدة</a></li>
-  <li><a routerLink="/new-operation">عملية على الخزنة</a></li>
-  <li><a routerLink="/orders-management">إدارة الطلبيات</a></li>
-  <li>
+  <li *ngFor="let link of navLinks">
+    <a *ngIf="link.link" [routerLink]="link.link">{{ link.text }}</a>
+
     <a
+      *ngIf="link.isNavItemOpen"
       class="expandable"
-      [class.expanded]="isNavItemOpen.accounting"
-      id="accounting"
-      (click)="isNavItemOpen.accounting = !isNavItemOpen.accounting"
-      >الحسابات</a
+      [class.expanded]="isNavItemOpen[link.isNavItemOpen]"
+      id="link.isNavItemOpen"
+      (click)="
+        isNavItemOpen[link.isNavItemOpen] = !isNavItemOpen[link.isNavItemOpen]
+      "
+      >{{ link.text }}</a
     >
-    <ul [style.display]="isNavItemOpen.accounting ? 'unset' : 'none'">
-      <li><a routerLink="">|-- سجل المعاملات</a></li>
-      <li><a routerLink="">|-- العملاء</a></li>
-      <li><a routerLink="">|-- الخزنة</a></li>
-      <li><a routerLink="./accounting">الكل</a></li>
-    </ul>
-  </li>
-  <li>
-    <a
-      class="expandable"
-      [class.expanded]="isNavItemOpen.store"
-      id="store"
-      (click)="isNavItemOpen.store = !isNavItemOpen.store"
-      >المخزن</a
+
+    <ul
+      *ngIf="link.isNavItemOpen"
+      [style.display]="isNavItemOpen[link.isNavItemOpen] ? 'unset' : 'none'"
     >
-    <ul [style.display]="isNavItemOpen.store ? 'unset' : 'none'">
-      <li><a routerLink="">|-- المواد الخام</a></li>
-      <li><a routerLink="">|-- المنتجات بالمخزن</a></li>
-      <li><a routerLink="">|-- سجل المخزن</a></li>
-      <li><a routerLink="./store">الكل</a></li>
+      <li *ngFor="let innerLink of link.children">
+        <a routerLink="innerLink.link">{{ innerLink.text }}</a>
+      </li>
     </ul>
   </li>
 </ul>
-<!-- <i class="fa-solid fa-arrow-left"></i> -->
