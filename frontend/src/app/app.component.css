@@ -13,7 +13,7 @@ router-outlet {
 }
 
 router-outlet + * {
-  background-color: blue;
+  background-color: snow;
   display: block;
   /* height: 400px; */
   height: 100%;
