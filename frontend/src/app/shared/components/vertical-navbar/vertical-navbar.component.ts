@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { navLink } from '../../types/nav-link.t';
+import { NavigationEnd, Router, Event } from '@angular/router';
+import { filter, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-vertical-navbar',
@@ -12,7 +14,7 @@ export class VerticalNavbarComponent implements OnInit {
   navLinks: navLink[] = [
     {
       text: 'الرئيسية',
-      link: '.',
+      link: '/.',
     },
     {
       text: 'فاتورة جديدة',
@@ -32,15 +34,15 @@ export class VerticalNavbarComponent implements OnInit {
       children: [
         {
           text: '|-- سجل المعاملات',
-          link: '',
+          link: '/1',
         },
         {
           text: '|-- العملاء',
-          link: '',
+          link: '/2',
         },
         {
           text: '|-- الخزنة',
-          link: '',
+          link: '/3',
         },
         {
           text: 'الكل',
@@ -54,25 +56,50 @@ export class VerticalNavbarComponent implements OnInit {
       children: [
         {
           text: '|-- المواد الخام',
-          link: '',
+          link: '/4',
         },
         {
           text: '|-- المنتجات بالمخزن',
-          link: '',
+          link: '/5',
         },
         {
           text: '|-- سجل المخزن',
-          link: '',
+          link: '/6',
         },
         {
           text: 'الكل',
-          link: './store',
+          link: 'store',
         },
       ],
     },
   ];
 
-  constructor() {}
+  constructor(private router: Router) {
+    // const x = this.router.events
+    //   .pipe(filter((event) => event instanceof NavigationEnd))
+    //   .subscribe((event) => {
+    //     if (event instanceof NavigationEnd) this.checkExpandableNavItem(url);
+    //   });
+    // .filter((event) => event instanceof NavigationEnd)
+    // x;
+  }
 
   ngOnInit(): void {}
+
+  // checkExpandableNavItem(url:string){
+  //   const link = this.navLinks.reduce((acc,navLink)=>{
+  //    const isHavingChildren = navLink.children
+  //    if(!isHavingChildren) return acc
+  //    navLink.children
+  //   },null)
+  // }
+
+  toggleExpandableNavItem(link: navLink) {
+    // this.checkRoute();
+    // if link is in its children return
+    if (!link.isNavItemOpen) return;
+    // toggle its data
+    this.isNavItemOpen[link.isNavItemOpen] =
+      !this.isNavItemOpen[link.isNavItemOpen];
+  }
 }

@@ -4,16 +4,20 @@
 
 <ul>
   <li *ngFor="let link of navLinks">
-    <a *ngIf="link.link" [routerLink]="link.link">{{ link.text }}</a>
+    <a
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      *ngIf="link.link"
+      [routerLink]="link.link"
+      >{{ link.text }}</a
+    >
 
     <a
       *ngIf="link.isNavItemOpen"
       class="expandable"
       [class.expanded]="isNavItemOpen[link.isNavItemOpen]"
       id="link.isNavItemOpen"
-      (click)="
-        isNavItemOpen[link.isNavItemOpen] = !isNavItemOpen[link.isNavItemOpen]
-      "
+      (click)="toggleExpandableNavItem(link)"
       >{{ link.text }}</a
     >
 
@@ -22,7 +26,13 @@
       [style.display]="isNavItemOpen[link.isNavItemOpen] ? 'unset' : 'none'"
     >
       <li *ngFor="let innerLink of link.children">
-        <a routerLink="innerLink.link">{{ innerLink.text }}</a>
+        <a
+          (click)="isNavItemOpen[link.isNavItemOpen] = true"
+          [routerLink]="innerLink.link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ innerLink.text }}</a
+        >
       </li>
     </ul>
   </li>

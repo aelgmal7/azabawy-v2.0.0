@@ -15,6 +15,7 @@ import { NewOperationComponent } from './pages/new-operation/new-operation.compo
 import { StoreComponent } from './pages/store/store.component';
 import { OrdersManagementComponent } from './pages/orders-management/orders-management.component';
 import { VerticalNavbarComponent } from './shared/components/vertical-navbar/vertical-navbar.component';
+import { IconBtnComponent } from './shared/components/icon-btn/icon-btn.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { VerticalNavbarComponent } from './shared/components/vertical-navbar/ver
     StoreComponent,
     OrdersManagementComponent,
     VerticalNavbarComponent,
+    IconBtnComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],

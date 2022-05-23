@@ -1,0 +1,48 @@
+button {
+  display: inline-block;
+  padding: 15px 20px;
+  font-size: 1rem;
+  background-color: #53616e;
+  box-shadow: 0 0 5px 2px rgb(0 0 0 / 15%);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  transition: background-color 100ms, box-shadow 100ms;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  box-shadow: 0 0 10px 3px rgb(0 0 0 / 20%);
+}
+
+button:active {
+  background-color: #786f7f;
+}
+
+.opacity-20 {
+  opacity: 20%;
+}
+
+.opacity-50 {
+  opacity: 50%;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-auto {
+  cursor: auto;
+  pointer-events: none;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.btn-cancel {
+  background-color: #bd5630;
+}

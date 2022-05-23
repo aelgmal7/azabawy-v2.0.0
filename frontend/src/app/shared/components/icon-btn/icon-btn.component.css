@@ -1,0 +1,33 @@
+button {
+  display: inline-block;
+  padding: 25px 30px;
+  font-size: 1.5rem;
+  background-color: #86a0a0;
+  box-shadow: 0 0 20px 5px rgb(0 0 0 / 15%);
+  border: none;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 100ms, box-shadow 100ms;
+
+  height: 100%;
+  width: 100%;
+}
+
+button:hover {
+  box-shadow: 0 0 15px 5px rgb(0 0 0 / 20%);
+}
+
+button:active {
+  background-color: #786f7f;
+}
+
+button p {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.inactive {
+  opacity: 50%;
+  /* cursor:auto; */
+}

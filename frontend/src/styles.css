@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Tajawal", sans-serif;
 }
 
 html {
@@ -10,5 +11,4 @@ html {
 
 body {
   height: 100%;
-  font-family: "Tajawal", sans-serif;
 }

@@ -47,6 +47,10 @@ a::after {
 }
 
 a:hover {
+  background-color: aquamarine;
+}
+
+.active {
   background-color: #c6b0b0;
   color: whitesmoke;
 }
@@ -57,12 +61,12 @@ a.expandable {
 
 a.expandable::after {
   /* content: "right"; */
-  content: "\f063";
+  content: "\f078";
 }
 
 a.expanded::after {
   /* content: "right"; */
-  content: "\f062";
+  content: "\f068";
 }
 
 li > ul > li > a {
