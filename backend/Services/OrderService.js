@@ -3,8 +3,13 @@ const {Order} = require("../Models/Order")
 const {OrderItem} = require("../Models/OrderItem")
 const {Product} = require("../Models/Product")
 
-const createOrder = async() => {
-   return  Order.addProduct()
+const createOrder = async(clientId,payload) => {
+  return  Client.findByPk(clientId).then((client) => {
+     return client.createOrder({ClientId:client.id,...payload})
+   }).catch(error =>{
+      console.log(error)
+     // return error
+   })
    // TODO: موقتا علي ما اذاكر تاني 
 }
 const getOrderById = async ({clientId,orderId}) => {

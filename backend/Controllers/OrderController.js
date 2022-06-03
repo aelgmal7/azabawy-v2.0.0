@@ -4,14 +4,20 @@ const router = express.Router()
 const {returnedResult} = require('../Payload/ReturnedResult')
 const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
-router.get('/add-order',async (req, res, next) =>{
+router.post('/add-order',async (req, res, next) =>{
      
-    let result =await createOrder()
+    let result =await createOrder(clientId= req.query.clientId,payload=req.body)
     try {
+        console.log("sadfgh", result)
+        if(result == undefined) {
+                
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{message:`no client with id ${req.query.clientId} `}))
+        } else {
 
-        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
+        }
+
     }catch(error){
-        console.log(error)
     }
  
  })
@@ -35,6 +41,11 @@ router.get('/add-order',async (req, res, next) =>{
         console.log(error)
     }
  
+ })
+
+ router.post('/',async (req, res, next) =>{
+     console.log(req.body)
+     res.send("received")
  })
 
 
