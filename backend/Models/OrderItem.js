@@ -7,7 +7,8 @@ OrderItem.init(
     id:{    
       type: Sequelize.INTEGER,
         allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true,
   },
     kiloPrice: {
       type: DataTypes.NUMBER,

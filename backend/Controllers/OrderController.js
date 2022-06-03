@@ -26,7 +26,7 @@ router.post('/add-order',async (req, res, next) =>{
      let orderId = req.params.id;
      let clientId = req.query.clientId;
     let result =await getOrderById({clientId:clientId,orderId:orderId})
-    console.log(result)
+    // console.log(result)
     try {
         if(result == undefined) {
             

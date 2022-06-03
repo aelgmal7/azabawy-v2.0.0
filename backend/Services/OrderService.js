@@ -5,7 +5,12 @@ const {Product} = require("../Models/Product")
 
 const createOrder = async(clientId,payload) => {
   return  Client.findByPk(clientId).then((client) => {
-     return client.createOrder({ClientId:client.id,...payload})
+     return client.createOrder({ClientId:client.id,...payload}).then(order => {
+        return Product.findByPk(1).then((product) => {
+           return order.addProduct(product,{through:{kiloPrice:20,productNeededWeight:50,completed:false,delivered:10,productId:1,productName: "homs"}})
+        })
+      
+     })
    }).catch(error =>{
       console.log(error)
      // return error
@@ -17,8 +22,9 @@ const getOrderById = async ({clientId,orderId}) => {
 
       return client.getOrders().then(orders => {
          const order = orders.find(order => order.dataValues.id == orderId)
+         // console.log(order)
           return order.getProducts().then((products) => {
-               //console.log(products)
+               console.log(products)
                return products
             })
             .then((products) => {
@@ -34,7 +40,7 @@ const getOrderById = async ({clientId,orderId}) => {
                   }
                   return tmp
                })
-               console.log(payload);
+               //console.log(payload);
                return payload
             })
 
