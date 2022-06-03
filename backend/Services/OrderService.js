@@ -8,48 +8,34 @@ const createOrder = async() => {
    // TODO: موقتا علي ما اذاكر تاني 
 }
 const getOrderById = async ({clientId,orderId}) => {
-   return Client.findByPk(clientId).then(() => {
+   return Client.findByPk(clientId).then((client) => {
 
-      return Order.findByPk(orderId).then((order) => {
-         let payload = []
-         return order.getProducts().then((products) => {
-          console.log(products)
-          return products
-         })
-         .then((products) => {
-            const payload = products.map((product) =>{
-               const tmp = {
-                           itemId:product.id,
-                           itemName:product.productName,
-                           orderDetails: {
-                              id:product.orderItem.id,
-                              completed: product.orderItem.completed
-                           }
-                        }
-                        return tmp
+      return client.getOrders().then(orders => {
+         const order = orders.find(order => order.dataValues.id == orderId)
+          return order.getProducts().then((products) => {
+               //console.log(products)
+               return products
             })
-            return payload
-         })
-      //    .then((result) => {
-      //     console.log("prodooood"+ result)
-      //     return payload = result.map((product)=> {
-         //       const tmp = {
-      //          itemName:product.productName,
-      //          orderDetails: {
-      //             id:product.orderItem.id,
-      //             completed: product.orderItem.completed
-      //          }
-      //       }
-      //       return tmp
-      //    })
-      //  }).then(result => {
-      //     return result
-      //  })
+            .then((products) => {
+               const payload = products.map((product) =>{
+                  const tmp = {
+                     itemId:product.id,
+                     itemName:product.productName,
+                     orderDetails: {
+                        id:product.orderItem.id,
+                        completed: product.orderItem.completed,
+                        delivered: product.orderItem.delivered
+                     }
+                  }
+                  return tmp
+               })
+               console.log(payload);
+               return payload
+            })
 
-      //  console.log('order'+order);
-      // if(!order) throw  new Error('no order found with id ' + id);
-      
-      // return order
+         
+
+       // return order
    })
    }).catch(error=>{
       console.log(error)
