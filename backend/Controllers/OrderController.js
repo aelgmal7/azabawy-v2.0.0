@@ -1,8 +1,19 @@
-const {createOrder,getOrderById} = require('../Services/OrderService')
+const {createOrder,getOrderById,getOrderItemsAsProduct} = require('../Services/OrderService')
 const express = require("express");
 const router = express.Router()
 const {returnedResult} = require('../Payload/ReturnedResult')
 const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
+
+
+
+
+router.get("/test",async  (req, res) => {
+    let result = await getOrderItemsAsProduct()
+    res.send(result)
+    //TODO not completed 
+})
+
+
 
 router.post('/add-order',async (req, res, next) =>{
      

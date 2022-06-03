@@ -53,5 +53,16 @@ const getOrderById = async ({clientId,orderId}) => {
    })
  
 }
+//TODO not completed 
+const getOrderItemsAsProduct = async() => {
+   return Client.findByPk(1).then(client => {
+      return client.getOrders().then(async(orders) => {
+         return  await orders[5].getProducts().then(prod => {
+             return prod
+          });
+         })
+      })
 
-module.exports = {createOrder, getOrderById}
+}
+
+module.exports = {createOrder, getOrderById,getOrderItemsAsProduct}
