@@ -1,1 +1,39 @@
-<p>vertical-navbar works!</p>
+<div id="logo-container">
+  <img src="../../../../assets/images/logo.png" alt="لوجو العزباوي" />
+</div>
+
+<ul>
+  <li *ngFor="let link of navLinks">
+    <a
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      *ngIf="link.link"
+      [routerLink]="link.link"
+      >{{ link.text }}</a
+    >
+
+    <a
+      *ngIf="link.isNavItemOpen"
+      class="expandable"
+      [class.expanded]="isNavItemOpen[link.isNavItemOpen]"
+      id="link.isNavItemOpen"
+      (click)="toggleExpandableNavItem(link)"
+      >{{ link.text }}</a
+    >
+
+    <ul
+      *ngIf="link.isNavItemOpen"
+      [style.display]="isNavItemOpen[link.isNavItemOpen] ? 'unset' : 'none'"
+    >
+      <li *ngFor="let innerLink of link.children">
+        <a
+          (click)="isNavItemOpen[link.isNavItemOpen] = true"
+          [routerLink]="innerLink.link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ innerLink.text }}</a
+        >
+      </li>
+    </ul>
+  </li>
+</ul>

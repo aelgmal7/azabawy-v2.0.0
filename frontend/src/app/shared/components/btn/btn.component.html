@@ -1,1 +1,8 @@
-<p>btn works!</p>
+<button
+  [class]="btn.classes"
+  [style.flexDirection]="btn.reverse ? 'row' : 'row-reverse'"
+>
+  <i *ngIf="btn.iconClasses" [class]="btn.iconClasses"></i>
+  <span>&nbsp;&nbsp;</span>
+  {{ btn.text }}
+</button>

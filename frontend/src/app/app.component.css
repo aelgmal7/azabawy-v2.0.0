@@ -3,6 +3,7 @@ app-root {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  background-color: snow;
 }
 
 router-outlet {
@@ -13,7 +14,6 @@ router-outlet {
 }
 
 router-outlet + * {
-  background-color: blue;
   display: block;
   /* height: 400px; */
   height: 100%;
@@ -27,5 +27,7 @@ app-vertical-navbar {
   height: 100%;
   width: 300px;
   /* min-width: 500px; */
-  background-color: red;
+  background-color: beige;
+  overflow: auto;
+  box-shadow: inset 20px 0px 20px 0px #b6a2a229;
 }

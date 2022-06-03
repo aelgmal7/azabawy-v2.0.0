@@ -1,1 +1,137 @@
-<p>new-operation works!</p>
+<div id="main-type">
+  <app-icon-btn
+    (click)="showInnerBranches('fromThemToUs')"
+    [class]="{
+      'cursor-auto': operationData && operationData.type === 'fromThemToUs'
+    }"
+    [style.width]="'40%'"
+    [btn]="{
+      text: 'سند قبض',
+      iconClasses: 'fa-solid fa-arrow-up-from-bracket fa-rotate-180',
+      activeState: operationData && operationData.type === 'fromThemToUs'
+    }"
+  ></app-icon-btn>
+
+  <app-icon-btn
+    (click)="showInnerBranches('fromUsToThem')"
+    [class]="{
+      'cursor-auto': operationData && operationData.type === 'fromUsToThem'
+    }"
+    [style.width]="'40%'"
+    [btn]="{
+      text: 'سند دفع',
+      iconClasses: 'fa-solid fa-arrow-up-from-bracket',
+      activeState: operationData && operationData.type === 'fromUsToThem'
+    }"
+  ></app-icon-btn>
+</div>
+
+<div
+  id="typeOfType-income"
+  data-for="income"
+  [class]="{
+    income: operationData && operationData.type === 'fromThemToUs'
+  }"
+>
+  <app-btn
+    (click)="showForm('direct-operation')"
+    [class]="{
+      'cursor-auto':
+        operationData && operationData.typeOfType === 'direct-operation',
+      'cursor-pointer':
+        !operationData || operationData.typeOfType !== 'direct-operation'
+    }"
+    [btn]="{
+      text: 'عملية مباشرة',
+      classes:
+        operationData && operationData.typeOfType === 'direct-operation'
+          ? 'cursor-auto'
+          : 'opacity-50 cursor-pointer'
+    }"
+  >
+  </app-btn>
+  &nbsp; &nbsp;
+  <app-btn
+    (click)="showForm('bill')"
+    [class]="{
+      'cursor-auto': operationData && operationData.typeOfType === 'bill',
+      'cursor-pointer': !operationData || operationData.typeOfType !== 'bill'
+    }"
+    [btn]="{
+      text: 'فاتورة',
+      classes:
+        operationData && operationData.typeOfType === 'bill'
+          ? 'cursor-auto'
+          : 'opacity-50 cursor-pointer'
+    }"
+  ></app-btn>
+</div>
+
+<div
+  id="typeOfType-outcome"
+  data-for="outcome"
+  [class]="{
+    outcome: operationData && operationData.type === 'fromUsToThem'
+  }"
+>
+  <app-btn
+    (click)="showForm('tash8eel')"
+    [class]="{
+      'cursor-auto': operationData && operationData.typeOfType === 'tash8eel',
+      'cursor-pointer':
+        !operationData || operationData.typeOfType !== 'tash8eel'
+    }"
+    [btn]="{
+      text: 'مصاريف تشغيل',
+      classes:
+        operationData && operationData.typeOfType === 'tash8eel'
+          ? 'cursor-auto'
+          : 'opacity-50 cursor-pointer'
+    }"
+  ></app-btn>
+  &nbsp; &nbsp;
+  <app-btn
+    (click)="showForm('bill')"
+    [class]="{
+      'cursor-auto': operationData && operationData.typeOfType === 'bill',
+      'cursor-pointer': !operationData || operationData.typeOfType !== 'bill'
+    }"
+    [btn]="{
+      text: 'فاتورة',
+      classes:
+        operationData && operationData.typeOfType === 'bill'
+          ? 'cursor-auto'
+          : 'opacity-50 cursor-pointer'
+    }"
+  ></app-btn>
+</div>
+
+<div
+  id="form-container"
+  [class.active]="operationData && operationData.typeOfType"
+>
+  <!-- TODO not finished in case of a bill -->
+  <form
+    *ngIf="operationData && operationData.typeOfType === 'bill'"
+    id="bill-form"
+  ></form>
+  <form
+    *ngIf="operationData && operationData.typeOfType !== 'bill'"
+    id="direct-operation-form"
+  >
+    <div>
+      <label for="payment">التكلفة بالجنيه:</label>
+      <input id="payment" name="payment" type="number" />
+    </div>
+    <div>
+      <label for="details">التفاصيل:</label>
+      <textarea id="details" name="details" type="text"></textarea>
+    </div>
+  </form>
+  <app-btn
+    id="save"
+    (click)="saveForm()"
+    [btn]="{ text: 'احفظ', classes: 'cursor-pointer' }"
+  >
+  </app-btn>
+</div>

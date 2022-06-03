@@ -13,10 +13,6 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'accounting',
-    component: AccountingComponent,
-  },
-  {
     path: 'new-bill',
     component: NewBillComponent,
   },
@@ -27,6 +23,10 @@ const routes: Routes = [
   {
     path: 'orders-management',
     component: OrdersManagementComponent,
+  },
+  {
+    path: 'accounting',
+    component: AccountingComponent,
   },
   {
     path: 'store',

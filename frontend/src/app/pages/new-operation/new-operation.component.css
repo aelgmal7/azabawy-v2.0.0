@@ -1,0 +1,130 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 10px 20px 20px;
+  /* flex-wrap: wrap; */
+  /* height: fit-content; */
+  /* row-gap: 20px; */
+  gap: 10px;
+}
+
+/* h1,
+p {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 20px;
+} */
+
+#main-type {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+#typeOfType-income,
+#typeOfType-outcome {
+  /* background-color: red; */
+  transition: height 300ms, margin 300ms;
+  height: 0;
+  overflow: hidden;
+  text-align: center;
+  width: 50%;
+}
+
+#typeOfType-income {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+#typeOfType-outcome {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+#typeOfType-income.income {
+  height: 60px;
+}
+
+#typeOfType-outcome.outcome {
+  height: 60px;
+}
+
+app-btn {
+  display: inline-block;
+}
+
+#form-container {
+  transition: height 300ms;
+  height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+#form-container.active {
+  /* background-color: red; */
+  height: 170px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-auto {
+  cursor: auto;
+  pointer-events: none;
+}
+
+form {
+  display: flex;
+  gap: 30px;
+  width: 97%;
+  margin: auto;
+}
+
+form > div {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+form > div > input {
+  flex-grow: 1;
+}
+
+form > div > input {
+  flex-grow: 2;
+}
+
+input,
+textarea,
+select,
+option {
+  /* line-height: 20px; */
+  /* width: 100%; */
+  font-size: 1.1rem;
+  resize: none;
+  padding: 8px 15px;
+  text-align: right;
+}
+
+#form-container {
+  text-align: left;
+}
+
+#form-container label {
+  /* line-height: 300%; */
+  text-align: right;
+}
+
+#save {
+  margin: 15px;
+}
