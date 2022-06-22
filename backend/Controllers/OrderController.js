@@ -17,7 +17,7 @@ router.get("/test",async  (req, res) => {
 
 router.post('/add-order',async (req, res, next) =>{
      
-    let result =await createOrder(clientId= req.query.clientId,payload=req.body)
+    let result =await createOrder(clientId= req.query.clientId,payload=req.body.orderDetails,productIds=req.body.productIds)
     try {
         console.log("sadfgh", result)
         if(result == undefined) {

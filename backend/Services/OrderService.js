@@ -1,13 +1,24 @@
 const { Client } = require("../Models/Client");
+const Sequelize = require('Sequelize')
+const Op = Sequelize.Op;
+
 const {Order} = require("../Models/Order")
 const {OrderItem} = require("../Models/OrderItem")
 const {Product} = require("../Models/Product")
-
-const createOrder = async(clientId,payload) => {
+const createOrder = async(clientId,payload,productIds) => {
   return  Client.findByPk(clientId).then((client) => {
      return client.createOrder({ClientId:client.id,...payload}).then(order => {
-        return Product.findByPk(1).then((product) => {
-           return order.addProduct(product,{through:{kiloPrice:20,productNeededWeight:50,completed:false,delivered:10,productId:1,productName: "homs"}})
+        return Product.findAll({where :{ id:{[Op.or] :productIds}}})
+        .then((products) => {
+
+         return order.addProducts(products.map(product => {
+            console.log("Product.id", product.id);
+            
+
+               product.orderItem = {kiloPrice:20,productNeededWeight:50,completed:false,delivered:10,productId:1,productName: product.name}
+               return product
+         }))
+          // return order.addProduct(product,{through:{kiloPrice:20,productNeededWeight:50,completed:false,delivered:10,productId:1,productName: "homs"}})
         })
       
      })
