@@ -1,4 +1,4 @@
-const {createOrder,getOrderById,getOrderItemsAsProduct} = require('../Services/OrderService')
+const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders} = require('../Services/OrderService')
 const express = require("express");
 const router = express.Router()
 const {returnedResult} = require('../Payload/ReturnedResult')
@@ -7,8 +7,8 @@ const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
 
 
-router.get("/test",async  (req, res) => {
-    let result = await getOrderItemsAsProduct()
+router.get("/",async  (req, res) => {
+    let result = await getAllOrders()
     res.send(result)
     //TODO not completed 
 })
@@ -17,7 +17,7 @@ router.get("/test",async  (req, res) => {
 
 router.post('/add-order',async (req, res, next) =>{
      
-    let result =await createOrder(clientId= req.query.clientId,payload=req.body.orderDetails,productIds=req.body.productIds)
+    let result =await createOrder(clientId= req.query.clientId,payload=req.body.orderDetails,productsIds=req.body.productsIds)
     try {
         console.log("sadfgh", result)
         if(result == undefined) {

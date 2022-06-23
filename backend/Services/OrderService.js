@@ -1,14 +1,22 @@
-const { Client } = require("../Models/Client");
 const Sequelize = require('Sequelize')
 const Op = Sequelize.Op;
-
+const { Client } = require("../Models/Client");
 const {Order} = require("../Models/Order")
 const {OrderItem} = require("../Models/OrderItem")
 const {Product} = require("../Models/Product")
-const createOrder = async(clientId,payload,productIds) => {
-  return  Client.findByPk(clientId).then((client) => {
+
+//get all orders 
+const getAllOrders = async() => {
+   return await Order.findAll(
+      // {include: ['products']} // to eager load
+      )
+}
+
+// create new order 
+const createOrder = async(clientId,payload,productsIds) => {
+  return  await Client.findByPk(clientId).then((client) => {
      return client.createOrder({ClientId:client.id,...payload}).then(order => {
-        return Product.findAll({where :{ id:{[Op.or] :productIds}}})
+        return Product.findAll({where :{ id:{[Op.or] :productsIds}}})
         .then((products) => {
 
          return order.addProducts(products.map(product => {
@@ -65,10 +73,11 @@ const getOrderById = async ({clientId,orderId}) => {
  
 }
 //TODO not completed 
+// i think not useful at all
 const getOrderItemsAsProduct = async() => {
    return Client.findByPk(1).then(client => {
       return client.getOrders().then(async(orders) => {
-         return  await orders[5].getProducts().then(prod => {
+         return  await orders[46].getProducts().then(prod => {
              return prod
           });
          })
@@ -76,4 +85,4 @@ const getOrderItemsAsProduct = async() => {
 
 }
 
-module.exports = {createOrder, getOrderById,getOrderItemsAsProduct}
+module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders}

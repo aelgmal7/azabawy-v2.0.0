@@ -17,8 +17,8 @@ router.get('/',async (req, res) => {
 
 router.post('/add-product',async (req, res) => {
     try {
-        const {productName, amounts,weights,productNeededWeight,unit,alarm,supplierName} = req.body
-        const result = await createProduct({productName, amounts,weights,unit,alarm,supplierName})
+        const {productName,weightsAndAmounts,kiloPrice,alarm} = req.body
+        const result = await createProduct({productName,weightsAndAmounts,kiloPrice,alarm})
         res.send(result)
     }catch (err) {
         console.error(err)

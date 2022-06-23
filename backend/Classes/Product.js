@@ -1,30 +1,25 @@
 class ProductModel {
         productName;
-        amounts;
-        weights;
+        weightsAndAmounts
         totalWeight;
         totalAmount;
-        unit;
+        kiloPrice;
         alarm;
-        supplierName;
 
-        constructor(productName, amounts,weights,unit,alarm,supplierName) {
+        constructor(productName,weightsAndAmounts,kiloPrice,alarm) {
                 this.productName = productName;
-                this.amounts = amounts;
-                this.weights = weights;
-                this.totalAmount = amounts.split(',').reduce((total,num)=> {
-                        return Number(total) + Number(num)
+                const amounts = weightsAndAmounts.map(item => item.a)
+                this.totalAmount = amounts.reduce((total,item)=> {
+                        console.log("aaa a",  (total))
+                        return Number(total) + Number(item)
                 })
-                const tmp = weights.split(',').map((w,index)=> {
-                        console.log( amounts.split(',')[index] )
-                        return (Number(w) * Number(amounts.split(',')[index]))
+                const tmp = weightsAndAmounts.map((item,index)=> {
+                        return (Number(item.w) * Number(item.a))
                 })
                 this.totalWeight = tmp.reduce((total,num)=> {
                         return Number(total) + Number(num)
                 })
-                
-               
-                this.unit= unit;
+                this.kiloPrice = kiloPrice
                 this.alarm= alarm;
         }       
 }

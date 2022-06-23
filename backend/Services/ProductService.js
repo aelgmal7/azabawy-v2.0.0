@@ -3,21 +3,24 @@ const {Product} = require("../Models/Product")
 
 const createProduct = ({
     productName,
-    amounts,
-    weights,
-    unit,
+    weightsAndAmounts,
+    kiloPrice,
     alarm,
-    supplierName
 }) => {
     const product = new ProductModel(
         productName,
-         amounts,
-         weights,
-         unit, 
+        weightsAndAmounts,
+        kiloPrice,
          alarm, 
-         supplierName
+        
     );
-    return Product.create(product)
+    return Product.create(product).then((product) => {
+        console.log("asdfgh  gf ",weightsAndAmounts)
+        return weightsAndAmounts.map(e => {
+
+            return product.createWeightAndAmount({weight:e.w,amount:e.a,productName:product.productName})
+        })
+    })
 
 }
 

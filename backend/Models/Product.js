@@ -13,45 +13,25 @@ Product.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
-    amounts: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-
-    weights: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     totalWeight: {
       type: DataTypes.NUMBER,
-      allowNull: false,
+      allowNull: true,
     },
     totalAmount: {
       type: DataTypes.NUMBER,
-      allowNull: false,
+      allowNull: true,
     },
-    unit: {
-      type: DataTypes.STRING,
+   
+    kiloPrice: {
+      type: DataTypes.NUMBER,
       allowNull: false,
     },
 
     alarm: {
       type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-    // completed: {
-    //   type: DataTypes.BOOLEAN,
-    //   allowNull: false,
-    // },
-    // delivered: {
-    //   type: DataTypes.NUMBER,
-    //   allowNull: false,
-    // },
-    supplierName: {
-      type: DataTypes.STRING,
       allowNull: true,
     },
+    
     enabled: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
