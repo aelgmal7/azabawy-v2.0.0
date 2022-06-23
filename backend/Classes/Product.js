@@ -10,7 +10,6 @@ class ProductModel {
                 this.productName = productName;
                 const amounts = weightsAndAmounts.map(item => item.a)
                 this.totalAmount = amounts.reduce((total,item)=> {
-                        console.log("aaa a",  (total))
                         return Number(total) + Number(item)
                 })
                 const tmp = weightsAndAmounts.map((item,index)=> {

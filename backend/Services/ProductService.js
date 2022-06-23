@@ -15,9 +15,7 @@ const createProduct = ({
         
     );
     return Product.create(product).then((product) => {
-        console.log("asdfgh  gf ",weightsAndAmounts)
         return weightsAndAmounts.map(e => {
-
             return product.createWeightAndAmount({weight:e.w,amount:e.a,productName:product.productName})
         })
     })
@@ -25,7 +23,7 @@ const createProduct = ({
 }
 
 const getProducts = () => {
-    return Product.findAll()
+    return Product.findAll({where : {enabled: true}})
 }
 
 module.exports ={
