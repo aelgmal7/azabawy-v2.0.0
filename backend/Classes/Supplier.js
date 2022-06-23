@@ -1,4 +1,4 @@
-class ClientModel {
+class SupplierModel {
     clientName;
     phoneNumber;
     type;
@@ -7,8 +7,8 @@ class ClientModel {
     paid;
     remain;
     enabled;
-    constructor(clientName, phoneNumber, type, typeString, totalBalance, paid, remain){
-        this.clientName = clientName;
+    constructor(supplierName, phoneNumber, type, typeString, totalBalance, paid, remain){
+        this.supplierName = supplierName;
         this.phoneNumber = phoneNumber;
         this.type = type;
         this.typeString = typeString;
@@ -21,4 +21,4 @@ class ClientModel {
 
 }
 
-module.exports ={ClientModel}
+module.exports ={ SupplierModel}

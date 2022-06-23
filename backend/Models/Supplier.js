@@ -1,14 +1,14 @@
 const  { Sequelize, Model, DataTypes } = require('sequelize');
 const {sequelize} = require('../DataBase')
-class Client extends Model {}
+class Supplier extends Model {}
 
-Client.init({
+Supplier.init({
     id:{    
         type:Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    clientName:{
+    supplierName:{
         type:DataTypes.STRING,
         allowNull:false,
     },
@@ -19,12 +19,12 @@ Client.init({
     type:{
         type:DataTypes.BOOLEAN, // true for عميل 
         allowNull:true,
-        defaultValue:true
+        defaultValue:false
     },
     typeString:{
         type:DataTypes.STRING,
         allowNull:true,
-        defaultValue:  "عميل" 
+        defaultValue:  "مورد" 
     },
     totalBalance: {
         type:DataTypes.FLOAT,
@@ -44,7 +44,8 @@ Client.init({
         defaultValue: 0.0,
 
     },
-   
+ 
+  
     enabled:{
         type:DataTypes.BOOLEAN,
         defaultValue:true   
@@ -54,9 +55,9 @@ Client.init({
 
 },{
     sequelize,
-    modelName:'Client'
+    modelName:'Supplier'
 })
-Client.build()
+Supplier.build()
 
 
-module.exports = {Client}
+module.exports = { Supplier}
