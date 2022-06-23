@@ -23,10 +23,25 @@ const createProduct = ({
 }
 
 const getProducts = () => {
-    return Product.findAll({where : {enabled: true}})
+    return Product.findAll({
+        where : {enabled: true},
+        include: ['weightAndAmounts']
+    })
+}
+
+const deleteProduct = async (prodId) => {
+    try {
+        const product = await Product.findOne({ where: { id: prodId } });
+        console.log("product>>>", product);
+        product.enabled = false;
+        return await product.save();
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports ={
     getProducts: getProducts,
-    createProduct : createProduct
+    createProduct: createProduct,
+    deleteProduct: deleteProduct
 }
