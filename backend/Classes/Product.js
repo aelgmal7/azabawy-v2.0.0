@@ -1,6 +1,5 @@
 class ProductModel {
         productName;
-        weightsAndAmounts
         totalWeight;
         totalAmount;
         kiloPrice;
