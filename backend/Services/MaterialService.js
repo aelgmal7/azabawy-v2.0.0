@@ -24,5 +24,18 @@ const createMaterial =async ({
         })
     })
 }
+const getAllMaterials = async () => {
 
-module.exports = {createMaterial}
+    try {
+       return Material.findAll({where : {enabled: true}})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+module.exports = {
+    createMaterial :createMaterial,
+    getAllMaterials :getAllMaterials
+
+}
