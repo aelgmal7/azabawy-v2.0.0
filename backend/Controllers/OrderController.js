@@ -1,4 +1,4 @@
-const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders} = require('../Services/OrderService')
+const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight} = require('../Services/OrderService')
 const express = require("express");
 const router = express.Router()
 const {returnedResult} = require('../Payload/ReturnedResult')
@@ -14,18 +14,23 @@ router.get("/",async  (req, res) => {
 })
 
 
-
+router.post("/change-delivered/:orderId", async (req, res) => {
+    let orderId = req.params.orderId;
+    let clientId = req.query.clientId;
+    let result = await changeOrderItemsDeliveredWeight(clientId, orderId)
+    res.send(result)
+})
 router.post('/add-order',async (req, res, next) =>{
      
-    let result =await createOrder(clientId= req.query.clientId,payload=req.body.orderDetails,productsIds=req.body.productsIds)
+    let result =await createOrder(clientId= req.query.clientId,payload=req.body.orderDetails,productsDetails=req.body.productsDetails)
     try {
-        console.log("sadfgh", result)
-        if(result == undefined) {
+        // console.log("sadfgh", result)
+        if(result.errorCode !== undefined) {
                 
-            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{message:`no client with id ${req.query.clientId} `}))
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_500'],false,{message:result.message}))
         } else {
 
-            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{...result}))
         }
 
     }catch(error){

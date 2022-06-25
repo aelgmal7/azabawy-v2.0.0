@@ -21,10 +21,12 @@ OrderItem.init(
     completed: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false
     },
     delivered: {
       type: DataTypes.NUMBER,
       allowNull: false,
+      defaultValue: 0
     },
     enabled: {
       type: DataTypes.BOOLEAN,
