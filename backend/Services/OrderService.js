@@ -116,14 +116,19 @@ const getOrderItemsAsProduct = async() => {
       })
 
 }
-const changeOrderItemsDeliveredWeight = async(clientId,orderId) => {
+const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) => {
    return Client.findByPk(clientId).then((client)=> {
       return client.getOrders().then(orders =>{
+         const ids = orderItemsArr.map(obj => {
+            return obj.id
+         })
       const order = orders.find(order => order.dataValues.id == orderId)
-      return order.getOrderItems({where: { id:{[Op.or] :[20]}}}).then(items =>{
+      return order.getOrderItems({where: { id:{[Op.or] :ids}}}).then(items =>{
        
          return items.map(item =>{
-            item.delivered = 9;
+            const receivedItem = orderItemsArr.find(ele => ele.id ===item.id);
+            item.delivered += receivedItem.delivered;
+            if(item.delivered >= item.productNeededWeight) item.completed = true;
             item.save();
             return item;       
         })

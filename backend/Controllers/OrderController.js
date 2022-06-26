@@ -17,7 +17,8 @@ router.get("/",async  (req, res) => {
 router.post("/change-delivered/:orderId", async (req, res) => {
     let orderId = req.params.orderId;
     let clientId = req.query.clientId;
-    let result = await changeOrderItemsDeliveredWeight(clientId, orderId)
+    let orderItemsArr = req.body;
+    let result = await changeOrderItemsDeliveredWeight(clientId, orderId,orderItemsArr)
     res.send(result)
 })
 router.post('/add-order',async (req, res, next) =>{
