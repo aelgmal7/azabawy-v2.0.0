@@ -73,6 +73,7 @@ const getOrderById = async ({clientId,orderId}) => {
       return client.getOrders().then(orders => {
 
          const order = orders.find(order => order.dataValues.id == orderId)
+         
           return order.getProducts().then((products) => {
                console.log(products)
                return products
@@ -118,11 +119,21 @@ const getOrderItemsAsProduct = async() => {
 }
 const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) => {
    return Client.findByPk(clientId).then((client)=> {
+      if(client == null) return {
+         errorCode: 500,
+         message: `no client with id ${clientId}`
+         }
       return client.getOrders().then(orders =>{
          const ids = orderItemsArr.map(obj => {
             return obj.id
          })
       const order = orders.find(order => order.dataValues.id == orderId)
+         if(order === undefined) {
+            return {
+               errorCode: 500,
+               message: `client ${client.clientName} doesn't have order with id ${orderId} `
+               }
+         }
       return order.getOrderItems({where: { id:{[Op.or] :ids}}}).then(items =>{
        
          return items.map(item =>{
