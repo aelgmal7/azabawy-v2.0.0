@@ -8,7 +8,7 @@ const {Product} = require("../Models/Product")
 //get all orders 
 const getAllOrders = async() => {
    return await Order.findAll(
-      // {include: ['products']} // to eager load
+       {include: ['products']} // to eager load
       )
 }
 

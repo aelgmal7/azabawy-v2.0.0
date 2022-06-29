@@ -22,6 +22,10 @@ WeightAndAmount.init(
     amount :{ 
         type:Sequelize.INTEGER,
         allowNull: true
+    },
+    enabled: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     }
   },
   {
