@@ -38,7 +38,7 @@ router.get('/:productId',async(req,res,next)=> {
         
     }
 })
-router.get('/deleteProductWeight/:productId',async (req, res)=> {
+router.delete('/deleteProductWeight/:productId',async (req, res)=> {
     const id = req.params.productId
     const productWeight = req.query.productWeight
     const result = await deleteProductWeight(id,productWeight)

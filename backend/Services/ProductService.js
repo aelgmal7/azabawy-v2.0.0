@@ -10,9 +10,21 @@ const createProduct = async({
 }) => {
     const p =await Product.findOne({where: {productName: productName}})
     if(p != null) {
-        return {
-            message: "product already exists",
-            code : 500
+        if ( p.enabled === false) {
+            WeightAndAmount.findAll({where: {enabled:true,productName: p.productName}}).then((weights) => {
+                return weights.map((weight) =>{
+                    weight.destroy();
+                    weight.save();
+                })
+            })
+            p.destroy();
+            p.save();
+        }else {
+            
+            return {
+                message: "product already exists",
+                code : 500
+            }
         }
     }
     console.log('p :>> ', p);
