@@ -1,8 +1,5 @@
-import { EditProductComponent } from './edit-product/edit-product.component';
-import {
-  AddProductComponent,
-  kartona,
-} from './add-product/add-product.component';
+import { EditMaterialsComponent } from './edit-materials/edit-materials.component';
+import { AddMaterialsComponent } from './add-materials/add-materials.component';
 import {
   animate,
   state,
@@ -16,11 +13,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
-
+import { kartona } from '../store/add-product/add-product.component';
 @Component({
-  selector: 'app-store',
-  templateUrl: './store.component.html',
-  styleUrls: ['./store.component.css'],
+  selector: 'app-materials',
+  templateUrl: './materials.component.html',
+  styleUrls: ['./materials.component.css'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -32,8 +29,8 @@ import Swal from 'sweetalert2';
     ]),
   ],
 })
-export class StoreComponent implements OnInit {
-  dataSource: MatTableDataSource<PeriodicElement>;
+export class MaterialsComponent implements OnInit {
+  dataSource: MatTableDataSource<IMaterials>;
 
   weight;
   amount;
@@ -45,6 +42,8 @@ export class StoreComponent implements OnInit {
     {
       name: 'Agwa',
       kind: 'Halawa',
+      supplier: 'Moataz',
+      unit: 'Kg',
       limit: 20,
       price: 10,
       karateen: [
@@ -57,16 +56,18 @@ export class StoreComponent implements OnInit {
 
   columnsToDisplay = [
     'م',
-    'إسم المنتج',
+    'إسم المادة الخام',
+    'إسم المورد',
     'النوع',
     'عدد الكراتين',
     'الوزن الكلي',
+    'الوحدة',
     'سعر الكيلو',
     'الحد الأدنى',
     'التعديل',
   ];
 
-  expandedElement: PeriodicElement | null;
+  expandedElement: IMaterials | null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -78,6 +79,7 @@ export class StoreComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
   ngOnInit(): void {
     this.dataSource.data = this.ELEMENT_DATA;
   }
@@ -89,7 +91,8 @@ export class StoreComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  deleteProduct(i) {
+
+  deleteMaterial(i) {
     this.swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -100,7 +103,7 @@ export class StoreComponent implements OnInit {
 
     this.swalWithBootstrapButtons
       .fire({
-        title: 'مسح هذا المنتج؟',
+        title: 'مسح هذه المادة',
         text: 'سوف تكون غير قادر على إعادة هذه الخطوة',
         icon: 'warning',
         showCancelButton: true,
@@ -123,7 +126,7 @@ export class StoreComponent implements OnInit {
         ) {
           this.swalWithBootstrapButtons.fire(
             'تم الإلغاء',
-            'هذا المنتج لم يتم مسحه :)',
+            'هذه المادة لم يتم مسحه :)',
             'error'
           );
         }
@@ -193,12 +196,13 @@ export class StoreComponent implements OnInit {
     this.dataSource.data[index1].karateen[index2].amount -= Number(val1);
     Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
   }
-
   addDialog() {
-    let dialogRef = this.dialog.open(AddProductComponent, {
+    let dialogRef = this.dialog.open(AddMaterialsComponent, {
       width: '800px',
       data: {
         name: null,
+        supplier: null,
+        unit: null,
         kind: null,
         limit: null,
         price: null,
@@ -210,14 +214,14 @@ export class StoreComponent implements OnInit {
       if (typeof result === 'object') {
         this.ELEMENT_DATA.push(result);
         this.dataSource.data = this.ELEMENT_DATA;
-        Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
+        Swal.fire('تم إضافة المادة الخام بنجاح!', '', 'success');
       } else {
         Swal.fire('تم الإلغاء!', '', 'error');
       }
     });
   }
   editDialog(prod, i) {
-    let dialogRef = this.dialog.open(EditProductComponent, {
+    let dialogRef = this.dialog.open(EditMaterialsComponent, {
       width: '600px',
       data: prod,
     });
@@ -226,13 +230,12 @@ export class StoreComponent implements OnInit {
       if (typeof result === 'object') {
         this.ELEMENT_DATA.splice(i, 1, result);
         this.dataSource.data = this.ELEMENT_DATA;
-        Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+        Swal.fire('تم تعديل المادة الخام بنجاح!', '', 'success');
       } else {
         Swal.fire('تم الإلغاء!', '', 'error');
       }
     });
   }
-
   addNewWeight(w, a, index1) {
     if (
       this.dataSource.data[index1].karateen.filter((e) => e.weight == w)
@@ -251,9 +254,11 @@ export class StoreComponent implements OnInit {
     }
   }
 }
-export interface PeriodicElement {
+export interface IMaterials {
   name: string;
   kind: string;
+  supplier: string;
+  unit: number;
   limit: number;
   price: number;
   karateen: [

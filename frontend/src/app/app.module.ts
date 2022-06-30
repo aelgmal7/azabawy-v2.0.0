@@ -1,6 +1,12 @@
+import { EditMaterialsComponent } from './pages/materials/edit-materials/edit-materials.component';
+import { AddMaterialsComponent } from './pages/materials/add-materials/add-materials.component';
+import { MaterialsComponent } from './pages/materials/materials.component';
+import { EditProductComponent } from './pages/store/edit-product/edit-product.component';
+import { AddProductComponent } from './pages/store/add-product/add-product.component';
+import { MaterialModule } from './shared/material.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +22,9 @@ import { StoreComponent } from './pages/store/store.component';
 import { OrdersManagementComponent } from './pages/orders-management/orders-management.component';
 import { VerticalNavbarComponent } from './shared/components/vertical-navbar/vertical-navbar.component';
 import { IconBtnComponent } from './shared/components/icon-btn/icon-btn.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,9 +39,25 @@ import { IconBtnComponent } from './shared/components/icon-btn/icon-btn.componen
     OrdersManagementComponent,
     VerticalNavbarComponent,
     IconBtnComponent,
+    AddProductComponent,
+    EditProductComponent,
+    MaterialsComponent,
+    AddMaterialsComponent,
+    EditMaterialsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    MaterialModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    SweetAlert2Module,
+    [SweetAlert2Module.forRoot()],
+  ],
   providers: [],
+
   bootstrap: [AppComponent],
 })
 export class AppModule {}

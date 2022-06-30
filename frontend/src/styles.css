@@ -1,3 +1,5 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
 * {
   margin: 0;
   padding: 0;
@@ -11,4 +13,14 @@ html {
 
 body {
   height: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.mat-button-focus-overlay {
+  background-color: transparent !important;
 }

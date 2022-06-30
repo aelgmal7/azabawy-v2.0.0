@@ -56,11 +56,11 @@ export class VerticalNavbarComponent implements OnInit {
       children: [
         {
           text: '|-- المواد الخام',
-          link: '/4',
+          link: 'materials',
         },
         {
           text: '|-- المنتجات بالمخزن',
-          link: '/5',
+          link: 'store',
         },
         {
           text: '|-- سجل المخزن',
@@ -68,7 +68,7 @@ export class VerticalNavbarComponent implements OnInit {
         },
         {
           text: 'الكل',
-          link: 'store',
+          link: '/5',
         },
       ],
     },
