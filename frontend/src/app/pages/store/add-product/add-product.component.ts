@@ -6,10 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { StoreService } from 'src/app/shared/services/store.service';
 import { PeriodicElement } from '../store.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-add-product',
@@ -19,7 +21,7 @@ import { PeriodicElement } from '../store.component';
 export class AddProductComponent implements OnInit {
   form: FormGroup;
 
-  karateen: any = [];
+  karateen: kartona2[] = [];
 
   visible: boolean = false;
 
@@ -28,7 +30,9 @@ export class AddProductComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: PeriodicElement,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _storeService: StoreService,
+    private _dialogRef: MatDialogRef<AddProductComponent>
   ) {}
 
   get kind(): AbstractControl {
@@ -52,14 +56,9 @@ export class AddProductComponent implements OnInit {
       weight1: [''],
       amount1: [''],
     });
-    // this.form.valueChanges.subscribe((change) => {
-    //   this.form.controls['name'].status &&
-    //   this.form.controls['kind'].status &&
-    //   this.form.controls['limit'].status &&
-    //   this.form.controls['price'].status === 'VALID'
-    //     ? (this.valid = true)
-    //     : (this.valid = false);
-    // });
+    this.form.valueChanges.subscribe((change) => {
+      // console.log(change);
+    });
 
     this.filteredOptions = this.kind.valueChanges.pipe(
       startWith(''),
@@ -75,16 +74,15 @@ export class AddProductComponent implements OnInit {
   }
 
   addWeight(w, a) {
-    if (this.karateen.filter((e) => e.weight == w).length > 0) {
+    if (this.karateen.filter((e) => e.w == w).length > 0) {
       this.visible = true;
     } else {
-      const order = {} as kartona;
-      order.amount = Number(a);
-      order.weight = Number(w);
+      const order = {} as kartona2;
+      order.w = Number(w);
+      order.a = Number(a);
       this.karateen.push(order);
       this.amount.reset();
       this.weight.reset();
-      this.data.karateen = this.karateen;
       this.visible = false;
       document.getElementById('kartona')?.scrollIntoView();
     }
@@ -93,8 +91,53 @@ export class AddProductComponent implements OnInit {
   deleteWeight(i) {
     this.karateen.splice(i, 1);
   }
+
+  submit(form) {
+    const prod = {
+      productName: form.controls.name.value,
+      kiloPrice: form.controls.price.value,
+      alarm: form.controls.limit.value,
+      weightsAndAmounts: this.karateen,
+    };
+
+    this._storeService.addNewProduct(prod).subscribe((response) => {
+      if (Object.keys(response)[0] === '0') {
+        Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
+        this._dialogRef.close();
+      } else {
+        Swal.fire('لم يتم حفظ المنتج!', Object.values(response)[0], 'error');
+      }
+    });
+  }
 }
 export interface kartona {
+  amount: number;
+  createdAt: string;
+  enabled: boolean;
+  id: number;
+  productId: number;
+  productName: string;
+  updatedAt: string;
+  weight: number;
+}
+export interface kartona2 {
+  w: number;
+  a: number;
+  createdAt: string;
+  enabled: boolean;
+  id: number;
+  productId: number;
+  productName: string;
+  updatedAt: string;
+}
+
+export interface INewProduct {
+  productName: string;
+  weightsAndAmounts: kartona2[];
+  kiloPrice: Number;
+  alarm: Number;
+}
+export interface INewWeight {
   amount: number;
   weight: number;
 }

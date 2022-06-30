@@ -14,32 +14,32 @@
 
       <ng-container matColumnDef="م">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>م</th>
-        <td mat-cell *matCellDef="let product; let i = dataIndex;">{{ i + 1 }}</td>
+        <td mat-cell *matCellDef="let product">{{ product.id }}</td>
       </ng-container>
       <ng-container matColumnDef="إسم المنتج">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المنتج</th>
-        <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+        <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
       </ng-container>
       <ng-container matColumnDef="النوع">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>النوع</th>
-        <td mat-cell *matCellDef="let product">{{ product.kind }}</td>
+        <td mat-cell *matCellDef="let product">{{ product.productName }}</td>
       </ng-container>
       <ng-container matColumnDef="عدد الكراتين">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>عدد الكراتين</th>
-        <td mat-cell *matCellDef="let product">{{ totalAmount(product.karateen)
+        <td mat-cell *matCellDef="let product">{{ totalAmount(product.weightAndAmounts)
           }}</td>
       </ng-container>
       <ng-container matColumnDef="الوزن الكلي">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الوزن الكلي</th>
-        <td mat-cell *matCellDef="let product">{{ totalWeight(product.karateen) }}</td>
+        <td mat-cell *matCellDef="let product">{{ totalWeight(product.weightAndAmounts) }}</td>
       </ng-container>
       <ng-container matColumnDef="سعر الكيلو">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>سعر الكيلو</th>
-        <td mat-cell *matCellDef="let product">{{ product.price }}</td>
+        <td mat-cell *matCellDef="let product">{{ product.kiloPrice }}</td>
       </ng-container>
       <ng-container matColumnDef="الحد الأدنى">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الحد الأدنى</th>
-        <td mat-cell *matCellDef="let product">{{ product.limit }}</td>
+        <td mat-cell *matCellDef="let product">{{ product.alarm }}</td>
       </ng-container>
       <ng-container matColumnDef="التعديل">
         <th mat-header-cell *matHeaderCellDef></th>
@@ -49,7 +49,7 @@
               <mat-icon>edit</mat-icon>
             </button>
             <span class="line"></span>
-            <button mat-icon-button (click)="deleteProduct(i)" color="warn" matTooltip="حذف">
+            <button mat-icon-button (click)="deleteProduct(product.id)" color="warn" matTooltip="حذف">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -60,7 +60,7 @@
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let product let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
           <div class="example-element-detail" [@detailExpand]="product == expandedElement ? 'expanded' : 'collapsed'">
-            <div class="row-detail" *ngFor="let kartona of product.karateen; let i = index">
+            <div class="row-detail" *ngFor="let kartona of product.weightAndAmounts; let i = index">
               <span class="example-element-description">الكراتين من الوزن</span>
               <span class="example-element-description highlight" id="weight">{{ kartona.weight
                 }}</span>
@@ -74,7 +74,8 @@
                 <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
                   (click)="input.value = ''">+</button>
               </div>
-              <button mat-icon-button (click)="deleteWeight(r, i)" color="warn" matTooltip="حذف">
+              <button mat-icon-button [disabled]="product.weightAndAmounts.length == 1"
+                (click)="deleteWeight(product.id, kartona.weight)" color="warn" matTooltip="حذف">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
@@ -87,7 +88,7 @@
                 placeholder=" الكمية">
 
               <button mat-raised-button color="primary" class="addWight"
-                (click)="addNewWeight(weight1.value, amount1.value, r)">أضف
+                (click)="addNewWeight(weight1.value, amount1.value, product.id, r)">أضف
                 الوزن الجديد</button>
 
               <p class="text-error1" id="text-error1" [hidden]="!visible">هذا الوزن تم إضافته بالفعل</p>
