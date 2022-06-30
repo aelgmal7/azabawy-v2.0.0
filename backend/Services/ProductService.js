@@ -118,11 +118,31 @@ const addNewWeightToProduct = async (productId,weight,amount) => {
         return p
     })
 }
+const updateProduct = async (productId,productName,alarm,kiloPrice) => {
+    try{
+        const p = await Product.findOne({where: {id: productId , enabled: true}})
+        if(p === null){
+            return {
+                message:`no product with id ${productId}`,
+                code: 404
+            }
+        }
+        p.productName = productName;
+        p.alarm = alarm;
+        p.kiloPrice = kiloPrice;
+        p.save();
+        return p;
+    }catch (err) {
+        console.log(err)
+    }
+
+}
 
 module.exports ={
     getProducts: getProducts,
     createProduct: createProduct,
     deleteProduct: deleteProduct,
     deleteProductWeight:deleteProductWeight,
-    addNewWeightToProduct:addNewWeightToProduct
+    addNewWeightToProduct:addNewWeightToProduct,
+    updateProduct:updateProduct
 }

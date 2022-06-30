@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router()
-const {getProducts, createProduct,deleteProduct,deleteProductWeight,addNewWeightToProduct} = require('../Services/ProductService')
+const {getProducts, createProduct,deleteProduct,deleteProductWeight,addNewWeightToProduct,updateProduct} = require('../Services/ProductService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
 
@@ -36,6 +36,18 @@ router.post('/add-weights-and-amounts/:productId',async (req, res)=>{
         res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{weight:result}))
 
     }catch(e) {}
+})
+router.put('/update-product/:productId',async (req, res)=>{
+    const id = req.params.productId;
+    const {productName,kiloPrice,alarm} = req.body
+    const result = await updateProduct(id, productName, kiloPrice, alarm)
+    try {
+        if (result.message){
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],false,{message:result.message}))
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{product:result}))
+
+    }catch(e){}
 })
 router.delete('/:productId',async(req,res,next)=> {
     const id = req.params.productId
