@@ -9,6 +9,7 @@
 
 ul {
   list-style-type: none;
+  padding-left: unset;
 }
 
 li:first-of-type {
@@ -47,17 +48,17 @@ a::after {
 }
 
 a:hover {
-  background-color: aquamarine;
+  background-color: #dfdfcf;
 }
 
 .active {
-  background-color: #c6b0b0;
+  background-color: #757565;
   color: whitesmoke;
 }
 
-a.expandable {
-  /* position: relative; */
-}
+/* a.expandable {
+  position: relative;
+} */
 
 a.expandable::after {
   /* content: "right"; */

@@ -1,0 +1,40 @@
+<h1 mat-dialog-title class="mb-0">تعديل المنتج</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <input class="hide">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>الإسم</mat-label>
+      <input type="text" matInput formControlName="name" placeholder="إسم المنتج" [(ngModel)]="data.name">
+      <mat-error *ngIf="form.get('name')!.hasError('required')">
+        الإسم <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>سعر الكيلو</mat-label>
+      <input type="number" matInput formControlName="price" min="1" placeholder="سعر الكيلو" [(ngModel)]="data.price">
+      <mat-error *ngIf="form.get('price')!.hasError('min')">
+        يحب ان يكون سعر الكيلو <strong>1</strong> على الأقل
+      </mat-error>
+      <mat-error *ngIf="form.get('price')!.hasError('required')">
+        سعر الكيلو <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>الحد الأدنى</mat-label>
+      <input type="number" matInput formControlName="limit" min="1" placeholder="الحد الأدنى" [(ngModel)]="data.limit">
+      <mat-error *ngIf="form.get('limit')!.hasError('min')">
+        يحب ان يكون الحد الأدنى <strong>1</strong> على الأقل
+      </mat-error>
+      <mat-error *ngIf="form.get('limit')!.hasError('required')">
+        الحد الأدنى <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="0" class="btn btn-danger">إلغاء</button>
+  <button mat-raised-button class="btn btn-success" [mat-dialog-close]="data"
+    [disabled]="form.invalid || !form.dirty">تعديل</button>
+</div>

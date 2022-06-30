@@ -1,6 +1,6 @@
 <div class="container1">
   <div class="header">
-    <h1>المخزن</h1>
+    <h1>المواد الخام</h1>
     <button mat-raised-button color="primary" (click)="addDialog()">إضافة</button>
   </div>
 
@@ -14,42 +14,50 @@
 
       <ng-container matColumnDef="م">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>م</th>
-        <td mat-cell *matCellDef="let product; let i = dataIndex;">{{ i + 1 }}</td>
+        <td mat-cell *matCellDef="let material; let i = dataIndex;">{{ i + 1 }}</td>
       </ng-container>
-      <ng-container matColumnDef="إسم المنتج">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المنتج</th>
-        <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+      <ng-container matColumnDef="إسم المادة الخام">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المادة الخام</th>
+        <td mat-cell *matCellDef="let material">{{ material.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="إسم المورد">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المورد</th>
+        <td mat-cell *matCellDef="let material">{{ material.supplier }}</td>
       </ng-container>
       <ng-container matColumnDef="النوع">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>النوع</th>
-        <td mat-cell *matCellDef="let product">{{ product.kind }}</td>
+        <td mat-cell *matCellDef="let material">{{ material.kind }}</td>
       </ng-container>
       <ng-container matColumnDef="عدد الكراتين">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>عدد الكراتين</th>
-        <td mat-cell *matCellDef="let product">{{ totalAmount(product.karateen)
+        <td mat-cell *matCellDef="let material">{{ totalAmount(material.karateen)
           }}</td>
       </ng-container>
       <ng-container matColumnDef="الوزن الكلي">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الوزن الكلي</th>
-        <td mat-cell *matCellDef="let product">{{ totalWeight(product.karateen) }}</td>
+        <td mat-cell *matCellDef="let material">{{ totalWeight(material.karateen) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="الوحدة">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>الوحدة</th>
+        <td mat-cell *matCellDef="let material">{{ material.unit }}</td>
       </ng-container>
       <ng-container matColumnDef="سعر الكيلو">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>سعر الكيلو</th>
-        <td mat-cell *matCellDef="let product">{{ product.price }}</td>
+        <td mat-cell *matCellDef="let material">{{ material.price }}</td>
       </ng-container>
       <ng-container matColumnDef="الحد الأدنى">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الحد الأدنى</th>
-        <td mat-cell *matCellDef="let product">{{ product.limit }}</td>
+        <td mat-cell *matCellDef="let material">{{ material.limit }}</td>
       </ng-container>
       <ng-container matColumnDef="التعديل">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let product let i = dataIndex">
+        <td mat-cell *matCellDef="let material let i = dataIndex">
           <div class="d-flex align-items-center">
-            <button mat-icon-button color="primary" matTooltip="تعديل" (click)="editDialog(product, i)">
+            <button mat-icon-button color="primary" matTooltip="تعديل" (click)="editDialog(material, i)">
               <mat-icon>edit</mat-icon>
             </button>
             <span class="line"></span>
-            <button mat-icon-button (click)="deleteProduct(i)" color="warn" matTooltip="حذف">
+            <button mat-icon-button (click)="deleteMaterial(i)" color="warn" matTooltip="حذف">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -58,9 +66,9 @@
 
       <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
       <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let product let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
-          <div class="example-element-detail" [@detailExpand]="product == expandedElement ? 'expanded' : 'collapsed'">
-            <div class="row-detail" *ngFor="let kartona of product.karateen; let i = index">
+        <td mat-cell *matCellDef="let material let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="material == expandedElement ? 'expanded' : 'collapsed'">
+            <div class="row-detail" *ngFor="let kartona of material.karateen; let i = index">
               <span class="example-element-description">الكراتين من الوزن</span>
               <span class="example-element-description highlight" id="weight">{{ kartona.weight
                 }}</span>
@@ -98,9 +106,9 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let product; columns: columnsToDisplay;" class="example-element-row"
-        [class.example-expanded-row]="expandedElement === product"
-        (click)="expandedElement = expandedElement === product ? null : product">
+      <tr mat-row *matRowDef="let material; columns: columnsToDisplay;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === material"
+        (click)="expandedElement = expandedElement === material ? null : material">
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
     </table>
