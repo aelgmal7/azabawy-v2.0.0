@@ -21,8 +21,8 @@ router.get('/',async (req, res) => {
 
 router.post('/add-product',async (req, res) => {
     try {
-        const {productName,weightsAndAmounts,kiloPrice,alarm} = req.body
-        const result = await createProduct({productName,weightsAndAmounts,kiloPrice,alarm})
+        const {productName,weightsAndAmounts,kiloPrice,alarm,type} = req.body
+        const result = await createProduct({productName,weightsAndAmounts,kiloPrice,alarm,type})
         res.send(result)
     }catch (err) {
         console.error(err)
@@ -40,7 +40,7 @@ router.post('/add-weights-and-amounts/:productId',async (req, res)=>{
 router.put('/update-product/:productId',async (req, res)=>{
     const id = req.params.productId;
     const {productName,kiloPrice,alarm} = req.body
-    const result = await updateProduct(id, productName, kiloPrice, alarm)
+    const result = await updateProduct(id, productName,alarm,kiloPrice)
     try {
         if (result.message){
             res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],false,{message:result.message}))

@@ -31,6 +31,11 @@ Product.init(
       type: DataTypes.NUMBER,
       allowNull: true,
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "حلاوه"
+    },
     
     enabled: {
       type: DataTypes.BOOLEAN,

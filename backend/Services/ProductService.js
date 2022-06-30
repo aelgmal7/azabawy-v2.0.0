@@ -7,6 +7,7 @@ const createProduct = async({
     weightsAndAmounts,
     kiloPrice,
     alarm,
+    type
 }) => {
     const p =await Product.findOne({where: {productName: productName}})
     if(p != null) {
@@ -32,7 +33,8 @@ const createProduct = async({
         productName,
         weightsAndAmounts,
         kiloPrice,
-         alarm, 
+         alarm,
+         type
         
     );
     return Product.create(product).then((product) => {
