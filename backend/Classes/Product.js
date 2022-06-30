@@ -4,8 +4,9 @@ class ProductModel {
         totalAmount;
         kiloPrice;
         alarm;
+        type;
 
-        constructor(productName,weightsAndAmounts,kiloPrice,alarm) {
+        constructor(productName,weightsAndAmounts,kiloPrice,alarm,type) {
                 this.productName = productName;
                 const amounts = weightsAndAmounts.map(item => item.a)
                 this.totalAmount = amounts.reduce((total,item)=> {
@@ -19,6 +20,7 @@ class ProductModel {
                 })
                 this.kiloPrice = kiloPrice
                 this.alarm= alarm;
+                this.type = type
         }       
 }
 module.exports = {ProductModel}
