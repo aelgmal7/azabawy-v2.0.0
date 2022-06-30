@@ -92,7 +92,11 @@ const deleteProductWeight = async(productId,weightReq) => {
 }
 const deleteProduct = async (prodId) => {
     try {
-        const product = await Product.findOne({ where: { id: prodId } });
+        const product = await Product.findOne({ where: { id: prodId,enabled: true } });
+        if (product === null) return {
+            message:`no product with id ${prodId}`,
+            code: 404
+        }
         console.log("product>>>", product);
         product.enabled = false;
         return await product.save();
@@ -100,10 +104,25 @@ const deleteProduct = async (prodId) => {
         console.log(err);
     }
 }
+const addNewWeightToProduct = async (productId,weight,amount) => {
+    console.log(productId,weight,amount);
+    return Product.findOne({where: {enabled: true,id: productId}}).then((product) => {
+        return product.createWeightAndAmount({weight:weight,amount:amount,productName:product.productName})
+    }).then(async(weightAndAmount) => {
+        const p = await Product.findOne({where: {enabled: true,id: productId}})
+        console.log(weightAndAmount)
+        p.totalAmount += Number(weightAndAmount.amount);
+        p.totalWeight += (Number(weightAndAmount.weight) * Number(weightAndAmount.amount));
+        console.log(p.totalAmount,p.totalWeight)
+        p.save();
+        return p
+    })
+}
 
 module.exports ={
     getProducts: getProducts,
     createProduct: createProduct,
     deleteProduct: deleteProduct,
-    deleteProductWeight:deleteProductWeight
+    deleteProductWeight:deleteProductWeight,
+    addNewWeightToProduct:addNewWeightToProduct
 }
