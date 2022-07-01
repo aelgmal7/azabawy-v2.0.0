@@ -82,7 +82,8 @@
                 <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
                   (click)="input.value = ''">+</button>
               </div>
-              <button mat-icon-button (click)="deleteWeight(r, i)" color="warn" matTooltip="حذف">
+              <button mat-icon-button [disabled]="material.karateen.length == 0" (click)="deleteWeight(r, i)"
+                color="warn" matTooltip="حذف">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
