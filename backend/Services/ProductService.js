@@ -139,6 +139,34 @@ const updateProduct = async (productId,productName,alarm,kiloPrice) => {
     }
 
 }
+const changeAmountOfWeight = async(productId,weight,newAmount) => {
+
+    const p = await Product.findOne({where: {id: productId , enabled: true}})
+    if(p === null){
+        return {
+            message:`no product with id ${productId}`,
+            code: 404
+        }
+    }
+    const w = await WeightAndAmount.findOne({where: {productName: p.productName, weight:weight,enabled: true}})
+    if(w === null){
+        return {
+            message:`no weight with for product ${p.productName} equals ${weight}`,
+            code: 404
+        }
+    }
+    try {
+        w.amount += Number(newAmount)
+        p.totalAmount += Number(newAmount);
+        p.totalWeight += (Number(newAmount) * Number(weight))
+        w.save();
+        p.save();
+        return p;
+    }catch (err) {
+        console.error(err)
+    }
+}
+
 
 module.exports ={
     getProducts: getProducts,
@@ -146,5 +174,6 @@ module.exports ={
     deleteProduct: deleteProduct,
     deleteProductWeight:deleteProductWeight,
     addNewWeightToProduct:addNewWeightToProduct,
-    updateProduct:updateProduct
+    updateProduct:updateProduct,
+    changeAmountOfWeight:changeAmountOfWeight
 }
