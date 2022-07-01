@@ -10,26 +10,14 @@ Order.init(
       autoIncrement: true,
       primaryKey: true
   },
-    totalWeight: {
-      type: DataTypes.NUMBER,
+    orderName: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     completed: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
-    },
-    estimatedEndDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    estimatedPrice: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
     },
     enabled: {
       type: DataTypes.BOOLEAN,
