@@ -4,8 +4,6 @@ const { ClientModel } = require("../Classes/Client");
 const createClient = ({
   clientName,
   phoneNumber,
-  type,
-  typeString,
   totalBalance,
   paid,
   remain,
@@ -16,8 +14,6 @@ const createClient = ({
   const client = new ClientModel(
     clientName,
     phoneNumber,
-    type,
-    typeString,
     totalBalance,
     paid,
     remain,

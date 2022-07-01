@@ -7,7 +7,7 @@ class ClientModel {
     paid;
     remain;
     enabled;
-    constructor(clientName, phoneNumber, type, typeString, totalBalance, paid, remain){
+    constructor(clientName, phoneNumber, type=true, typeString="عميل", totalBalance, paid, remain){
         this.clientName = clientName;
         this.phoneNumber = phoneNumber;
         this.type = type;
