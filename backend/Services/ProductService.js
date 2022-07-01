@@ -28,7 +28,6 @@ const createProduct = async({
             }
         }
     }
-    console.log('p :>> ', p);
     const product = new ProductModel(
         productName,
         weightsAndAmounts,
