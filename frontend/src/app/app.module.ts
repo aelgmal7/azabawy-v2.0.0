@@ -1,3 +1,4 @@
+import { OrdersService } from './shared/services/orders.service';
 import { StoreService } from './shared/services/store.service';
 import { EditMaterialsComponent } from './pages/materials/edit-materials/edit-materials.component';
 import { AddMaterialsComponent } from './pages/materials/add-materials/add-materials.component';
@@ -57,7 +58,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     SweetAlert2Module,
     [SweetAlert2Module.forRoot()],
   ],
-  providers: [StoreService],
+  providers: [StoreService, OrdersService],
 
   bootstrap: [AppComponent],
 })

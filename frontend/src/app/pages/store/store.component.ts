@@ -45,8 +45,6 @@ export class StoreComponent implements OnInit {
 
   products;
 
-  ELEMENT_DATA: any[] = [{}];
-
   columnsToDisplay = [
     'م',
     'إسم المنتج',
@@ -254,25 +252,19 @@ export class StoreComponent implements OnInit {
       .then((result) => {
         if (result.isConfirmed) {
           this._storeService.deleteWeight(id, weight).subscribe((response) => {
-            console.log(response);
-            console.log(this.dataSource.data[1].weightAndAmounts);
-            // if (Object.keys(response).length === 8) {
-            //   this.swalWithBootstrapButtons.fire(
-            //     'تم المسح!',
-            //     'تم مسح الوزن بنجاح!',
-            //     'success'
-            //   );
-            //   this._storeService.getAllProducts().subscribe((prod) => {
-            //     this.products = Object.values(prod.result);
-            //     this.dataSource.data = this.products[0];
-            //   });
-            // } else {
-            //   this.swalWithBootstrapButtons.fire(
-            //     'لم يتم المسح!',
-            //     '',
-            //     'error'
-            //   );
-            // }
+            if (Object.keys(response).length === 8) {
+              this.swalWithBootstrapButtons.fire(
+                'تم المسح!',
+                'تم مسح الوزن بنجاح!',
+                'success'
+              );
+              this._storeService.getAllProducts().subscribe((prod) => {
+                this.products = Object.values(prod.result);
+                this.dataSource.data = this.products[0];
+              });
+            } else {
+              this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
+            }
           });
         } else if (
           /* Read more about handling dismissals below */

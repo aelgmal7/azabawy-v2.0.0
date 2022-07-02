@@ -1,1 +1,108 @@
-<p>orders-management works!</p>
+<div class="container1">
+  <div class="header">
+    <h1>الطلبيات</h1>
+    <button mat-raised-button color="primary">إضافة</button>
+  </div>
+  <div class="mat-elevation-z8">
+    <mat-form-field appearance="fill">
+      <mat-label>بحث</mat-label>
+      <input matInput (keyup)="applyFilter($event)" />
+    </mat-form-field>
+
+    <table mat-table mat-table matSort [dataSource]="dataSource" multiTemplateDataRows>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>م</th>
+        <td mat-cell *matCellDef="let order">{{ order.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="clientName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم العميل</th>
+        <td mat-cell *matCellDef="let order">{{ order.clientName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="orderName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم الطلبية</th>
+        <td mat-cell *matCellDef="let order">{{ order.orderName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>الحالة</th>
+        <td mat-cell *matCellDef="let order">{{ order.status }}</td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let order let i = dataIndex">
+
+          <button mat-icon-button color="warn" matTooltip="حذف">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+        </td>
+      </ng-container>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let order let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="order == expandedElement ? 'expanded' : 'collapsed'">
+            <div class="row-detail" *ngFor="let kartona of order.products; let i = index">
+              <span class="example-element-description">الكراتين من الوزن</span>
+              <span class="example-element-description highlight" id="weight">{{ kartona.weight
+                }}</span>
+              <span class="example-element-description">الكمية المتاحة</span>
+              <span class="example-element-description highlight">{{ kartona.amount }}</span>
+              <span class="example-element-description">تعديل الكمية</span>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-danger" (click)="input.value= ''">-</button>
+                <input type="number" class="form-control" id="input" placeholder="الكمية" #input>
+                <button type="button" class="btn btn-success" (click)="input.value = ''">+</button>
+              </div>
+              <button mat-icon-button [disabled]="order.weightAndAmounts.length == 1" color="warn" matTooltip="حذف">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let order; columns: columnsToDisplay;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === order"
+        (click)="expandedElement = expandedElement === order ? null : order">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="mb-5"></mat-paginator>
+  </div>
+  <!-- <div class="orders mb-5">
+    <div *ngFor="let order of orders" class="mat-elevation-z8 order">
+      <div class="d-flex justify-content-between p-4 orderHeader">
+        <div>
+          <h2>{{order.clientName}}</h2>
+          <h4>{{order.orderName}}</h4>
+        </div>
+        <button mat-icon-button color="warn" matTooltip="حذف">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="mat-elevation-z8">
+        <table mat-table mat-table matSort [dataSource]="order.products" multiTemplateDataRows>
+          <ng-container matColumnDef="product">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>المنتج</th>
+            <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>الوزن المطلوب</th>
+            <td mat-cell *matCellDef="let product">{{ product.weight }}</td>
+          </ng-container>
+          <ng-container matColumnDef="receivedWeight">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>تم التسليم (وزن)</th>
+            <td mat-cell *matCellDef="let product">{{ product.receivedWeight }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+        </table>
+        <mat-paginator #MatPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="mb-5"></mat-paginator>
+      </div>
+    </div>
+  </div> -->
+</div>
