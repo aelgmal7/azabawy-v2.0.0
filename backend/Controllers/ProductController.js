@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router()
-const {getProducts, createProduct,deleteProduct,deleteProductWeight,addNewWeightToProduct,updateProduct} = require('../Services/ProductService')
+const {getProducts, createProduct,deleteProduct,deleteProductWeight,addNewWeightToProduct,updateProduct,changeAmountOfWeight} = require('../Services/ProductService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
 
@@ -69,6 +69,19 @@ router.delete('/deleteProductWeight/:productId',async (req, res)=> {
     const result = await deleteProductWeight(id,productWeight)
     res.send(result)
 
+})
+router.put('/changeAmountOfWeight/:productId',async (req, res)=> {
+    const id = req.params.productId;
+    const weight = req.query.weight;
+    const newAmount = req.query.newAmount;
+    const result = await changeAmountOfWeight(id, weight, newAmount)
+    try {
+        if(result.message) {
+
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],false,{message:result.message}))
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{product:result}))
+    }catch (err) {}
 })
 
 module.exports = {productRouter:router}

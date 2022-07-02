@@ -8,7 +8,7 @@ const {Product} = require("../Models/Product")
 //get all orders 
 const getAllOrders = async() => {
    return await Order.findAll(
-       {include: ['products']} // to eager load
+       {where:{enabled: true},include: ['orderItems'],order:[['completed','ASC']]} // to eager load
       )
 }
 
@@ -46,9 +46,9 @@ const createOrder = async(clientId,payload,productsDetails) => {
                
                return order.addProducts(products.map(product => {
                   console.log("Product.id", product.id);
-                  const {productNeededWeight,completed,delivered} = productsDetails.find(item => item.id === product.id);
+                  const {productNeededWeight} = productsDetails.find(item => item.id === product.id);
                   
-               product.orderItem = {kiloPrice:product.kiloPrice,productNeededWeight:productNeededWeight,completed:completed,delivered:delivered,productId:product.id,productName: product.name}
+               product.orderItem = {kiloPrice:product.kiloPrice,productNeededWeight:productNeededWeight,productId:product.id,productName: product.name}
                return product
             })).then(products => {
                return {order,orderItems:products}
@@ -134,19 +134,52 @@ const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) =>
                message: `client ${client.clientName} doesn't have order with id ${orderId} `
                }
          }
-      return order.getOrderItems({where: { id:{[Op.or] :ids}}}).then(items =>{
-       
-         return items.map(item =>{
-            const receivedItem = orderItemsArr.find(ele => ele.id ===item.id);
-            item.delivered += receivedItem.delivered;
-            if(item.delivered >= item.productNeededWeight) item.completed = true;
-            item.save();
-            return item;       
-        })
-      })
+         return order.getOrderItems({where: { id:{[Op.or] :ids}}}).then(items =>{
+         
+            if(items.length < ids.length) {
+               return {
+                  message: ` some orderItems don't exist`,
+                  code: 404,
+               }
+            }
+            else{
+               return items.map(item =>{
+                  const receivedItem = orderItemsArr.find(ele => ele.id ===item.id);
+                  item.delivered += receivedItem.delivered;
+                  if(item.delivered >= item.productNeededWeight) item.completed = true;
+                  item.save();
+                  return item;       
+               })
+            }
+         }).then(items => {
+            if(items.every(item => item.completed == true)) {
+               order.completed = true;
+               order.save();
+            }
+            return {order:order,
+               orderItems:order.getOrderItems()}
+         })
       })
    })
   
 }
+const deleteOrder = async(orderId) => {
+   const order = await Order.findByPk(orderId);
+   if (!order) {
+      return {
+         message: `no order with id ${orderId}`,
+         code: 404,
+      }
+   }
+   order.enabled = false;
+   order.save()
+   console.log(order.getProducts())
+   return order.getProducts().then(items=> {
+      return items.map(item=> {
+         item.enabled= false;
+         item.save();
+      })
+   })
+}
 
-module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight}
+module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder}

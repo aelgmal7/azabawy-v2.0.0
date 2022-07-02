@@ -1,6 +1,6 @@
-const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight} = require('../Services/OrderService')
 const express = require("express");
 const router = express.Router()
+const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder} = require('../Services/OrderService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
@@ -9,7 +9,8 @@ const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
 router.get("/",async  (req, res) => {
     let result = await getAllOrders()
-    res.send(result)
+    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
+
     //TODO not completed 
 })
 
@@ -19,7 +20,18 @@ router.post("/change-delivered/:orderId", async (req, res) => {
     let clientId = req.query.clientId;
     let orderItemsArr = req.body;
     let result = await changeOrderItemsDeliveredWeight(clientId, orderId,orderItemsArr)
-    res.send(result)
+    try {
+        // console.log("sadfgh", result)
+        if(result.message) {
+                
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_500'],false,{message:result.message}))
+        } else {
+
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{order:result}))
+        }
+
+    }catch(error){
+    }
 })
 router.post('/add-order',async (req, res, next) =>{
      
@@ -65,6 +77,19 @@ router.post('/add-order',async (req, res, next) =>{
      res.send("received")
  })
 
+ router.delete('/delete/:orderId',async (req, res, next)=>{
+
+    const orderId = req.params.orderId
+    const result = await deleteOrder(orderId)
+    try { 
+        if(result.message) {
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],true,result.message))
+        }else {
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{items:result}))
+
+        }
+    }catch(err) {}
+ })
 
 
  module.exports ={orderRouter:router}

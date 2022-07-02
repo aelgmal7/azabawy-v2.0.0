@@ -12,14 +12,14 @@ const createProduct = async({
     const p =await Product.findOne({where: {productName: productName}})
     if(p != null) {
         if ( p.enabled === false) {
-            WeightAndAmount.findAll({where: {enabled:true,productName: p.productName}}).then((weights) => {
-                return weights.map((weight) =>{
-                    weight.destroy();
-                    weight.save();
+            WeightAndAmount.findAll({where: {productName: p.productName}}).then((weights) => {
+                return weights.map(async(weight) =>{
+                   await  weight.destroy();
+                    await weight.save();
                 })
             })
-            p.destroy();
-            p.save();
+            await p.destroy();
+            await p.save();
         }else {
             
             return {
@@ -28,7 +28,6 @@ const createProduct = async({
             }
         }
     }
-    console.log('p :>> ', p);
     const product = new ProductModel(
         productName,
         weightsAndAmounts,
@@ -139,6 +138,34 @@ const updateProduct = async (productId,productName,alarm,kiloPrice) => {
     }
 
 }
+const changeAmountOfWeight = async(productId,weight,newAmount) => {
+
+    const p = await Product.findOne({where: {id: productId , enabled: true}})
+    if(p === null){
+        return {
+            message:`no product with id ${productId}`,
+            code: 404
+        }
+    }
+    const w = await WeightAndAmount.findOne({where: {productName: p.productName, weight:weight,enabled: true}})
+    if(w === null){
+        return {
+            message:`no weight with for product ${p.productName} equals ${weight}`,
+            code: 404
+        }
+    }
+    try {
+        w.amount += Number(newAmount)
+        p.totalAmount += Number(newAmount);
+        p.totalWeight += (Number(newAmount) * Number(weight))
+        w.save();
+        p.save();
+        return p;
+    }catch (err) {
+        console.error(err)
+    }
+}
+
 
 module.exports ={
     getProducts: getProducts,
@@ -146,5 +173,6 @@ module.exports ={
     deleteProduct: deleteProduct,
     deleteProductWeight:deleteProductWeight,
     addNewWeightToProduct:addNewWeightToProduct,
-    updateProduct:updateProduct
+    updateProduct:updateProduct,
+    changeAmountOfWeight:changeAmountOfWeight
 }

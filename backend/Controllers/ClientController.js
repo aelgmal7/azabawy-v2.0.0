@@ -18,9 +18,9 @@ const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
  })
  router.post('/add-client', async (req, res) => {
      try {
-         const {clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying} = req.body
+         const {clientName,phoneNumber,totalBalance, paid, remain,orders, bills,paying} = req.body
 
-         const result = await createClient({clientName,phoneNumber,type,typeString, totalBalance, paid, remain,orders, bills,paying})
+         const result = await createClient({clientName,phoneNumber, totalBalance, paid, remain,orders, bills,paying})
          res.send(result)
          console.log(req.body)
         }catch (error){
