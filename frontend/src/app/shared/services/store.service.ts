@@ -27,7 +27,6 @@ export class StoreService {
   }
 
   getAllProducts(): Observable<IProducts> {
-    // return this.products;
     return this.http.get<IProducts>(this.Url);
   }
 

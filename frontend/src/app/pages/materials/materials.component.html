@@ -78,7 +78,7 @@
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-danger" (click)="minAmount(input.value, r, i)"
                   (click)="input.value= ''">-</button>
-                <input type="number" class="form-control" id="input" placeholder="الكمية" #input>
+                <input type="number" class="form-control" id="input" #input>
                 <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
                   (click)="input.value = ''">+</button>
               </div>
@@ -89,11 +89,9 @@
             </div>
             <div class="row-detail">
               <span class="example-element-description">الكراتين من الوزن</span>
-              <input type="number" class="form-control example-element-description" #weight1 [(ngModel)]="weight"
-                placeholder=" الوزن">
+              <input type="number" class="form-control example-element-description" #weight1 [(ngModel)]="weight">
               <span class="example-element-description">الكمية المتاحة</span>
-              <input type="number" class="form-control example-element-description" #amount1 [(ngModel)]="amount"
-                placeholder=" الكمية">
+              <input type="number" class="form-control example-element-description" #amount1 [(ngModel)]="amount">
 
               <button mat-raised-button color="primary" class="addWight"
                 (click)="addNewWeight(weight1.value, amount1.value, r)">أضف

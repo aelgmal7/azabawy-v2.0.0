@@ -1,3 +1,4 @@
+import { AddOrderComponent } from './pages/orders-management/add-order/add-order.component';
 import { OrdersService } from './shared/services/orders.service';
 import { StoreService } from './shared/services/store.service';
 import { EditMaterialsComponent } from './pages/materials/edit-materials/edit-materials.component';
@@ -46,6 +47,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     MaterialsComponent,
     AddMaterialsComponent,
     EditMaterialsComponent,
+    AddOrderComponent,
   ],
   imports: [
     BrowserModule,
