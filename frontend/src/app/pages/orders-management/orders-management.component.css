@@ -96,3 +96,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 ::ng-deep .mat-paginator-range-label {
   direction: ltr;
 }
+::ng-deep .swal2-actions {
+  width: 50%;
+  justify-content: space-evenly;
+}

@@ -27,6 +27,7 @@ import { VerticalNavbarComponent } from './shared/components/vertical-navbar/ver
 import { IconBtnComponent } from './shared/components/icon-btn/icon-btn.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     ReactiveFormsModule,
     SweetAlert2Module,
     [SweetAlert2Module.forRoot()],
+    DropdownModule,
   ],
   providers: [StoreService, OrdersService],
 

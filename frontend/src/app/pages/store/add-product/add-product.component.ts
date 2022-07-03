@@ -102,6 +102,7 @@ export class AddProductComponent implements OnInit {
     };
 
     this._storeService.addNewProduct(prod).subscribe((response) => {
+      console.log(response);
       if (Object.keys(response)[0] === '0') {
         Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
         this._dialogRef.close();

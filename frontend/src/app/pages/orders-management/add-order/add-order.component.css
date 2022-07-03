@@ -55,3 +55,42 @@
 ::-webkit-scrollbar {
   width: 0 !important;
 }
+
+::ng-deep .mat-dialog-content {
+  height: 20rem;
+}
+
+:host ::ng-deep .p-dropdown {
+  width: 100%;
+  margin-top: 0.25rem;
+  height: 60px;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label {
+  padding-right: 1rem !important;
+}
+::ng-deep .p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  padding-right: 1rem !important;
+  margin-right: unset !important;
+}
+::ng-deep .p-dropdown-panel .p-dropdown-header .p-dropdown-filter-icon {
+  left: 0.75rem !important;
+  right: unset !important;
+}
+::ng-deep .p-dropdown .p-dropdown-clear-icon {
+  left: 3rem !important;
+  right: unset !important;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-hidden-accessible input {
+  display: none !important;
+}
+::ng-deep .p-dropdown .p-dropdown-panel {
+  top: unset !important;
+  bottom: -70px !important;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label .country-item {
+  margin-top: 0.5rem;
+}
+.kartona {
+  opacity: 0;
+  margin-top: 2rem;
+}
