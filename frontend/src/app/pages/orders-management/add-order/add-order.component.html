@@ -1,0 +1,103 @@
+<h1 mat-dialog-title class="mb-0">إضافة طلبية</h1>
+<div mat-dialog-content class="position-relative">
+  <form [formGroup]="form">
+    <input class="hide">
+
+
+
+    <!-- <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>إسم العميل</mat-label>
+      <input type="text" matInput formControlName="clientName">
+      <mat-error *ngIf="form.get('clientName')!.hasError('required')">
+        إسم العميل <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field> -->
+
+    <p-dropdown [options]="clients" [(ngModel)]="selectedClient" optionLabel="clientName" [filter]="true" class="w-100"
+      filterBy="clientName" [showClear]="true" placeholder="إسم العميل" formControlName="clientName">
+      <ng-template pTemplate="selectedItem">
+        <div class="country-item country-item-value" *ngIf="selectedClient">
+          <div>{{selectedClient.clientName}}</div>
+        </div>
+      </ng-template>
+      <ng-template let-client pTemplate="item">
+        <div class="country-item">
+          <div>{{client.clientName}}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>إسم الطلبية</mat-label>
+      <input type="text" matInput formControlName="orderName">
+      <mat-error *ngIf="form.get('orderName')!.hasError('required')">
+        إسم الطلبية <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+
+    <div class="example-full-width d-flex justify-content-between">
+      <div class="w-80 d-flex justify-content-between">
+        <!-- <mat-form-field class="w-49" appearance="outline">
+          <mat-label>إسم المنتج</mat-label>
+          <input type="text" matInput formControlName="productName" [matAutocomplete]="auto" #product>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let product of filteredOptions | async" [value]="product">
+              {{product}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field> -->
+        <p-dropdown [options]="products" [(ngModel)]="selectedOrder" optionLabel="productName" [filter]="true"
+          class="w-49" filterBy="productName" [showClear]="true" placeholder="إسم المنتج" formControlName="productName"
+          #product>
+          <ng-template pTemplate="selectedItem">
+            <div class="country-item country-item-value" *ngIf="selectedOrder">
+              <div>{{selectedOrder.productName}}</div>
+            </div>
+          </ng-template>
+          <ng-template let-country pTemplate="item">
+            <div class="country-item">
+              <div>{{country.productName}}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+
+        <mat-form-field class="w-49" appearance="outline">
+          <mat-label>الوزن المطلوب</mat-label>
+          <input type="number" matInput formControlName="productNeededWeight" min="1" #weight>
+          <mat-error *ngIf="form.get('productNeededWeight')!.hasError('min')">
+            يحب ان يكون الوزن المطلوب <strong>1</strong> على الأقل
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="d-flex flex-column ">
+        <button mat-raised-button color="primary" class="h-fit mx-auto"
+          [disabled]="!productName.value || !productNeededWeight.value"
+          (click)="addProduct(product.value,weight.value)">أضف
+          المنتج</button>
+        <p class="text-error" id="text-error" [hidden]="!visible">هذا المنتج تم إضافته بالفعل</p>
+      </div>
+    </div>
+
+    <div *ngIf="orderProducts">
+      <ul *ngFor="let product of orderProducts; let i = index">
+        <li class="position-relative order">
+          <p>
+            المنتج <strong>{{product.productName}}</strong> الوزن المطلوب
+            <strong>{{product.productNeededWeight}}</strong>
+          </p>
+          <button mat-icon-button class="position-absolute top-0 start-0" (click)="deleteProduct(i)"
+            [swal]="['تم حذف المنتج بنجاح!', '', 'error']">
+            <mat-icon mat-raised-button>cancel</mat-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="kartona" id="kartona">1</div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="0" class="btn btn-danger">إلغاء</button>
+  <button mat-raised-button class="btn btn-success" (click)="submit(form)"
+    [disabled]="!form.valid || orderProducts.length < 1">إضافة</button>
+</div>

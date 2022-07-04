@@ -1,3 +1,4 @@
+import { AddOrderComponent } from './add-order/add-order.component';
 import { OrdersService } from './../../shared/services/orders.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +12,13 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { StoreService } from 'src/app/shared/services/store.service';
+import { SelectItem } from 'primeng/api';
+import Swal from 'sweetalert2';
 
+interface City {
+  name: string;
+}
 @Component({
   selector: 'app-orders-management',
   templateUrl: './orders-management.component.html',
@@ -31,67 +38,9 @@ export class OrdersManagementComponent implements OnInit {
   dataSource: MatTableDataSource<[]>;
 
   products;
+  swalWithBootstrapButtons;
 
-  orders: any = [
-    {
-      clientName: 'Moataz',
-      orderName: '7lwyat',
-      products: [
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-        {
-          name: 'Agwa2',
-          weight: 6,
-          receivedWeight: 3,
-        },
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-      ],
-    },
-    {
-      clientName: 'Moataz',
-      orderName: '7lwyat',
-      products: [
-        {
-          name: 'Agwa',
-          weight: 6,
-          receivedWeight: 3,
-        },
-      ],
-    },
-    {
-      clientName: 'Moataz',
-      orderName: '7lwyat',
-      products: [
-        {
-          name: 'Agwa11',
-          weight: 6,
-          receivedWeight: 3,
-        },
-      ],
-    },
-  ];
+  orders;
   expandedElement: IOrders | null;
   columnsToDisplay = ['id', 'clientName', 'orderName', 'status', 'delete'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -107,11 +56,17 @@ export class OrdersManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._orderService.getAllOrders().subscribe((o) => {
-      console.log(o);
-      // this.dataSource.data = o;
+    this._orderService.getAllOrders().subscribe((orders) => {
+      this.orders = Object.values(orders.result);
+      this.dataSource.data = this.orders[0];
+      console.log((this.dataSource.data = this.orders[0]));
+      this.dataSource.data.forEach((order) => {
+        // console.log(order['orderItems']);
+        order['orderItems'].sort((a, b) => {
+          return Number(a.completed) - Number(b.completed);
+        });
+      });
     });
-    // this.dataSource.data = this.orders;
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -121,26 +76,105 @@ export class OrdersManagementComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  addDialog() {
+    let dialogRef = this.dialog.open(AddOrderComponent, {
+      width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      this._orderService.getAllOrders().subscribe((orders) => {
+        this.orders = Object.values(orders.result);
+        this.dataSource.data = this.orders[0];
+
+        this.dataSource.data.forEach((order) => {
+          console.log(order['orderItems']);
+          order['orderItems'].sort((a, b) => {
+            return Number(a.completed) - Number(b.completed);
+          });
+        });
+      });
+    });
+  }
+
+  deleteOrder(i) {
+    this.swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+
+    this.swalWithBootstrapButtons
+      .fire({
+        title: 'مسح هذه الطلبية؟',
+        text: 'سوف تكون غير قادر على إعادة هذه الخطوة',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'إحذف',
+        cancelButtonText: 'إلغاء',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // this.ELEMENT_DATA.splice(i, 1);
+          this._orderService.deleteOrder(i).subscribe((response) => {
+            console.log(response);
+            if (Object.values(response)[1] === true) {
+              this.swalWithBootstrapButtons.fire(
+                'تم المسح!',
+                'تم مسح الطلبية بنجاح!',
+                'success'
+              );
+              this._orderService.getAllOrders().subscribe((orders) => {
+                this.orders = Object.values(orders.result);
+                this.dataSource.data = this.orders[0];
+
+                // this.dataSource.data.forEach((order) => {
+                //   console.log(order['orderItems']);
+                //   order['orderItems'].sort((a, b) => {
+                //     return Number(a.completed) - Number(b.completed);
+                //   });
+                // });
+              });
+            } else {
+              this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
+            }
+          });
+        }
+      });
+  }
 }
 export interface IOrders {
-  id: number;
-  orderName: string;
-  completed: boolean;
-  enabled: boolean;
-  createdAt: number;
   clientId: number;
-  totalWeight: number;
-  clientName: string;
-  products: [
+  completed: boolean;
+  createdAt: number;
+  enabled: boolean;
+  id: number;
+  orderItems: [
     {
-      name: string;
-      weight: number;
-      receivedWeight: number;
+      completed: boolean;
+      createdAt: number;
+      delivered: number;
+      enabled: boolean;
+      id: number;
+      kiloPrice: number;
+      orderId: number;
+      productId: number;
+      productNeededWeight: number;
+      updatedAt: number;
     }
   ];
+  orderName: string;
+  updatedAt: number;
 }
-export interface IOrderProduct {
-  name: string;
-  weight: number;
-  receivedWeight: number;
+export interface IOrderResponse {
+  succeeded: boolean;
+  result: {};
+  status: string;
+}
+export interface IOrderDetails {
+  orderName: string;
+  clientName: string;
 }

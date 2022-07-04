@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { map, Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { StoreService } from 'src/app/shared/services/store.service';
@@ -29,7 +29,6 @@ export class AddProductComponent implements OnInit {
   filteredOptions: Observable<string[]>;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: PeriodicElement,
     private _fb: FormBuilder,
     private _storeService: StoreService,
     private _dialogRef: MatDialogRef<AddProductComponent>
@@ -48,6 +47,8 @@ export class AddProductComponent implements OnInit {
   ngAfterViewInit() {}
 
   ngOnInit() {
+    console.log(this.kinds);
+
     this.form = this._fb.group({
       name: ['', Validators.required],
       kind: ['', Validators.required],
@@ -101,6 +102,7 @@ export class AddProductComponent implements OnInit {
     };
 
     this._storeService.addNewProduct(prod).subscribe((response) => {
+      console.log(response);
       if (Object.keys(response)[0] === '0') {
         Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
         this._dialogRef.close();

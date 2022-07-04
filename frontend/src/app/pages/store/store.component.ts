@@ -72,7 +72,7 @@ export class StoreComponent implements OnInit {
     this._storeService.getAllProducts().subscribe((prod) => {
       this.products = Object.values(prod.result);
       this.dataSource.data = this.products[0];
-      console.log(this.dataSource.data[0]);
+      console.log(this.dataSource.data);
     });
   }
 
@@ -167,13 +167,6 @@ export class StoreComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-      // if (typeof result === 'object') {
-      //   this.ELEMENT_DATA.push(result);
-      //   this.dataSource.data = this.ELEMENT_DATA;
-      //   Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
-      // } else {
-      //   Swal.fire('تم الإلغاء!', '', 'error');
-      // }
       this._storeService.getAllProducts().subscribe((prod) => {
         this.products = Object.values(prod.result);
         this.dataSource.data = this.products[0];
