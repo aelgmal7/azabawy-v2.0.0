@@ -101,6 +101,7 @@ export class AddProductComponent implements OnInit {
       weightsAndAmounts: this.karateen,
     };
 
+    console.log(prod);
     this._storeService.addNewProduct(prod).subscribe((response) => {
       console.log(response);
       if (Object.keys(response)[0] === '0') {

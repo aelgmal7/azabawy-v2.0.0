@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import {
   IProducts,
+  IUpdateAmount,
   PeriodicElement,
 } from './../../pages/store/store.component';
 import { Injectable } from '@angular/core';
@@ -46,6 +47,16 @@ export class StoreService {
     const UpdateURL = `http://localhost:3000/product/update-product/${id}`;
 
     return this.http.put<IUpdateProduct>(UpdateURL, product);
+  }
+
+  updateAmount(
+    id: number,
+    amount: number,
+    weight: number
+  ): Observable<IUpdateAmount> {
+    const UpdateURL = `http://localhost:3000/product/changeAmountOfWeight/${id}?weight=${weight}&newAmount=${amount}`;
+
+    return this.http.put<IUpdateAmount>(UpdateURL, null);
   }
 
   addNewWeight(id: number, newWeight: INewWeight): Observable<INewWeight> {

@@ -161,6 +161,20 @@ export class StoreComponent implements OnInit {
     Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
   }
 
+  updateAmountMin(amount, weight, id) {
+    // const newAmount = {} as IUpdateAmount;
+    // newAmount.weight = Number(weight);
+    // newAmount.amount = Number(amount);
+    amount = -amount;
+
+    console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
+    this._storeService
+      .updateAmount(id, amount, weight)
+      .subscribe((response) => {
+        console.log(response);
+      });
+  }
+
   addDialog() {
     let dialogRef = this.dialog.open(AddProductComponent, {
       width: '800px',
@@ -299,4 +313,8 @@ export interface PeriodicElement {
 export interface IProducts {
   succeeded: boolean;
   result: {};
+}
+export interface IUpdateAmount {
+  weight: number;
+  amount: number;
 }

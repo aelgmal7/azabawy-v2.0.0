@@ -61,7 +61,6 @@ export class OrdersManagementComponent implements OnInit {
       this.dataSource.data = this.orders[0];
       console.log((this.dataSource.data = this.orders[0]));
       this.dataSource.data.forEach((order) => {
-        // console.log(order['orderItems']);
         order['orderItems'].sort((a, b) => {
           return Number(a.completed) - Number(b.completed);
         });

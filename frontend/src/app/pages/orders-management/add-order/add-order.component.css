@@ -57,7 +57,7 @@
 }
 
 ::ng-deep .mat-dialog-content {
-  height: 20rem;
+  height: 24rem;
 }
 
 :host ::ng-deep .p-dropdown {
@@ -85,7 +85,10 @@
 }
 ::ng-deep .p-dropdown .p-dropdown-panel {
   top: unset !important;
-  bottom: -70px !important;
+  bottom: -130px !important;
+}
+::ng-deep .p-dropdown .p-dropdown-panel .p-dropdown-items-wrapper {
+  max-height: 140px !important;
 }
 ::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label .country-item {
   margin-top: 0.5rem;

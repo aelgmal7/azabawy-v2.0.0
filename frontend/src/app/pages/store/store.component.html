@@ -68,7 +68,8 @@
               <span class="example-element-description highlight">{{ kartona.amount }}</span>
               <span class="example-element-description">تعديل الكمية</span>
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-danger" (click)="minAmount(input.value, r, i)"
+                <button type="button" class="btn btn-danger"
+                  (click)="updateAmountMin(input.value, kartona.weight, product.id)"
                   (click)="input.value= ''">-</button>
                 <input type="number" class="form-control" id="input" placeholder="الكمية" #input>
                 <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
