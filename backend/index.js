@@ -58,7 +58,7 @@ const  {sequelize} = require('./DataBase/index')
   // })
 
   sequelize.sync(
-    // {force: true}
+  // {force: true}
   ).then(result => {
     app.listen(3000)
 

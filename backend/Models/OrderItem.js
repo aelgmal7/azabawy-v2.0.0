@@ -28,6 +28,10 @@ OrderItem.init(
       allowNull: false,
       defaultValue: 0
     },
+    productName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     enabled: {
       type: DataTypes.BOOLEAN,
       defaultValue: true

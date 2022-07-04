@@ -45,10 +45,10 @@ const createOrder = async(clientId,payload,productsDetails) => {
             .then((products) => {
                
                return order.addProducts(products.map(product => {
-                  console.log("Product.id", product.id);
+                  console.log("Product.id", product.productName);
                   const {productNeededWeight} = productsDetails.find(item => item.id === product.id);
                   
-               product.orderItem = {kiloPrice:product.kiloPrice,productNeededWeight:productNeededWeight,productId:product.id,productName: product.name}
+               product.orderItem = {kiloPrice:product.kiloPrice,productNeededWeight:productNeededWeight,productId:product.id,productName: product.productName}
                return product
             })).then(products => {
                return {order,orderItems:products}
