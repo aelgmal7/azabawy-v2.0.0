@@ -1,6 +1,15 @@
 const express = require("express");
 const router = express.Router()
-const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder} = require('../Services/OrderService')
+const {
+    createOrder,
+    getOrderById,
+    getOrderItemsAsProduct,
+    getAllOrders,changeOrderItemsDeliveredWeight,
+    deleteOrder,
+    getAllCompletedOrders,
+    setCompletedOrderState
+}
+ = require('../Services/OrderService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
@@ -13,8 +22,30 @@ router.get("/",async  (req, res) => {
 
     //TODO not completed 
 })
+router.get("/uncompleted",async  (req, res) => {
+    let result = await getAllCompletedOrders()
+    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
 
+    //TODO not completed 
+})
 
+router.put('/setCompleted/:orderId',async (req, res, next)=> {
+    const orderId= req.params.orderId;
+    const clientId = req.query.clientId;
+    const result = await setCompletedOrderState(clientId, orderId)
+    try {
+        if(result.message ) {
+                
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_500'],false,{message:result.message}))
+        } else {
+
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{order:result}))
+        }
+
+    }catch(e){
+        console.error(e)
+    }
+})
 router.post("/change-delivered/:orderId", async (req, res) => {
     let orderId = req.params.orderId;
     let clientId = req.query.clientId;
