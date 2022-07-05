@@ -110,6 +110,31 @@ const getOrderById = async ({clientId,orderId}) => {
    })
  
 }
+const setCompletedOrderState = async (clientId,orderId)=>{
+   return await Client.findOne({where:{id:clientId}}).then(async (client)=>{
+      if (client === null ){
+         return {
+            message:`no client with id ${clientId}`,
+            code: 404,
+         }
+      }else {
+         return await Order.findOne({where:{id:orderId}}).then(async (order)=>{
+            if (order === null) {
+               return {
+                  message:`no order with id ${orderId}`,
+                  code: 404,
+               }
+            }else {
+               order.completed = true;
+               await order.save();
+               return order
+            }
+         })
+      }
+
+   })
+
+}
 //TODO not completed 
 // i think not useful at all
 const getOrderItemsAsProduct = async() => {
@@ -187,4 +212,4 @@ const deleteOrder = async(orderId) => {
    })
 }
 
-module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder,getAllCompletedOrders}
+module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder,getAllCompletedOrders,setCompletedOrderState}
