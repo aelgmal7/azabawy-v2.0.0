@@ -151,21 +151,20 @@ export interface IOrders {
   createdAt: number;
   enabled: boolean;
   id: number;
-  orderItems: [
-    {
-      completed: boolean;
-      createdAt: number;
-      delivered: number;
-      enabled: boolean;
-      id: number;
-      kiloPrice: number;
-      orderId: number;
-      productId: number;
-      productNeededWeight: number;
-      updatedAt: number;
-    }
-  ];
+  orderItems: IOrderItems[];
   orderName: string;
+  updatedAt: number;
+}
+export interface IOrderItems {
+  completed: boolean;
+  createdAt: number;
+  delivered: number;
+  enabled: boolean;
+  id: number;
+  kiloPrice: number;
+  orderId: number;
+  productId: number;
+  productNeededWeight: number;
   updatedAt: number;
 }
 export interface IOrderResponse {

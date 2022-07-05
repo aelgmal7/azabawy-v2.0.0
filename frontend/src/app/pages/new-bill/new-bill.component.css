@@ -1,234 +1,87 @@
-.container {
-  width: 85%;
-  margin: auto;
-  padding: 30px 0;
+.container1 {
+  margin: 0 10rem;
 }
-
-.position-relative {
-  position: relative;
+.header {
+  margin-top: 5rem;
+  margin-bottom: 2rem;
 }
-
-.position-absolute {
-  position: absolute;
+.w-49 {
+  width: 49%;
 }
-
-.overflow-auto {
-  overflow: hidden;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-#new-bill-form {
-  transition: right 1000ms cubic-bezier(0.67, 0.03, 0.46, 1.03);
-  right: 0;
-}
-
-#new-bill-form > div {
-  padding: 10px;
-}
-
-.gap-10 {
-  gap: 10px;
-}
-
-.col-10 {
-  width: 10%;
-}
-
-.col-20 {
+.w-20 {
   width: 20%;
 }
-
-.col-30 {
-  width: 30%;
+.w-14 {
+  width: 14rem;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+.btn-success {
+  color: #fff;
+  background-color: #198754;
+}
+.hide {
+  height: 0;
+  border: 0;
 }
 
-.col-33 {
-  width: 33.333%;
+.h-fit {
+  height: fit-content;
 }
-
-.col-50 {
-  width: 50%;
-}
-
-label {
-  display: block;
-}
-
-input,
-select,
-option {
-  /* line-height: 20px; */
-  width: 100%;
-  padding: 10px 20px;
-}
-
-#products-table > div:first-child input {
-  font-size: 1.1rem;
-  padding: 15px 20px;
-}
-
-input[type="radio"] {
-  width: auto;
-}
-
-.h-min-100 {
-  min-height: 100%;
-}
-
-.h-100 {
-  height: 100%;
-}
-
-.h-max-100 {
-  min-height: 100%;
-}
-
-.w-min-100 {
-  min-width: 100%;
-}
-
-.w-100 {
-  width: 100%;
-}
-
-.w-max-100 {
-  min-width: 100%;
-}
-
-app-icon-btn {
-  display: inline-block;
-  min-width: 30%;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.justify-space-around {
-  justify-content: space-around;
-}
-
-.justify-space-between {
-  justify-content: space-between;
-}
-
-.justify-space-evenly {
-  justify-content: space-evenly;
-}
-
-.justify-start {
-  justify-content: flex-start;
-}
-.justify-end {
-  justify-content: flex-end;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.align-center {
-  align-items: center;
-}
-
-.align-start {
-  align-items: flex-start;
-}
-
-.align-end {
-  align-items: flex-end;
-}
-
-.flex-grow-1 {
-  flex-grow: 1;
-}
-
-.flex-grow-2 {
-  flex-grow: 2;
-}
-
-.flex-grow-3 {
-  flex-grow: 3;
-}
-
-.flex-grow-4 {
-  flex-grow: 4;
-}
-
-.opacity-20 {
-  opacity: 20%;
-}
-
-.opacity-50 {
-  opacity: 50%;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.cursor-auto {
-  cursor: auto;
-  pointer-events: none;
-}
-
-.visibility-hidden {
-  visibility: hidden;
-}
-
-.btn-cancel {
-  background-color: orangered;
-}
-
-#weight-type {
-  max-width: 60px;
-}
-
-#products-table {
-  padding: 10px;
-}
-#products-table > div:first-of-type {
-  position: relative;
-}
-
-#products-table > div:first-of-type > div {
-  opacity: 0.8;
-  /* pointer-events: none; */
-}
-
-#products-table > div:first-of-type > div:hover,
-#products-table > div:first-of-type > div:focus,
-#products-table > div:first-of-type > div:focus-within {
-  opacity: 1;
-}
-/*
-#table-container {
-  width: 100%; */
-/* display: flex; */
-/* flex-direction: column; */
-/* justify-content: center; */
-/* height: 100%; */
-/* flex-grow: 2;
-} */
 
 table {
-  text-align: center;
-  font-size: 1.3em;
+  direction: rtl;
+  border-collapse: collapse;
+  width: 100%;
 }
 
-#new-order {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 10px;
+td,
+th {
+  border: 1px solid #dddddd;
+  /* text-align: right; */
+  padding: 8px;
+}
+
+th {
+  background-color: #dddddd;
+}
+
+::ng-deep .mat-dialog-content {
+  height: 24rem;
+}
+
+:host ::ng-deep .p-dropdown {
+  width: 100%;
+  margin-top: 0.25rem;
+  height: 60px;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label {
+  padding-right: 1rem !important;
+}
+::ng-deep .p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  padding-right: 1rem !important;
+  margin-right: unset !important;
+}
+::ng-deep .p-dropdown-panel .p-dropdown-header .p-dropdown-filter-icon {
+  left: 0.75rem !important;
+  right: unset !important;
+}
+::ng-deep .p-dropdown .p-dropdown-clear-icon {
+  left: 3rem !important;
+  right: unset !important;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-hidden-accessible input {
+  display: none !important;
+}
+::ng-deep .p-dropdown .p-dropdown-panel {
+  top: unset !important;
+  bottom: -130px !important;
+}
+::ng-deep .p-dropdown .p-dropdown-panel .p-dropdown-items-wrapper {
+  max-height: 140px !important;
+}
+::ng-deep .p-dropdown.p-dropdown-clearable .p-dropdown-label .country-item {
+  margin-top: 0.5rem;
 }

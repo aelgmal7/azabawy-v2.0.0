@@ -109,9 +109,6 @@ export class AddOrderComponent implements OnInit {
       orderName: form.controls.orderName.value,
       clientName: form.controls.clientName.value.clientName,
     };
-    const productsDetails = {
-      productsDetails: this.orderProducts,
-    };
     const order = {} as IPostOrder;
     order.orderDetails = orderDetails;
     order.productsDetails = this.orderProducts;

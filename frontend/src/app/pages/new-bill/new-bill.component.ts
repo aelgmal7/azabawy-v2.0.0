@@ -1,6 +1,21 @@
+import {
+  IOrderItems,
+  IOrders,
+} from './../orders-management/orders-management.component';
+import { OrdersService } from './../../shared/services/orders.service';
+import { IClients } from './../orders-management/add-order/add-order.component';
+import { ClientsService } from './../../shared/services/clients.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
+import { StoreService } from 'src/app/shared/services/store.service';
 import { Product, BillType } from './types/types.t';
+import { PeriodicElement } from '../store/store.component';
 
 @Component({
   selector: 'app-new-bill',
@@ -8,96 +23,146 @@ import { Product, BillType } from './types/types.t';
   styleUrls: ['./new-bill.component.css'],
 })
 export class NewBillComponent implements OnInit {
-  billType!: BillType;
-  screenInView: 1 | 2 = 1;
-  @ViewChild('billForm') billForm!: ElementRef;
-  firstScreen = true;
-  lastScreen = false;
+  form: FormGroup;
+  myDate: Date = new Date();
+  clients: IClients[];
+  selectedClient: IClients;
+  orders: IOrders[];
+  selectedOrder: IOrders;
+  products: IOrderItems;
+  selectedProduct: PeriodicElement;
+  weights;
+  selectedWeights;
+  amount;
+  price;
+  orderedProducts: IOrderedProducts[] = [];
+  totalPrice: number = 0;
 
-  products = [
-    { id: 'h-550', name: 'حمصية' },
-    { id: 'a-220', name: 'سودانية' },
-    { id: 'm-40', name: 'مشمشية' },
-    { id: 'a-100', name: 'عسلية' },
-  ];
+  operations = ['عميل', 'مورد', 'بيع مباشر'];
+  bills = ['بيع', 'بيع مرتجع'];
 
-  billRows: Product[] = [];
+  constructor(
+    private _fb: FormBuilder,
+    private _storeService: StoreService,
+    private _ordersService: OrdersService,
+    private _clientsService: ClientsService
+  ) {}
 
-  tinOrKilo: 'tin' | 'kilo' = 'kilo';
-
-  totalPrice = 0;
-
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {}
-
-  addProduct(
-    productId: string,
-    packagesNumber: number | string,
-    packageWeight: number | string,
-    kiloPrice: number | string
-  ) {
-    const filledProduct: Product = {
-      productId,
-      productName: this.products.filter((prod) => prod.id === productId)[0]
-        .name,
-      packagesNumber: parseFloat(packagesNumber as unknown as string),
-      packageWeight: parseFloat(packageWeight as unknown as string),
-      kiloPrice: parseFloat(kiloPrice as unknown as string),
-      tinOrKilo: this.tinOrKilo === 'tin' ? 1000 : 1,
-    };
-
-    this.billRows.push(filledProduct);
-
-    this.totalPrice +=
-      filledProduct.kiloPrice *
-      filledProduct.packagesNumber *
-      filledProduct.packageWeight *
-      filledProduct.tinOrKilo;
-
-    console.log(this.billRows);
+  get operation(): AbstractControl {
+    return this.form?.get('operation') as AbstractControl;
+  }
+  get clientName(): AbstractControl {
+    return this.form?.get('clientName') as AbstractControl;
+  }
+  get orderName(): AbstractControl {
+    return this.form?.get('orderName') as AbstractControl;
+  }
+  get productName(): AbstractControl {
+    return this.form?.get('productName') as AbstractControl;
+  }
+  get kiloPrice(): AbstractControl {
+    return this.form?.get('kiloPrice') as AbstractControl;
+  }
+  get productWeights(): AbstractControl {
+    return this.form?.get('productWeights') as AbstractControl;
+  }
+  get productAmount(): AbstractControl {
+    return this.form?.get('productAmount') as AbstractControl;
+  }
+  get totalPrice2(): AbstractControl {
+    return this.form?.get('totalPrice') as AbstractControl;
   }
 
-  updateBillType(type: BillType) {
-    this.billType = type;
+  ngOnInit(): void {
+    console.log(this.orderedProducts);
+    this._clientsService.getAllClients().subscribe((response) => {
+      const c: any = Object.values(response.result);
+      this.clients = c[0];
+    });
+
+    this.form = this._fb.group({
+      operation: ['', Validators.required],
+      date: [this.myDate, Validators.required],
+      totalPrice: [''],
+      clientName: [''],
+      orderName: [''],
+      billType: [''],
+      productName: [''],
+      kiloPrice: [''],
+      productWeights: [''],
+      productAmount: [''],
+      paid: [0],
+    });
+    this.clientName.valueChanges.subscribe((change) => {
+      this._ordersService.getAllOrders().subscribe((orders) => {
+        const x: any[] = Object.values(orders.result);
+        const y = x[0];
+        this.orders = y?.filter((e) => e.ClientId == this.clientName.value?.id);
+      });
+    });
+    this.orderName.valueChanges.subscribe((change) => {
+      this._storeService.getAllProducts().subscribe((prod) => {
+        const x: any[] = Object.values(prod.result);
+        let y: PeriodicElement[] = x[0];
+
+        const arr: any[] = this.orderName.value?.orderItems;
+        arr?.forEach((e) => {
+          y = y.filter((obj) => {
+            return obj.id !== e.productId;
+          });
+          // console.log(y);
+        });
+        console.log(y, this.orderName.value?.orderItems);
+      });
+    });
+    this.productName.valueChanges.subscribe((change) => {
+      this._storeService.getAllProducts().subscribe((prod) => {
+        const x: any[] = Object.values(prod.result);
+        const y = x[0];
+        const z = y?.filter((e) => e.id == this.productName.value?.productId);
+        this.weights = z[0]?.weightAndAmounts;
+        this.price = z[0]?.kiloPrice;
+        console.log(z);
+      });
+    });
+    this.productWeights.valueChanges.subscribe((change) => {
+      this.amount = this.productWeights.value?.amount;
+      this.productAmount.setValidators([
+        Validators.max(this.amount),
+        Validators.min(1),
+      ]);
+    });
   }
 
-  showForm(direction: 'back' | 'next') {
-    const billFormWidth = this.billForm.nativeElement.offsetWidth;
-    const lastRight = parseInt(this.billForm.nativeElement.style.right) || 0;
+  orderProduct(productName, productPrice, productWeight, productAmount) {
+    const x = {} as IOrderedProducts;
+    x.productName = productName.productName;
+    x.productPrice = productPrice * productWeight.weight * productAmount;
+    x.productWeight = productWeight.weight;
+    x.productAmount = productAmount;
+    x.totalWeight = productAmount * productWeight.weight;
+    this.orderedProducts?.push(x);
+    this.productName.reset();
+    this.kiloPrice.reset();
+    this.productWeights.reset();
+    this.productAmount.reset();
 
-    const numberOfFormScreens = 3;
-
-    const margins = { min: 0, max: billFormWidth * numberOfFormScreens };
-
-    if (direction === 'next') {
-      this.firstScreen = false;
-      if (this.lastScreen) {
-        this.saveForm();
-        return;
-      }
-      this.billForm.nativeElement.style.right = `${
-        lastRight - billFormWidth
-      }px`;
-      if (
-        -1 * (lastRight - billFormWidth) >=
-        billFormWidth * (numberOfFormScreens - 1)
-      )
-        this.lastScreen = true;
-    } else {
-      this.lastScreen = false;
-
-      if (this.firstScreen) return;
-      this.billForm.nativeElement.style.right = `${
-        lastRight + billFormWidth * (numberOfFormScreens - 2)
-      }px`;
-      if (-1 * lastRight <= 0 + billFormWidth) this.firstScreen = true;
-    }
-
-    console.log(this.firstScreen, this.lastScreen);
+    this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
+      return accumulator + object.productPrice;
+    }, 0);
   }
-
-  saveForm() {
-    this.router.navigate(['.']);
+  deleteProduct(i) {
+    this.orderedProducts.splice(i, 1);
+    this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
+      return accumulator + object.productPrice;
+    }, 0);
+    console.log(this.totalPrice);
   }
+}
+export interface IOrderedProducts {
+  productName: string;
+  productPrice: number;
+  productWeight: number;
+  totalWeight: number;
+  productAmount: number;
 }
