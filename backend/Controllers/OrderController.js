@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router()
-const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder} = require('../Services/OrderService')
+const {createOrder,getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder,getAllCompletedOrders} = require('../Services/OrderService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
@@ -9,6 +9,12 @@ const {HTTP_STATUS_CODES} =require('../Payload/statusCode.ts')
 
 router.get("/",async  (req, res) => {
     let result = await getAllOrders()
+    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
+
+    //TODO not completed 
+})
+router.get("/uncompleted",async  (req, res) => {
+    let result = await getAllCompletedOrders()
     res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{orders:result}))
 
     //TODO not completed 

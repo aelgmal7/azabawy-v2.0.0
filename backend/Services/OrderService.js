@@ -11,6 +11,11 @@ const getAllOrders = async() => {
        {where:{enabled: true},include: ['orderItems'],order:[['completed','ASC']]} // to eager load
       )
 }
+const getAllCompletedOrders = async() => {
+   return await Order.findAll(
+       {where:{enabled: true,completed:false},include: ['orderItems'],order:[['completed','ASC']]} // to eager load
+      )
+}
 
 // create new order 
 const createOrder = async(clientId,payload,productsDetails) => {
@@ -182,4 +187,4 @@ const deleteOrder = async(orderId) => {
    })
 }
 
-module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder}
+module.exports = {createOrder, getOrderById,getOrderItemsAsProduct,getAllOrders,changeOrderItemsDeliveredWeight,deleteOrder,getAllCompletedOrders}
