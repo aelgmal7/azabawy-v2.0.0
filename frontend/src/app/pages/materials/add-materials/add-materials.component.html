@@ -4,40 +4,37 @@
     <input class="hide">
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>الإسم</mat-label>
-      <input type="text" matInput formControlName="name" [(ngModel)]="data.name">
-      <mat-error *ngIf="form.get('name')!.hasError('required')">
+      <input type="text" matInput formControlName="materialName" [(ngModel)]="data.materialName">
+      <mat-error *ngIf="form.get('materialName')!.hasError('required')">
         الإسم <strong>مطلوب</strong>
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>المورد</mat-label>
-      <input type="text" matInput formControlName="supplier" [(ngModel)]="data.supplier">
-      <mat-error *ngIf="form.get('supplier')!.hasError('required')">
+      <input type="text" matInput formControlName="supplierId" [(ngModel)]="data.supplierId">
+      <mat-error *ngIf="form.get('supplierId')!.hasError('required')">
         المورد <strong>مطلوب</strong>
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="outline">
+    <!-- <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>النوع</mat-label>
-      <input type="text" matInput formControlName="kind" [matAutocomplete]="auto" [(ngModel)]="data.kind">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let kind of filteredOptions | async" [value]="kind">
-          {{kind}}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="form.get('name')!.hasError('required')">
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let type of kinds" [value]="type">{{type}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('type')!.hasError('required')">
         النوع <strong>مطلوب</strong>
       </mat-error>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>الحد الأدنى للعدد</mat-label>
-      <input type="number" matInput formControlName="limit" min="1" [(ngModel)]="data.limit">
-      <mat-error *ngIf="form.get('limit')!.hasError('min')">
+      <input type="number" matInput formControlName="alarm" min="1" [(ngModel)]="data.alarm">
+      <mat-error *ngIf="form.get('alarm')!.hasError('min')">
         يحب ان يكون الحد الأدنى <strong>1</strong> على الأقل
       </mat-error>
-      <mat-error *ngIf="form.get('limit')!.hasError('required')">
+      <mat-error *ngIf="form.get('alarm')!.hasError('required')">
         الحد الأدنى <strong>مطلوب</strong>
       </mat-error>
     </mat-form-field>
@@ -52,11 +49,11 @@
 
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>سعر الكيلو</mat-label>
-      <input type="number" matInput formControlName="price" min="1" [(ngModel)]="data.price">
-      <mat-error *ngIf="form.get('price')!.hasError('min')">
+      <input type="number" matInput formControlName="kiloPrice" min="1" [(ngModel)]="data.kiloPrice">
+      <mat-error *ngIf="form.get('kiloPrice')!.hasError('min')">
         يحب ان يكون سعر الكيلو <strong>1</strong> على الأقل
       </mat-error>
-      <mat-error *ngIf="form.get('price')!.hasError('required')">
+      <mat-error *ngIf="form.get('kiloPrice')!.hasError('required')">
         سعر الكيلو <strong>مطلوب</strong>
       </mat-error>
     </mat-form-field>
@@ -109,6 +106,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="0" class="btn btn-danger">إلغاء</button>
-  <button mat-raised-button class="btn btn-success" [mat-dialog-close]="data"
+  <button mat-raised-button class="btn btn-success" (click)="submit(form)"
     [disabled]="!form.valid || karateen.length < 1">إضافة</button>
 </div>

@@ -15,6 +15,7 @@ import {
 import { StoreService } from 'src/app/shared/services/store.service';
 import { SelectItem } from 'primeng/api';
 import Swal from 'sweetalert2';
+import { response } from 'express';
 
 interface City {
   name: string;
@@ -81,18 +82,39 @@ export class OrdersManagementComponent implements OnInit {
       width: '800px',
     });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
       this._orderService.getAllOrders().subscribe((orders) => {
         this.orders = Object.values(orders.result);
         this.dataSource.data = this.orders[0];
 
         this.dataSource.data.forEach((order) => {
-          console.log(order['orderItems']);
           order['orderItems'].sort((a, b) => {
             return Number(a.completed) - Number(b.completed);
           });
         });
       });
+    });
+  }
+  setCompleted(id: number, clientId: number) {
+    this._orderService.setCompleted(id, clientId).subscribe((response) => {
+      if (Object.values(response)[1] == true) {
+        Swal.fire('تم تعديل الطلبية أنها تم تسليمها!', '', 'success');
+        this._orderService.getAllOrders().subscribe((orders) => {
+          this.orders = Object.values(orders.result);
+          this.dataSource.data = this.orders[0];
+
+          this.dataSource.data.forEach((order) => {
+            order['orderItems'].sort((a, b) => {
+              return Number(a.completed) - Number(b.completed);
+            });
+          });
+        });
+      } else {
+        Swal.fire(
+          'لم يتم تعديل الطلبية!',
+          Object.values(response)[2].message,
+          'error'
+        );
+      }
     });
   }
 

@@ -35,4 +35,10 @@ export class OrdersService {
     const deleteURL = `http://localhost:3000/order/delete/${id}`;
     return this.http.delete<number>(deleteURL);
   }
+
+  setCompleted(id: number, clientId: number): Observable<number> {
+    const UpdateURL = `http://localhost:3000/order/setCompleted/${id}?clientId=${clientId}`;
+
+    return this.http.put<number>(UpdateURL, null);
+  }
 }

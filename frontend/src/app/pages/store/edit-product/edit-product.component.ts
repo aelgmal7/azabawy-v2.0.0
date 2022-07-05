@@ -37,6 +37,17 @@ export class EditProductComponent implements OnInit {
     console.log(prod, id);
     this._storeService.updateProduct(id, prod).subscribe((response) => {
       console.log(response);
+      console.log(Object.values(response)[1].message);
+      if (Object.values(response)[0] == true) {
+        Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+        this._dialogRef.close();
+      } else {
+        Swal.fire(
+          'لم يتم تعديل المنتج!',
+          Object.values(response)[1].message,
+          'error'
+        );
+      }
       // if (Object.keys(response)[0] === '0') {
       //   Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
       //   this._dialogRef.close();

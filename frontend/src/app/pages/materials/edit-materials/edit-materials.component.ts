@@ -16,9 +16,9 @@ export class EditMaterialsComponent implements OnInit {
 
   ngOnInit() {
     this.form = this._fb.group({
-      name: [this.data.name || '', Validators.required],
-      price: [this.data.price || '', Validators.required],
-      limit: [this.data.limit || '', Validators.required],
+      name: [this.data.materialName || '', Validators.required],
+      price: [this.data.kiloPrice || '', Validators.required],
+      limit: [this.data.alarm || '', Validators.required],
     });
   }
 }

@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { StoreService } from 'src/app/shared/services/store.service';
 import { Product, BillType } from './types/types.t';
 import { PeriodicElement } from '../store/store.component';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-new-bill',
@@ -29,7 +30,8 @@ export class NewBillComponent implements OnInit {
   selectedClient: IClients;
   orders: IOrders[];
   selectedOrder: IOrders;
-  products: IOrderItems;
+  myProducts: IOrderItems[];
+  products: PeriodicElement[];
   selectedProduct: PeriodicElement;
   weights;
   selectedWeights;
@@ -50,6 +52,9 @@ export class NewBillComponent implements OnInit {
 
   get operation(): AbstractControl {
     return this.form?.get('operation') as AbstractControl;
+  }
+  get billType(): AbstractControl {
+    return this.form?.get('billType') as AbstractControl;
   }
   get clientName(): AbstractControl {
     return this.form?.get('clientName') as AbstractControl;
@@ -93,6 +98,20 @@ export class NewBillComponent implements OnInit {
       productAmount: [''],
       paid: [0],
     });
+    this.operation.valueChanges.subscribe((change) => {
+      this.clientName.reset();
+      this.productName.reset();
+      this.productWeights.reset();
+      this.totalPrice2.reset();
+      this.orderedProducts = [];
+    });
+    this.billType.valueChanges.subscribe((change) => {
+      this.orderName.reset();
+      this.productName.reset();
+      this.productWeights.reset();
+      this.totalPrice2.reset();
+      this.orderedProducts = [];
+    });
     this.clientName.valueChanges.subscribe((change) => {
       this._ordersService.getAllOrders().subscribe((orders) => {
         const x: any[] = Object.values(orders.result);
@@ -103,23 +122,26 @@ export class NewBillComponent implements OnInit {
     this.orderName.valueChanges.subscribe((change) => {
       this._storeService.getAllProducts().subscribe((prod) => {
         const x: any[] = Object.values(prod.result);
-        let y: PeriodicElement[] = x[0];
+        this.products = x[0];
+        this.myProducts = this.orderName.value?.orderItems;
 
-        const arr: any[] = this.orderName.value?.orderItems;
-        arr?.forEach((e) => {
-          y = y.filter((obj) => {
-            return obj.id !== e.productId;
+        let ar: number[] = [];
+        for (let k in this.myProducts) {
+          ar.push(this.myProducts[k].productId);
+        }
+        for (let k of ar) {
+          this.products.sort((a, b) => {
+            return a.id == k ? -1 : b.id == k ? 1 : 0;
           });
-          // console.log(y);
-        });
-        console.log(y, this.orderName.value?.orderItems);
+        }
+        console.log(this.products);
       });
     });
     this.productName.valueChanges.subscribe((change) => {
       this._storeService.getAllProducts().subscribe((prod) => {
         const x: any[] = Object.values(prod.result);
         const y = x[0];
-        const z = y?.filter((e) => e.id == this.productName.value?.productId);
+        const z = y?.filter((e) => e.id == this.productName.value?.id);
         this.weights = z[0]?.weightAndAmounts;
         this.price = z[0]?.kiloPrice;
         console.log(z);

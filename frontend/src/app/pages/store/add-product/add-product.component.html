@@ -12,12 +12,9 @@
 
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>النوع</mat-label>
-      <input type="text" matInput formControlName="kind" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let kind of filteredOptions | async" [value]="kind">
-          {{kind}}
-        </mat-option>
-      </mat-autocomplete>
+      <mat-select formControlName="kind">
+        <mat-option *ngFor="let kind of kinds" [value]="kinds">{{kind}}</mat-option>
+      </mat-select>
       <mat-error *ngIf="form.get('kind')!.hasError('required')">
         النوع <strong>مطلوب</strong>
       </mat-error>

@@ -11,6 +11,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { kartona } from '../../store/add-product/add-product.component';
+import { MaterialsService } from 'src/app/shared/services/materials.service';
+import { response } from 'express';
 @Component({
   selector: 'app-add-materials',
   templateUrl: './add-materials.component.html',
@@ -27,11 +29,12 @@ export class AddMaterialsComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IMaterials,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _materialsService: MaterialsService
   ) {}
 
-  get kind(): AbstractControl {
-    return this.form?.get('kind') as AbstractControl;
+  get type(): AbstractControl {
+    return this.form?.get('type') as AbstractControl;
   }
   get weight(): AbstractControl {
     return this.form?.get('weight1') as AbstractControl;
@@ -42,17 +45,16 @@ export class AddMaterialsComponent implements OnInit {
 
   ngOnInit() {
     this.form = this._fb.group({
-      name: ['', Validators.required],
-      supplier: ['', Validators.required],
-      kind: ['', Validators.required],
-      limit: ['', Validators.required],
+      materialName: ['', Validators.required],
+      supplierId: ['', Validators.required],
+      alarm: ['', Validators.required],
       unit: ['', Validators.required],
-      price: ['', Validators.required],
+      kiloPrice: ['', Validators.required],
       weight1: [''],
       amount1: [''],
     });
 
-    this.filteredOptions = this.kind.valueChanges.pipe(
+    this.filteredOptions = this.type.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );
@@ -70,12 +72,12 @@ export class AddMaterialsComponent implements OnInit {
       this.visible = true;
     } else {
       const order = {} as kartona;
-      order.amount = Number(a);
-      order.weight = Number(w);
+      order.a = Number(a);
+      order.w = Number(w);
       this.karateen.push(order);
       this.amount.reset();
       this.weight.reset();
-      this.data.karateen = this.karateen;
+      this.data.weightsAndAmountsMat = this.karateen;
       this.visible = false;
       document.getElementById('kartona')?.scrollIntoView();
     }
@@ -83,5 +85,29 @@ export class AddMaterialsComponent implements OnInit {
   }
   deleteWeight(i) {
     this.karateen.splice(i, 1);
+  }
+
+  submit(form) {
+    const mat = {} as IMaterials;
+    mat.materialName = form.controls.name.value;
+    mat.supplierId = form.controls.supplier.value;
+    mat.alarm = form.controls.limit.value;
+    mat.unit = form.controls.unit.value;
+    mat.kiloPrice = form.controls.price.value;
+    mat.weightsAndAmountsMat = this.karateen;
+
+    console.log(mat);
+    this._materialsService.addNewMaterial(mat).subscribe((response) => {
+      console.log(response);
+    });
+    // this._storeService.addNewProduct(prod).subscribe((response) => {
+    //   console.log(response);
+    //   if (Object.keys(response)[0] === '0') {
+    //     Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
+    //     this._dialogRef.close();
+    //   } else {
+    //     Swal.fire('لم يتم حفظ المنتج!', Object.values(response)[0], 'error');
+    //   }
+    // });
   }
 }

@@ -28,6 +28,7 @@ import { IconBtnComponent } from './shared/components/icon-btn/icon-btn.componen
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
+import { ClientsComponent } from './pages/accounting/clients/clients.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { DropdownModule } from 'primeng/dropdown';
     AddMaterialsComponent,
     EditMaterialsComponent,
     AddOrderComponent,
+    ClientsComponent,
   ],
   imports: [
     BrowserModule,

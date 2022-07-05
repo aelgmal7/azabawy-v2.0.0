@@ -14,6 +14,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { kartona } from '../store/add-product/add-product.component';
+import { MaterialsService } from 'src/app/shared/services/materials.service';
 @Component({
   selector: 'app-materials',
   templateUrl: './materials.component.html',
@@ -38,40 +39,45 @@ export class MaterialsComponent implements OnInit {
   swalWithBootstrapButtons;
   visible: boolean = false;
 
-  ELEMENT_DATA: any[] = [
+  ELEMENT_DATA: IMaterials[] = [
     {
-      name: 'Agwa',
-      kind: 'Halawa',
-      supplier: 'Moataz',
+      materialName: 'Agwa',
+      supplierId: 'Moataz Handy',
       unit: 'Kg',
-      limit: 20,
-      price: 10,
-      karateen: [
-        { amount: 10, weight: 30 },
-        { amount: 20, weight: 40 },
-        { amount: 30, weight: 50 },
-      ],
+      alarm: 202,
+      kiloPrice: 10,
+      weightsAndAmountsMat: [{ w: 320, a: 10 }],
+    },
+    {
+      materialName: 'Agwa2',
+      supplierId: 'Moataz',
+      unit: 'Kg',
+      alarm: 20,
+      kiloPrice: 104,
+      weightsAndAmountsMat: [{ w: 30, a: 140 }],
     },
   ];
 
   columnsToDisplay = [
-    'م',
-    'إسم المادة الخام',
-    'إسم المورد',
-    'النوع',
-    'عدد الكراتين',
-    'الوزن الكلي',
-    'الوحدة',
-    'سعر الكيلو',
-    'الحد الأدنى',
-    'التعديل',
+    'id',
+    'materialName',
+    'supplierName',
+    'amount',
+    'totalWeight',
+    'unit',
+    'kiloPrice',
+    'alarm',
+    'actions',
   ];
 
   expandedElement: IMaterials | null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog) {
+  constructor(
+    public dialog: MatDialog,
+    private _materialsService: MaterialsService
+  ) {
     this.dataSource = new MatTableDataSource();
   }
 
@@ -81,6 +87,9 @@ export class MaterialsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._materialsService.getAllMaterials().subscribe((response) => {
+      console.log(response);
+    });
     this.dataSource.data = this.ELEMENT_DATA;
   }
   applyFilter(event: Event) {
@@ -158,7 +167,7 @@ export class MaterialsComponent implements OnInit {
             'تم المسح بنجاح!',
             'success'
           );
-          this.ELEMENT_DATA[index1].karateen.splice(index2, 1);
+          this.ELEMENT_DATA[index1].weightsAndAmountsMat.splice(index2, 1);
           this.dataSource.data = this.ELEMENT_DATA;
         } else if (
           /* Read more about handling dismissals below */
@@ -175,25 +184,25 @@ export class MaterialsComponent implements OnInit {
 
   totalWeight(array) {
     let x = 0;
-    array.forEach((element) => {
-      x += element.weight * element.amount;
+    array?.forEach((element) => {
+      x += element.w * element.a;
     });
     return x;
   }
   totalAmount(array) {
     let x = 0;
-    array.forEach((element) => {
-      x += element.amount;
+    array?.forEach((element) => {
+      x += element.a;
     });
     return x;
   }
 
   addAmount(val1, index1, index2) {
-    this.dataSource.data[index1].karateen[index2].amount += Number(val1);
+    this.dataSource.data[index1].weightsAndAmountsMat[index2].a += Number(val1);
     Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
   }
   minAmount(val1, index1, index2) {
-    this.dataSource.data[index1].karateen[index2].amount -= Number(val1);
+    this.dataSource.data[index1].weightsAndAmountsMat[index2].a -= Number(val1);
     Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
   }
   addDialog() {
@@ -216,7 +225,14 @@ export class MaterialsComponent implements OnInit {
         this.dataSource.data = this.ELEMENT_DATA;
         Swal.fire('تم إضافة المادة الخام بنجاح!', '', 'success');
       } else {
-        Swal.fire('تم الإلغاء!', '', 'error');
+        // Swal.fire('تم الإلغاء!', '', 'error');
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'تم الإلغاء!',
+          showConfirmButton: false,
+          timer: 800,
+        });
       }
     });
   }
@@ -232,21 +248,28 @@ export class MaterialsComponent implements OnInit {
         this.dataSource.data = this.ELEMENT_DATA;
         Swal.fire('تم تعديل المادة الخام بنجاح!', '', 'success');
       } else {
-        Swal.fire('تم الإلغاء!', '', 'error');
+        // Swal.fire('تم الإلغاء!', '', 'error');
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'تم الإلغاء!',
+          showConfirmButton: false,
+          timer: 800,
+        });
       }
     });
   }
   addNewWeight(w, a, index1) {
     if (
-      this.dataSource.data[index1].karateen.filter((e) => e.weight == w)
+      this.dataSource.data[index1].weightsAndAmountsMat.filter((e) => e.w == w)
         .length > 0
     ) {
       this.visible = true;
     } else {
       const order = {} as kartona;
-      order.amount = Number(a);
-      order.weight = Number(w);
-      this.dataSource.data[index1].karateen.push(order);
+      order.a = Number(a);
+      order.w = Number(w);
+      this.dataSource.data[index1].weightsAndAmountsMat.push(order);
       Swal.fire('تم إضافة الوزن الجديد بنجاح!', '', 'success');
       this.visible = false;
       this.amount = null;
@@ -255,16 +278,15 @@ export class MaterialsComponent implements OnInit {
   }
 }
 export interface IMaterials {
-  name: string;
-  kind: string;
-  supplier: string;
-  unit: number;
-  limit: number;
-  price: number;
-  karateen: [
+  materialName: string;
+  supplierId: string;
+  unit: string;
+  alarm: number;
+  kiloPrice: number;
+  weightsAndAmountsMat: [
     {
-      amount: number;
-      weight: number;
+      w: number;
+      a: number;
     }
   ];
 }

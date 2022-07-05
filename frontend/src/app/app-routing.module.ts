@@ -7,6 +7,7 @@ import { NewBillComponent } from './pages/new-bill/new-bill.component';
 import { NewOperationComponent } from './pages/new-operation/new-operation.component';
 import { OrdersManagementComponent } from './pages/orders-management/orders-management.component';
 import { MaterialsComponent } from './pages/materials/materials.component';
+import { ClientsComponent } from './pages/accounting/clients/clients.component';
 
 // TODO some routes need children
 const routes: Routes = [
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'materials',
     component: MaterialsComponent,
+  },
+  {
+    path: 'clients',
+    component: ClientsComponent,
   },
   {
     path: '**',

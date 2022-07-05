@@ -122,10 +122,6 @@ export class AddOrderComponent implements OnInit {
       }
       console.log(response);
     });
-
-    // this._orderService.addNewOrder(order).subscribe((response) => {
-    //   console.log(response)
-    // })
   }
 }
 

@@ -114,14 +114,14 @@ export class AddProductComponent implements OnInit {
   }
 }
 export interface kartona {
-  amount: number;
+  a: number;
   createdAt: string;
   enabled: boolean;
   id: number;
   productId: number;
   productName: string;
   updatedAt: string;
-  weight: number;
+  w: number;
 }
 export interface kartona2 {
   w: number;

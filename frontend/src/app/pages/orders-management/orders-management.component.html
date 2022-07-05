@@ -39,9 +39,19 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let order let i = dataIndex">
 
-          <button mat-icon-button color="warn" matTooltip="حذف" (click)="deleteOrder(order.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
+
+          <div class="d-flex align-items-center">
+            <button mat-icon-button matTooltip="تحديث حالة الطلبية تم تسليمها"
+              (click)="setCompleted(order.id, order.ClientId)">
+              <mat-icon class="text-success">
+                check_circle
+              </mat-icon>
+            </button>
+            <span class="line"></span>
+            <button mat-icon-button matTooltip="حذف" (click)="deleteOrder(order.id)">
+              <mat-icon class="text-danger">delete</mat-icon>
+            </button>
+          </div>
 
         </td>
       </ng-container>
@@ -52,7 +62,7 @@
           <div class="example-element-detail" [@detailExpand]="order == expandedElement ? 'expanded' : 'collapsed'">
             <div class="row-detail" *ngFor="let product of order.orderItems; let i = index">
               <span class="example-element-description">المنتج</span>
-              <span class="example-element-description fw-bold">{{ product.productName
+              <span class="example-element-description fw-bold w-4">{{ product.productName
                 }}</span>
               <span class="example-element-description">الوزن المطلوب</span>
               <span class="example-element-description highlight">{{ product.productNeededWeight }}</span>

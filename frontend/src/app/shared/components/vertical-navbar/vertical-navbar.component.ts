@@ -38,7 +38,7 @@ export class VerticalNavbarComponent implements OnInit {
         },
         {
           text: '|-- العملاء',
-          link: '/2',
+          link: '/clients',
         },
         {
           text: '|-- الخزنة',

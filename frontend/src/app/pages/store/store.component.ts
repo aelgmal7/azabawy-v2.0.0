@@ -1,9 +1,6 @@
 import { StoreService } from './../../shared/services/store.service';
 import { EditProductComponent } from './edit-product/edit-product.component';
-import {
-  AddProductComponent,
-  kartona,
-} from './add-product/add-product.component';
+import { AddProductComponent } from './add-product/add-product.component';
 import {
   animate,
   state,
@@ -14,10 +11,9 @@ import {
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
-import { response } from 'express';
 
 @Component({
   selector: 'app-store',
@@ -42,18 +38,17 @@ export class StoreComponent implements OnInit {
 
   swalWithBootstrapButtons;
   visible: boolean = false;
-
-  products;
+  x;
 
   columnsToDisplay = [
-    'م',
-    'إسم المنتج',
-    'النوع',
-    'عدد الكراتين',
-    'الوزن الكلي',
-    'سعر الكيلو',
-    'الحد الأدنى',
-    'التعديل',
+    'id',
+    'productName',
+    'type',
+    'amount',
+    'totalWeight',
+    'kiloPrice',
+    'alarm',
+    'actions',
   ];
 
   expandedElement: PeriodicElement | null;
@@ -70,8 +65,8 @@ export class StoreComponent implements OnInit {
   }
   ngOnInit(): void {
     this._storeService.getAllProducts().subscribe((prod) => {
-      this.products = Object.values(prod.result);
-      this.dataSource.data = this.products[0];
+      this.x = Object.values(prod.result);
+      this.dataSource.data = this.x[0];
       console.log(this.dataSource.data);
     });
   }
@@ -115,8 +110,8 @@ export class StoreComponent implements OnInit {
                 'success'
               );
               this._storeService.getAllProducts().subscribe((prod) => {
-                this.products = Object.values(prod.result);
-                this.dataSource.data = this.products[0];
+                this.x = Object.values(prod.result);
+                this.dataSource.data = this.x[0];
               });
             } else {
               this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
@@ -150,28 +145,58 @@ export class StoreComponent implements OnInit {
     return x;
   }
 
-  addAmount(val1, index1, index2) {
-    this.dataSource.data[index1].weightAndAmounts[index2].amount +=
-      Number(val1);
-    Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-  }
-  minAmount(val1, index1, index2) {
-    this.dataSource.data[index1].weightAndAmounts[index2].amount -=
-      Number(val1);
-    Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-  }
+  // addAmount(val1, index1, index2) {
+  //   this.dataSource.data[index1].weightAndAmounts[index2].amount +=
+  //     Number(val1);
+  //   Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+  // }
+  // minAmount(val1, index1, index2) {
+  //   this.dataSource.data[index1].weightAndAmounts[index2].amount -=
+  //     Number(val1);
+  //   Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+  // }
 
   updateAmountMin(amount, weight, id) {
-    // const newAmount = {} as IUpdateAmount;
-    // newAmount.weight = Number(weight);
-    // newAmount.amount = Number(amount);
     amount = -amount;
-
     console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
     this._storeService
       .updateAmount(id, amount, weight)
       .subscribe((response) => {
         console.log(response);
+        if (Object.values(response)[0] == true) {
+          Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+          this._storeService.getAllProducts().subscribe((prod) => {
+            this.x = Object.values(prod.result);
+            this.dataSource.data = this.x[0];
+          });
+        } else {
+          Swal.fire(
+            'لم يتم تعديل المنتج!',
+            Object.values(response)[1].message,
+            'error'
+          );
+        }
+      });
+  }
+  updateAmountAdd(amount, weight, id) {
+    console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
+    this._storeService
+      .updateAmount(id, amount, weight)
+      .subscribe((response) => {
+        console.log(response);
+        if (Object.values(response)[0] == true) {
+          Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+          this._storeService.getAllProducts().subscribe((prod) => {
+            this.x = Object.values(prod.result);
+            this.dataSource.data = this.x[0];
+          });
+        } else {
+          Swal.fire(
+            'لم يتم تعديل المنتج!',
+            Object.values(response)[1].message,
+            'error'
+          );
+        }
       });
   }
 
@@ -182,8 +207,8 @@ export class StoreComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
       this._storeService.getAllProducts().subscribe((prod) => {
-        this.products = Object.values(prod.result);
-        this.dataSource.data = this.products[0];
+        this.x = Object.values(prod.result);
+        this.dataSource.data = this.x[0];
       });
     });
   }
@@ -193,13 +218,10 @@ export class StoreComponent implements OnInit {
       data: prod,
     });
     dialogRef.afterClosed().subscribe((result) => {
-      // if (typeof result === 'object') {
-      //   this.ELEMENT_DATA.splice(i, 1, result);
-      //   this.dataSource.data = this.ELEMENT_DATA;
-      //   Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
-      // } else {
-      //   Swal.fire('تم الإلغاء!', '', 'error');
-      // }
+      this._storeService.getAllProducts().subscribe((prod) => {
+        this.x = Object.values(prod.result);
+        this.dataSource.data = this.x[0];
+      });
     });
   }
 
@@ -210,19 +232,21 @@ export class StoreComponent implements OnInit {
     };
 
     this._storeService.addNewWeight(id, prod).subscribe((response) => {
-      console.log(response);
       if (
         this.dataSource.data[index].weightAndAmounts.filter(
           (e) => e.weight == w
         ).length > 0
       ) {
         this.visible = true;
+        setTimeout(() => {
+          this.visible = false;
+        }, 3000);
       } else {
         if (Object.values(response)[0] === true) {
           Swal.fire('تم إضافة الوزن الجديد بنجاح!', '', 'success');
           this._storeService.getAllProducts().subscribe((prod) => {
-            this.products = Object.values(prod.result);
-            this.dataSource.data = this.products[0];
+            this.x = Object.values(prod.result);
+            this.dataSource.data = this.x[0];
           });
           this.visible = false;
           this.amount = null;
@@ -237,6 +261,7 @@ export class StoreComponent implements OnInit {
       }
     });
   }
+
   deleteWeight(id, weight) {
     this.swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -266,8 +291,8 @@ export class StoreComponent implements OnInit {
                 'success'
               );
               this._storeService.getAllProducts().subscribe((prod) => {
-                this.products = Object.values(prod.result);
-                this.dataSource.data = this.products[0];
+                this.x = Object.values(prod.result);
+                this.dataSource.data = this.x[0];
               });
             } else {
               this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
