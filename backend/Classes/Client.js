@@ -1,20 +1,18 @@
 class ClientModel {
     clientName;
-    phoneNumber;
     type;
     typeString;
     totalBalance;
     paid;
     remain;
     enabled;
-    constructor(clientName, phoneNumber, type=true, typeString="عميل", totalBalance, paid, remain){
+    constructor(clientName,totalBalance, paid, type=true, typeString="عميل"){
         this.clientName = clientName;
-        this.phoneNumber = phoneNumber;
         this.type = type;
         this.typeString = typeString;
         this.totalBalance = totalBalance;
         this.paid = paid;
-        this.remain = remain;
+        this.remain =  Number(totalBalance) - Number(paid);;
       
     }
 

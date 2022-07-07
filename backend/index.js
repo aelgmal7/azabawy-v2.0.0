@@ -15,6 +15,7 @@ const  {sequelize} = require('./DataBase/index')
  const  {productRouter} = require('./Controllers/ProductController')
  const  {orderRouter} = require('./Controllers/OrderController')
  const  {materialRouter} = require('./Controllers/MaterialController')
+ const {supplierRouter} = require('./Controllers/SupplierController')
  
  temp.sayHi()
  const server = () => {
@@ -28,6 +29,7 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/product',productRouter);
     app.use('/order',orderRouter);
     app.use('/material',materialRouter);
+    app.use('/supplier',supplierRouter);
    // console.log(Client === sequelize.models.Client); // true
   const tasks =['ahm3d','aaa']
 

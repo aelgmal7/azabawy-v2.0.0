@@ -12,10 +12,6 @@ Supplier.init({
         type:DataTypes.STRING,
         allowNull:false,
     },
-    phoneNumber:{
-        type:DataTypes.NUMBER,
-        allowNull:true
-    },
     type:{
         type:DataTypes.BOOLEAN, // true for عميل 
         allowNull:true,

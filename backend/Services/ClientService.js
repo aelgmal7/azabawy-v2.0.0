@@ -1,26 +1,25 @@
 const { Client } = require("../Models/Client");
 const { ClientModel } = require("../Classes/Client");
 
-const createClient = ({
+const createClient = async({
   clientName,
-  phoneNumber,
   totalBalance,
-  paid,
-  remain,
-  // orders,
-  bills,
-  paying,
+  paid
 }) => {
   const client = new ClientModel(
     clientName,
-    phoneNumber,
     totalBalance,
-    paid,
-    remain,
-    bills,
-    paying
-  );
-  return Client.create(client);
+    paid
+  ); 
+  const temp = await Client.findOne({where: {clientName: client.clientName}})
+  if (temp === null) {
+    
+    return Client.create(client);
+  } 
+    if (temp.enabled) return {
+      message: "client already exists",
+      code:404
+    }
 };
 const getClients = () => {
   return Client.findAll();

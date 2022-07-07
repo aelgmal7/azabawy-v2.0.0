@@ -1,20 +1,19 @@
 class SupplierModel {
-    clientName;
-    phoneNumber;
+    supplierName;
     type;
     typeString;
     totalBalance;
     paid;
     remain;
     enabled;
-    constructor(supplierName, phoneNumber, type, typeString, totalBalance, paid, remain){
+    constructor(supplierName,totalBalance, paid, type=false, typeString="مورد"){
         this.supplierName = supplierName;
-        this.phoneNumber = phoneNumber;
         this.type = type;
         this.typeString = typeString;
         this.totalBalance = totalBalance;
         this.paid = paid;
-        this.remain = remain;
+        this.remain = Number(totalBalance) - Number(paid);
+    
       
     }
 
