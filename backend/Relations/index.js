@@ -6,6 +6,10 @@ const {WeightAndAmount} = require('../Models/WeightAndAmount')
 const {WeightAndAmountMat} = require('../Models/WeightAndAmountMat')
 const { Client } = require("../Models/Client");
 const { Supplier } = require("../Models/Supplier");
+const {Bill} = require("../Models/Bill");
+const {BillItem} = require("../Models/BillItem");
+const {BillPay} = require("../Models/BillPay");
+const {DirectPay} = require("../Models/DirectPay");
 
 
 exports.relations =() => {
@@ -31,4 +35,25 @@ exports.relations =() => {
     //order - client
     Client.hasMany(Order)
     Order.belongsTo(Client)
+
+    //bill - client
+    Client.hasMany(Bill)
+    Bill.belongsTo(Client)
+
+    // bill - product
+    Bill.belongsToMany(Product,{through:BillItem})
+    Product.belongsToMany(Bill,{through:BillItem})
+
+    // bill - billPay
+    Bill.hasMany(BillPay)
+    BillPay.belongsTo(Bill)
+
+    // billPay - client
+    Client.hasMany(BillPay)
+    BillPay.belongsTo(Client)
+
+    // DirectPay - client
+    Client.hasMany(DirectPay)
+    DirectPay.belongsTo(Client)
+    
 }
