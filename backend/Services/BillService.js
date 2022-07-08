@@ -8,7 +8,9 @@ const  {BillItem} = require('../Models/BillItem')
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
 
 const getAllBills = async() => {
-    return Bill.findAll({where: {enabled: true}})
+    return Bill.findAll({where: {enabled: true},
+        include: [{model:Product,where: {enabled: true}}]
+        })
 }
 const getClientBills =async(clientId) => {
     return Bill.findAll({where: {enabled: true,clientId:clientId},

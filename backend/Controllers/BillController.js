@@ -21,7 +21,7 @@ router.get('/',async (req, res)=> {
 
     }catch (err) {}
 })
-router.get('/',async (req, res)=> {
+router.get('/client',async (req, res)=> {
     const clientId = req.query.clientId
     const result = await getClientBills(clientId)
     try {
