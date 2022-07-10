@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router()
-const {addBill,getAllBills,getClientBills,getBillById} = require('../Services/BillService')
+const {
+    addBill,
+    getAllBills,
+    getClientBills,
+    getBillById,
+    payForBill,
+    } = require('../Services/BillService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
 
@@ -36,6 +42,24 @@ router.get('/:billId',async (req, res)=> {
         res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{bill:result}))
 
     }catch (err) {}  
+})
+
+router.post('/pay/:billId',async (req, res)=> {
+    const billId = req.params.billId
+    const clientId = req.query.clientId
+    const {cash, date,note} = req.body
+    const result = await payForBill(billId, clientId,date,cash,note)
+    try {
+       if(result.message){
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],false,{message:result.message}))
+
+       }else {
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{pay:result}))
+
+       }
+
+
+    }catch (err) {}
 })
 
 module.exports = {billRouter:router}

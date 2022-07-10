@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const  {Client} = require('../Models/Client')
 const  {Product} = require('../Models/Product')
 const  {BillItem} = require('../Models/BillItem')
+const  {BillPay} = require('../Models/BillPay')
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
 const { changeOrderItemsDeliveredWeight } = require('./OrderService')
 
@@ -75,9 +76,33 @@ const getBillById = async(billId) =>{
     return Bill.findOne({where: {enabled: true,id: billId}})
 }
 
+const payForBill = async(billId,clientId,date, money,note=null) =>{
+    return Client.findOne({where: {enabled: true,id: clientId}}).then(client =>{
+        if (!client) {
+            return {
+                message: `no client with id ${clientId}`,
+                code: 404,
+            }
+        }
+      
+        return client.getBills({where: {enabled: true,id:billId}}).then((bills) => {
+            const bill = bills[0]
+            if(!bill) {
+                return { 
+                    message: `no bill with id ${billId}`,
+                    code: 404,
+                }
+            }
+            bill.paid += money
+            bill.save()
+            return bill.createBillPay({money:money,note:note,ClientId:Number(clientId)})
+        })
+    })
+} 
 module.exports = {
     addBill: addBill,
     getAllBills:getAllBills,
     getClientBills:getClientBills,
-    getBillById:getBillById
+    getBillById:getBillById,
+    payForBill:payForBill
 }
