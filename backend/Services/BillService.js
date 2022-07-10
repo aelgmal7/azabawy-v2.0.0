@@ -6,6 +6,7 @@ const  {Client} = require('../Models/Client')
 const  {Product} = require('../Models/Product')
 const  {BillItem} = require('../Models/BillItem')
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
+const { changeOrderItemsDeliveredWeight } = require('./OrderService')
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -36,14 +37,18 @@ const addBill = async (clientId,billData,productsDetails) => {
         })
         .then(async (bill)=> {
             // creating bill details 
+            const orderArr = []
             return await Product.findAll({where :{ id:{[Op.or] :productsIds}}}).then(async(products)=> {
                 return await bill.addProducts(products.map(product =>{
 
                     productsDetails.map(async(element) => {
                         if(element.id === product.id){
-                            const {weight,amount,kiloPrice} = element
+                            const {weight,amount,kiloPrice,orderFlag} = element
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                            
+                            if (orderFlag){
+
+                                orderArr.push({id:element.id,delivered:Number(amount * weight)})
+                            }
                             //change selected products amount of weights and change product total amount and weight
                             await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
                                 item.amount -= Number(amount);
@@ -55,7 +60,8 @@ const addBill = async (clientId,billData,productsDetails) => {
                         }
                     })
                     return product
-                })).then(products => {
+                })).then(async(products) => {
+                    await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
                     return {bill,products}
                 })
             })
