@@ -10,9 +10,13 @@ const {Bill} = require("../Models/Bill");
 const {BillItem} = require("../Models/BillItem");
 const {BillPay} = require("../Models/BillPay");
 const {DirectPay} = require("../Models/DirectPay");
+const {ClientLogger} = require("../Models/ClientLogger");
 
 
 exports.relations =() => {
+
+    
+
     //order - orderItem
     Order.hasMany(OrderItem)
     OrderItem.belongsTo(Order)

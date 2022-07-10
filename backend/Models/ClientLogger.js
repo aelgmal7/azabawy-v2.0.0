@@ -2,7 +2,8 @@ const  { Sequelize, Model, DataTypes } = require('sequelize');
 const {sequelize} = require('../DataBase')
 
 class ClientLogger extends Model {}
-ClientLogger.init({
+ClientLogger.init(
+    {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -25,13 +26,12 @@ ClientLogger.init({
         allowNull:false
     },
     enabled: {
-        type: Sequelize.BOOL,
+        type: DataTypes.BOOLEAN,
         defaultValue: true,
     }
 },{
     sequelize,
     modelName: 'clientLogger',
 })
-ClientLogger.build();
-
+ClientLogger.build()
 module.exports = {ClientLogger}
