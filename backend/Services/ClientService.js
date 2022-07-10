@@ -41,9 +41,34 @@ const deleteClient =async (clientId) => {
   })
 }
 
+const updateClient = async(clientId,clientName,totalBalance,paid) => {
+  return Client.findOne({where: {id:clientId, enabled: true}})
+  .then((client) => {
+    if (!client) {
+      return {
+        message: `no client with id ${clientId}`,
+        code: 404,
+      }
+    }
+    if (typeof totalBalance !== 'number'|| typeof paid !== 'number') {
+      return {
+        message: `invalid total balance or paid`,
+        code:500
+      }
+    }
+    client.clientName = clientName;
+    client.totalBalance = totalBalance;
+    client.paid = paid;
+    client.remain = Number(totalBalance) - Number(paid)
+    client.save()
+    return client;
+  })
+}
+
 module.exports = {
   createClient: createClient,
   getClients : getClients,
-  deleteClient:deleteClient
+  deleteClient:deleteClient,
+  updateClient:updateClient
 
 };
