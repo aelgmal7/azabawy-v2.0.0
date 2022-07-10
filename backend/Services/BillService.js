@@ -95,7 +95,7 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
             }
             bill.paid += money
             bill.save()
-            return bill.createBillPay({money:money,note:note,ClientId:Number(clientId)})
+            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)})
         })
     })
 } 

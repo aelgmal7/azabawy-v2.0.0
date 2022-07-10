@@ -17,6 +17,7 @@ const  {sequelize} = require('./DataBase/index')
  const  {materialRouter} = require('./Controllers/MaterialController')
  const {supplierRouter} = require('./Controllers/SupplierController')
  const {billRouter} = require('./Controllers/BillController')
+ const {directPayRouter} = require('./Controllers/DirectPayController')
  
  temp.sayHi()
  const server = () => {
@@ -32,8 +33,8 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/material',materialRouter);
     app.use('/supplier',supplierRouter);
     app.use('/bill',billRouter);
+    app.use('/directPay',directPayRouter)
    // console.log(Client === sequelize.models.Client); // true
-  const tasks =['ahm3d','aaa']
 
  
   sequelize.sync(

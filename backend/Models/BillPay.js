@@ -15,6 +15,11 @@ BillPay.init({
         type:Sequelize.STRING,
         allowNull: true
     },
+    date: { 
+        type:DataTypes.DATE,
+        allowNull: false,
+        defaultValue: new Date()
+    },
     enabled:{
         type:DataTypes.BOOLEAN,
         defaultValue:true   
