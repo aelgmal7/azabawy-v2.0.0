@@ -26,6 +26,9 @@ router.get('/print-bill',async(req,res) => {
       console.log("PDF Buffer:-", pdfBuffer);
       fs.writeFile(`${path.join("backend","views","bill.pdf")}`,pdfBuffer,err => {
         res.download(`${path.join("backend","views","bill.pdf")}`)
+        require('child_process').exec(`explorer.exe "${path.join("backend","views","bill.pdf")}"`);
+
+
       });
     })
 
