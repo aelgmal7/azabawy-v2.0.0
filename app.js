@@ -12,8 +12,8 @@ server()
 let appWindow
 function initWindow() {
   let appWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
+    width: 1600,
+    height: 1000,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
