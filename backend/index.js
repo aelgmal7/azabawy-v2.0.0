@@ -2,6 +2,13 @@
 // const path = require("path");
 const express = require("express");
 const cors = require('cors')
+const html_to_pdf = require('html-pdf-node');
+const ejs = require('ejs')
+const path = require('path')
+const fs = require('fs')
+
+
+
 const bodyParser =require('body-parser')
 const temp = require('./temp.ts')
 const {relations} = require('./Relations')
@@ -22,7 +29,9 @@ const  {sequelize} = require('./DataBase/index')
  temp.sayHi()
  const server = () => {
    const app = express();
-   
+
+   app.set('view engine', 'ejs')
+   app.set("views","views")
    app.use(express.json());
    app.use(bodyParser.urlencoded({extended:false}))
    app.use(cors());
@@ -35,6 +44,8 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/bill',billRouter);
     app.use('/directPay',directPayRouter)
    // console.log(Client === sequelize.models.Client); // true
+   
+
 
  
   sequelize.sync(

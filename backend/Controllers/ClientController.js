@@ -10,6 +10,7 @@ const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
 
 
+
  router.get('/',async (req, res, next) =>{
      
     let result =await getClients()
