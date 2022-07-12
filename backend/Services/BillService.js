@@ -1,7 +1,7 @@
 const  {Bill} = require('../Models/Bill')
 const Sequelize = require('Sequelize')
 const Op = Sequelize.Op;
-
+const {app} = require('electron')
 
 const  {Client} = require('../Models/Client')
 const  {Product} = require('../Models/Product')
@@ -13,6 +13,7 @@ const html_to_pdf = require('html-pdf-node');
 const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
+
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -69,8 +70,11 @@ const addBill = async (clientId,billData,productsDetails) => {
                     return product
                 })).then(async(products) => {
                     await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
-                    printBill(bill,client,oldClientTotalBalance)
-                    return {bill,products}
+                     printBill(bill,client,oldClientTotalBalance)
+                    
+                     return {
+                         bill,products,
+                    }
                 })
             })
             //    return await  bill.addProduct(product,{through:{productName:product.productName,weight:50,amount:40,kiloPrice:12}})
@@ -118,7 +122,6 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
             // console.log('bill :>> ',product.billItem.dataValues );
         })
     }).then(async()=> {
-        
     
 
         let totalAmount =0 
@@ -134,29 +137,66 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
         const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
         
         
-        
         let options = { format: 'A4' };
         // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
         let file = { content: temp };
         html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
             const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
             console.log("PDF Buffer:-", pdfBuffer);
-            const dir = `${path.join("backend","views","فواتير",client.clientName)}`
-            try {
-                // first check if directory already exists
-                if (!fs.existsSync(dir)) {
-                    fs.mkdirSync(dir);
-                    console.log("Directory is created.");
-                } else {
-                    console.log("Directory already exists.");
-                }
-            } catch (err) {
-                console.log(err);
-            }
+            if(false){
+                const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
+                const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
 
-            fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
-                require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
-            });
+                try {
+                    // first check if directory already exists
+                    if (!fs.existsSync(fwaterDirProd)) {
+                        fs.mkdirSync(fwaterDirProd);
+                        console.log("Directory is created.");
+                    } else {
+                        console.log("Directory already exists.");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+
+                try {
+                    // first check if directory already exists
+                    if (!fs.existsSync(clientDirProd)) {
+                        fs.mkdirSync(clientDirProd);
+                        console.log("Directory is created.");
+                    } else {
+                        console.log("Directory already exists.");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+                    fs.writeFile(`${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}`,pdfBuffer,err => {
+                        if(err) {
+                            console.log(err)
+                            // er = err
+                            return err
+                        }
+                        require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                    });
+            }else {
+                const dir = `${path.join("backend","views","فواتير",client.clientName)}`
+
+                try {
+                    // first check if directory already exists
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir);
+                        console.log("Directory is created.");
+                    } else {
+                        console.log("Directory already exists.");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+                fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
+                    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                });
+
+            }
 
         })
     })
