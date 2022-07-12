@@ -42,8 +42,41 @@ const addSupplier = async(payload) => {
     }
 }
 
+const deleteSupplier = async(supplierId)=> {
+    return Supplier.findOne({where: {id:supplierId,enabled: true}}).then((supplier)=> {
+        if(!supplier) {
+            return {
+                message: `no supplier with id ${supplierId}`,
+                code:404
+            }
+        }
+        supplier.enabled = false
+        supplier.save()
+        return supplier
+    })
+}
+const updateSupplier = async (supplierId,supplierName,totalBalance,paid) => {
+    return Supplier.findOne({where: {id:supplierId,enabled: true}})
+    
+    .then((supplier)=> {
+        if(!supplier) {
+            return {
+                message: `no supplier with id ${supplierId}`,
+                code:404
+            }
+        }
+        supplier.supplierName = supplierName || supplier.supplierName
+        supplier.totalBalance = totalBalance;
+        supplier.paid = paid
+        supplier.remain = Number(totalBalance) - Number(paid)
+        supplier.save()
+        return supplier
+    })
+}
 module.exports = {
     getAllSuppliers:getAllSuppliers,
     getSupplierMaterials:getSupplierMaterials,
-    addSupplier:addSupplier
+    addSupplier:addSupplier,
+    deleteSupplier:deleteSupplier,
+    updateSupplier:updateSupplier
 }

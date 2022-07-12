@@ -1,8 +1,14 @@
 const express = require("express");
 const router = express.Router()
-const {getClients, createClient} = require('../Services/ClientService')
+const {
+    getClients,
+     createClient,
+     deleteClient,
+     updateClient
+    } = require('../Services/ClientService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
+
 
 
  router.get('/',async (req, res, next) =>{
@@ -17,18 +23,49 @@ const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
  
  })
  router.post('/add-client', async (req, res) => {
+     const {clientName,totalBalance, paid} = req.body
      try {
-         const {clientName,totalBalance, paid} = req.body
 
-         const result = await createClient({clientName, totalBalance, paid})
-         res.send(result)
-         console.log(req.body)
+        const result = await createClient({clientName, totalBalance, paid})
+        if (result.message) {
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_500'],true,{message:result.message}))
+        return null        
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{client:result}))
+        
         }catch (error){
             console.log(error)
             res.send(error.message)
      }
 
  })
-const show =() => console.log("sdfghjghj",getClient)
 
+ router.delete('/:clientId',async(req,res)=> {
+    const clientId = req.params.clientId
+    const result = await deleteClient(clientId)
+    try {
+        if(result.message){
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{message:result.message}))
+            return null
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{client:result}))
+        return null
+    }catch (error){}
+
+})
+
+
+router.put('/:clientId',async (req, res)=> {
+    const clientId = req.params.clientId
+    const {clientName,totalBalance, paid} =req.body
+    const result = await updateClient(clientId,clientName,totalBalance, paid)
+    try {
+        if(result.message){
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{message:result.message}))
+            return null
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{client:result}))
+        return null
+    }catch (error){}
+})
  module.exports = {clientRouter:router}

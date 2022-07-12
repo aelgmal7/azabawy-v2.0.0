@@ -2,6 +2,13 @@
 // const path = require("path");
 const express = require("express");
 const cors = require('cors')
+const html_to_pdf = require('html-pdf-node');
+const ejs = require('ejs')
+const path = require('path')
+const fs = require('fs')
+
+
+
 const bodyParser =require('body-parser')
 const temp = require('./temp.ts')
 const {relations} = require('./Relations')
@@ -16,11 +23,15 @@ const  {sequelize} = require('./DataBase/index')
  const  {orderRouter} = require('./Controllers/OrderController')
  const  {materialRouter} = require('./Controllers/MaterialController')
  const {supplierRouter} = require('./Controllers/SupplierController')
+ const {billRouter} = require('./Controllers/BillController')
+ const {directPayRouter} = require('./Controllers/DirectPayController')
  
  temp.sayHi()
  const server = () => {
    const app = express();
-   
+
+   app.set('view engine', 'ejs')
+   app.set("views","views")
    app.use(express.json());
    app.use(bodyParser.urlencoded({extended:false}))
    app.use(cors());
@@ -30,35 +41,13 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/order',orderRouter);
     app.use('/material',materialRouter);
     app.use('/supplier',supplierRouter);
+    app.use('/bill',billRouter);
+    app.use('/directPay',directPayRouter)
    // console.log(Client === sequelize.models.Client); // true
-  const tasks =['ahm3d','aaa']
+   
 
-  // app.use('/a',(req,res,next) => {
-  //   res.send(`{
-  //     "name": "samy",
-  //     "age": 48,
-  //     "location": "tanta",
-  //     "physicalStatus": "3bit",
-  //     "mentalStatus": "mt5lf",
-  //     "photo": "https://i.ytimg.com/vi/N8WPmAvZNns/hqdefault.jpg"
-  //   }`)
-  // })
 
-  // app.get('/tasks',(req,res,next) => {
-  //   res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{title:tasks}))
-  // })
-
-  // app.post('/tasks',(req,res,next) => {
-  //   const r= req.body.title
-  //   console.log(returnedResult('CODE_200',true,{title:tasks}))
-  //   if(r === undefined){
-  //     throw new Error('no data sent')
-  //   }
-  //   console.log(r)
-  //   tasks.push(r)
-  //   res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{title:tasks}))
-  // })
-
+ 
   sequelize.sync(
   // {force: true}
   ).then(result => {
