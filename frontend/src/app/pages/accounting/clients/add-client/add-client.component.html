@@ -1,0 +1,41 @@
+<h1 mat-dialog-title class="mb-0">إضافة عميل</h1>
+<div mat-dialog-content class="position-relative">
+  <form [formGroup]="form">
+    <input class="hide">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>إسم العميل</mat-label>
+      <input type="text" matInput formControlName="clientName">
+      <mat-error *ngIf="form.get('clientName')!.hasError('required')">
+        إسم العميل <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>المبلغ بالكامل</mat-label>
+      <input type="number" matInput formControlName="totalBalance">
+      <mat-error *ngIf="form.get('totalBalance')!.hasError('required')">
+        المبلغ بالكامل <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>المدفوع</mat-label>
+      <input type="number" matInput formControlName="paid">
+      <mat-error *ngIf="form.get('paid')!.hasError('required')">
+        المدفوع <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>المتبقي</mat-label>
+      <input type="number" matInput formControlName="remain">
+      <mat-error *ngIf="form.get('remain')!.hasError('required')">
+        المتبقي <strong>مطلوب</strong>
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="0" class="btn btn-danger">إلغاء</button>
+  <button mat-raised-button class="btn btn-success" (click)="submit(form)" [disabled]="!form.valid">إضافة</button>
+</div>

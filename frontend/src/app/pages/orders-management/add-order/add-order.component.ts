@@ -137,14 +137,8 @@ export interface productsDetails {
 
 export interface IClients {
   clientName: string;
-  createdAt: Date;
-  enabled: boolean;
   id: number;
   paid: number;
-  phoneNumber: number;
   remain: number;
   totalBalance: number;
-  type: number;
-  typeString: string;
-  updatedAt: Date;
 }

@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+}
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+  background-color: white;
+}
+.container1 {
+  margin: 0 10rem;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+}
+.line {
+  border-left: 1px grey solid;
+  height: 1.5rem;
+  margin: 0 4px;
+}
+::ng-deep .mat-paginator-range-label {
+  direction: ltr;
+}
+::ng-deep .swal2-actions {
+  width: 50%;
+  justify-content: space-evenly;
+}

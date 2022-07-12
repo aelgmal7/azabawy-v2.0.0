@@ -4,24 +4,24 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClientsService } from 'src/app/shared/services/clients.service';
+import { SuppliersService } from 'src/app/shared/services/suppliers.service';
 import Swal from 'sweetalert2';
 import { IClients } from '../../orders-management/add-order/add-order.component';
 import { AddSupplierComponent } from '../suppliers/add-supplier/add-supplier.component';
-import { AddClientComponent } from './add-client/add-client.component';
-@Component({
-  selector: 'app-clients',
-  templateUrl: './clients.component.html',
-  styleUrls: ['./clients.component.css'],
-})
-export class ClientsComponent implements OnInit {
-  dataSource: MatTableDataSource<IClients>;
 
-  columnsToDisplay = ['id', 'clientName', 'paid', 'remain', 'actions'];
+@Component({
+  selector: 'app-suppliers',
+  templateUrl: './suppliers.component.html',
+  styleUrls: ['./suppliers.component.css'],
+})
+export class SuppliersComponent implements OnInit {
+  dataSource: MatTableDataSource<ISupplier>;
+  columnsToDisplay = ['id', 'supplierName', 'totalBalance', 'paid', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     public dialog: MatDialog,
-    private _clientsService: ClientsService
+    private _suppliersService: SuppliersService
   ) {
     this.dataSource = new MatTableDataSource();
   }
@@ -32,14 +32,13 @@ export class ClientsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._clientsService.getAllClients().subscribe((response) => {
+    this._suppliersService.getAllSuppliers().subscribe((response) => {
       console.log(response);
       const x: any[] = Object.values(response.result);
       this.dataSource.data = x[0];
       console.log(this.dataSource);
     });
   }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -50,15 +49,21 @@ export class ClientsComponent implements OnInit {
   }
 
   addDialog() {
-    let dialogRef = this.dialog.open(AddClientComponent, {
+    let dialogRef = this.dialog.open(AddSupplierComponent, {
       width: '800px',
     });
     dialogRef.afterClosed().subscribe((result) => {
-      this._clientsService.getAllClients().subscribe((response) => {
+      this._suppliersService.getAllSuppliers().subscribe((response) => {
         console.log(response);
         const x: any[] = Object.values(response.result);
         this.dataSource.data = x[0];
       });
     });
   }
+}
+export interface ISupplier {
+  supplierName: string;
+  id: number;
+  paid: number;
+  totalBalance: number;
 }

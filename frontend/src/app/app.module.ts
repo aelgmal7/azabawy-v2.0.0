@@ -29,6 +29,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { ClientsComponent } from './pages/accounting/clients/clients.component';
+import { SuppliersComponent } from './pages/accounting/suppliers/suppliers.component';
+import { AddSupplierComponent } from './pages/accounting/suppliers/add-supplier/add-supplier.component';
+import { AddClientComponent } from './pages/accounting/clients/add-client/add-client.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +54,9 @@ import { ClientsComponent } from './pages/accounting/clients/clients.component';
     EditMaterialsComponent,
     AddOrderComponent,
     ClientsComponent,
+    AddClientComponent,
+    SuppliersComponent,
+    AddSupplierComponent,
   ],
   imports: [
     BrowserModule,

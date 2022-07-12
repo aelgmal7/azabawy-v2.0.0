@@ -1,0 +1,15 @@
+.hide {
+  height: 0;
+  border: 0;
+}
+.example-full-width {
+  width: 100%;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+.btn-success {
+  color: #fff;
+  background-color: #198754;
+}

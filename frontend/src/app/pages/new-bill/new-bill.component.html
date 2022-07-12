@@ -5,7 +5,7 @@
   <div class="bg-white p-5 rounded-3 mat-elevation-z8">
     <form [formGroup]="form">
       <div class="d-flex justify-content-between">
-        <mat-form-field appearance="outline" class="w-49">
+        <!-- <mat-form-field appearance="outline" class="w-49">
           <mat-label>نوع العملية</mat-label>
           <mat-select formControlName="operation">
             <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
@@ -13,7 +13,21 @@
           <mat-error *ngIf="form.get('operation')!.hasError('required')">
             نوع العملية <strong>مطلوب</strong>
           </mat-error>
-        </mat-form-field>
+        </mat-form-field> -->
+
+        <p-dropdown [options]="clients" [(ngModel)]="selectedClient" optionLabel="clientName" [filter]="true"
+          class="w-49" filterBy="clientName" [showClear]="true" placeholder="إسم العميل" formControlName="clientName">
+          <ng-template pTemplate="selectedItem">
+            <div class="country-item country-item-value" *ngIf="selectedClient">
+              <div>{{selectedClient.clientName}}</div>
+            </div>
+          </ng-template>
+          <ng-template let-client pTemplate="item">
+            <div class="country-item">
+              <div>{{client.clientName}}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
 
         <mat-form-field appearance="outline" class="w-49">
           <mat-label>التاريخ</mat-label>
@@ -26,32 +40,18 @@
         </mat-error>
       </div>
 
-      <div *ngIf="operation.value == 'عميل'">
-        <div class="d-flex justify-content-between">
-          <p-dropdown [options]="clients" [(ngModel)]="selectedClient" optionLabel="clientName" [filter]="true"
-            class="w-49" filterBy="clientName" [showClear]="true" placeholder="إسم العميل" formControlName="clientName">
-            <ng-template pTemplate="selectedItem">
-              <div class="country-item country-item-value" *ngIf="selectedClient">
-                <div>{{selectedClient.clientName}}</div>
-              </div>
-            </ng-template>
-            <ng-template let-client pTemplate="item">
-              <div class="country-item">
-                <div>{{client.clientName}}</div>
-              </div>
-            </ng-template>
-          </p-dropdown>
+      <div *ngIf="router.url == '/new-bill-client'">
 
-          <mat-form-field appearance="outline" class="w-49">
-            <mat-label>نوع الفاتورة</mat-label>
-            <mat-select formControlName="billType">
-              <mat-option *ngFor="let bill of bills" [value]="bill">{{bill}}</mat-option>
-            </mat-select>
-            <mat-error *ngIf="form.get('billType')!.hasError('required')">
-              نوع الفاتورة <strong>مطلوب</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>نوع الفاتورة</mat-label>
+          <mat-select formControlName="billType">
+            <mat-option *ngFor="let bill of bills" [value]="bill">{{bill}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('billType')!.hasError('required')">
+            نوع الفاتورة <strong>مطلوب</strong>
+          </mat-error>
+        </mat-form-field>
+
 
         <div *ngIf="billType.value == 'بيع'">
           <p-dropdown [options]="orders" [(ngModel)]="selectedOrder" optionLabel="orderName" [filter]="true"

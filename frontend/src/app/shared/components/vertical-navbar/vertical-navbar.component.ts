@@ -33,15 +33,19 @@ export class VerticalNavbarComponent implements OnInit {
       isNavItemOpen: 'accounting',
       children: [
         {
-          text: '|-- سجل المعاملات',
+          text: 'سجل المعاملات',
           link: '/1',
         },
         {
-          text: '|-- العملاء',
+          text: 'العملاء',
           link: '/clients',
         },
         {
-          text: '|-- الخزنة',
+          text: 'الموردين',
+          link: '/suppliers',
+        },
+        {
+          text: 'الخزنة',
           link: '/3',
         },
         {
@@ -55,15 +59,15 @@ export class VerticalNavbarComponent implements OnInit {
       isNavItemOpen: 'store',
       children: [
         {
-          text: '|-- المواد الخام',
+          text: 'المواد الخام',
           link: 'materials',
         },
         {
-          text: '|-- المنتجات بالمخزن',
+          text: 'المنتجات بالمخزن',
           link: 'store',
         },
         {
-          text: '|-- سجل المخزن',
+          text: 'سجل المخزن',
           link: '/6',
         },
         {
