@@ -9,29 +9,10 @@ const {
 } = require('../Services/BillService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
-const html_to_pdf = require('html-pdf-node');
-const ejs = require('ejs')
-const path = require('path')
-const fs = require('fs')
+
 
 router.get('/print-bill',async(req,res) => {
-    const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{title:"samaa7",header:"aaa"})
-    
-
-
-    let options = { format: 'A4' };
    
-    let file = { content: temp };
-    html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
-      console.log("PDF Buffer:-", pdfBuffer);
-      fs.writeFile(`${path.join("backend","views","bill.pdf")}`,pdfBuffer,err => {
-        res.download(`${path.join("backend","views","bill.pdf")}`)
-        require('child_process').exec(`explorer.exe "${path.join("backend","views","bill.pdf")}"`);
-
-
-      });
-    })
-
 })
 
 router.post('/add-bill/:clientId', async (req, res) =>{

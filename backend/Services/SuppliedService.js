@@ -55,10 +55,28 @@ const deleteSupplier = async(supplierId)=> {
         return supplier
     })
 }
-
+const updateSupplier = async (supplierId,supplierName,totalBalance,paid) => {
+    return Supplier.findOne({where: {id:supplierId,enabled: true}})
+    
+    .then((supplier)=> {
+        if(!supplier) {
+            return {
+                message: `no supplier with id ${supplierId}`,
+                code:404
+            }
+        }
+        supplier.supplierName = supplierName || supplier.supplierName
+        supplier.totalBalance = totalBalance;
+        supplier.paid = paid
+        supplier.remain = Number(totalBalance) - Number(paid)
+        supplier.save()
+        return supplier
+    })
+}
 module.exports = {
     getAllSuppliers:getAllSuppliers,
     getSupplierMaterials:getSupplierMaterials,
     addSupplier:addSupplier,
-    deleteSupplier:deleteSupplier
+    deleteSupplier:deleteSupplier,
+    updateSupplier:updateSupplier
 }

@@ -8,6 +8,10 @@ const  {BillItem} = require('../Models/BillItem')
 const  {BillPay} = require('../Models/BillPay')
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
 const { changeOrderItemsDeliveredWeight } = require('./OrderService')
+const html_to_pdf = require('html-pdf-node');
+const ejs = require('ejs')
+const path = require('path')
+const fs = require('fs')
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -20,10 +24,11 @@ const getClientBills =async(clientId) => {
     })
 }
 const addBill = async (clientId,billData,productsDetails) => {
+    let oldClientTotalBalance=0
     try {
        const productsIds = productsDetails.map(product => product.id)
         return Client.findByPk(clientId).then((client)=> {
-
+            oldClientTotalBalance = client.totalBalance
             //creating bill
             return client.createBill({cost:billData.cost,clientId:clientId,paid:billData.paid,date:billData.date}).then((bill)=> {
             return bill
@@ -63,6 +68,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                     return product
                 })).then(async(products) => {
                     await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    printBill(bill,client,oldClientTotalBalance)
                     return {bill,products}
                 })
             })
@@ -73,7 +79,7 @@ const addBill = async (clientId,billData,productsDetails) => {
 
 }
 const getBillById = async(billId) =>{
-    return Bill.findOne({where: {enabled: true,id: billId}})
+    return Bill.findOne({where: {enabled: true,id: billId},include: ['products']})
 }
 
 const payForBill = async(billId,clientId,date, money,note=null) =>{
@@ -99,7 +105,72 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
         })
     })
 } 
-module.exports = {
+
+
+const printBill = async(bill,client,oldClientTotalBalance=null) => {
+    console.log('client :>> ', client.dataValues);
+    const billProducts = []
+     await bill.getProducts().then(products => {
+        products.forEach(product =>{
+            const {productName,weight,amount,kiloPrice} = product.billItem.dataValues
+            billProducts.push({productName,weight,amount,kiloPrice})
+            // console.log('bill :>> ',product.billItem.dataValues );
+        })
+    }).then(async()=> {
+        
+    
+
+        let totalAmount =0 
+        let totalWeight =0 
+        let totalCost =0 
+         billProducts.map(product =>{
+            
+            totalAmount += Number(product.amount)
+            totalWeight += (Number(product.weight) * Number(product.amount))
+            totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
+        }) 
+        // totalAmount = ConvertToArabicNumbers(totalAmount)
+        // bill.id = ConvertToArabicNumbers(bill.id)
+        // totalWeight += billProducts.map(product => Number(product.weight)) 
+        // totalCost += billProducts.map(product =>{
+        //     return ( Number(product.weight) * Number(product.amount) * Number(product.kiloPrice) )
+        
+
+        // }
+        // ) 
+        const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
+        
+        
+        
+        let options = { format: 'A4' };
+        // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
+        let file = { content: temp };
+        html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
+            const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
+            console.log("PDF Buffer:-", pdfBuffer);
+            const dir = `${path.join("backend","views","فواتير",client.clientName)}`
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            
+            fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
+                require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                
+                
+            });
+        })
+    })
+        
+    }
+    module.exports = {
     addBill: addBill,
     getAllBills:getAllBills,
     getClientBills:getClientBills,
