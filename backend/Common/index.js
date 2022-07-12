@@ -7,7 +7,23 @@ return new String(num).replace(/[0123456789]/g, (d)=>{return arabicNumbers[d]});
 const convertDate = (date=null) => {
     return new Date(date).toLocaleDateString('ar-EG-u-nu-latn',{weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'});
 }
+const fullDate = (date=null) => {
+        const date = new Date(date);
+    options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            };
+    return date.toLocaleDateString(
+        // 'en-US'
+        'ar-SA'
+        , options);
+    
+}
 module.exports = {
     convertToArabicNumbers:ConvertToArabicNumbers,
-    convertDate:convertDate
+    convertDate:convertDate,
+    fullDate:fullDate
+
 }

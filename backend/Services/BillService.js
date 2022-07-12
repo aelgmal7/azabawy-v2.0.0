@@ -2,6 +2,7 @@ const  {Bill} = require('../Models/Bill')
 const Sequelize = require('Sequelize')
 const Op = Sequelize.Op;
 
+
 const  {Client} = require('../Models/Client')
 const  {Product} = require('../Models/Product')
 const  {BillItem} = require('../Models/BillItem')
@@ -129,15 +130,7 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
             totalWeight += (Number(product.weight) * Number(product.amount))
             totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
-        // totalAmount = ConvertToArabicNumbers(totalAmount)
-        // bill.id = ConvertToArabicNumbers(bill.id)
-        // totalWeight += billProducts.map(product => Number(product.weight)) 
-        // totalCost += billProducts.map(product =>{
-        //     return ( Number(product.weight) * Number(product.amount) * Number(product.kiloPrice) )
-        
-
-        // }
-        // ) 
+       
         const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
         
         
@@ -160,12 +153,11 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
             } catch (err) {
                 console.log(err);
             }
-            
+
             fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
                 require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
-                
-                
             });
+
         })
     })
         

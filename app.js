@@ -8,7 +8,6 @@ const { executeCommand } = require("./helper-functions")
 
 const {server} = require("./backend")
 server()
-
 let appWindow
 function initWindow() {
   let appWindow = new BrowserWindow({
