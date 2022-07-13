@@ -8,6 +8,7 @@ import { NewOperationComponent } from './pages/new-operation/new-operation.compo
 import { OrdersManagementComponent } from './pages/orders-management/orders-management.component';
 import { MaterialsComponent } from './pages/materials/materials.component';
 import { ClientsComponent } from './pages/accounting/clients/clients.component';
+import { SuppliersComponent } from './pages/accounting/suppliers/suppliers.component';
 
 // TODO some routes need children
 const routes: Routes = [
@@ -16,7 +17,15 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'new-bill',
+    path: 'new-bill-client',
+    component: NewBillComponent,
+  },
+  {
+    path: 'new-bill-direct',
+    component: NewBillComponent,
+  },
+  {
+    path: 'new-bill-supplier',
     component: NewBillComponent,
   },
   {
@@ -42,6 +51,10 @@ const routes: Routes = [
   {
     path: 'clients',
     component: ClientsComponent,
+  },
+  {
+    path: 'suppliers',
+    component: SuppliersComponent,
   },
   {
     path: '**',

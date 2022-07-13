@@ -12,7 +12,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StoreService } from 'src/app/shared/services/store.service';
 import { Product, BillType } from './types/types.t';
 import { PeriodicElement } from '../store/store.component';
@@ -47,8 +47,12 @@ export class NewBillComponent implements OnInit {
     private _fb: FormBuilder,
     private _storeService: StoreService,
     private _ordersService: OrdersService,
-    private _clientsService: ClientsService
-  ) {}
+    private _clientsService: ClientsService,
+    // private route: ActivatedRoute,
+    public router: Router
+  ) {
+    console.log(router.url);
+  }
 
   get operation(): AbstractControl {
     return this.form?.get('operation') as AbstractControl;
@@ -79,7 +83,18 @@ export class NewBillComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.orderedProducts);
+    // this.route.paramMap.subscribe((params) => {
+    //   console.log(params);
+    // });
+
+    // this.router.events.filter(event => event instanceof NavigationEnd)
+    // .subscribe(event =>
+    //  {
+    //     this.currentRoute = event.url;
+    //     console.log(event);
+    //  });
+    console.log(this.router.url);
+
     this._clientsService.getAllClients().subscribe((response) => {
       const c: any = Object.values(response.result);
       this.clients = c[0];
