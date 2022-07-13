@@ -134,7 +134,7 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
             totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
        
-        const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
+        const temp = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
         
         
         let options = { format: 'A4' };
