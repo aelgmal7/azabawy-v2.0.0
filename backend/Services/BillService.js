@@ -55,7 +55,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
                             if (orderFlag){
 
-                                orderArr.push({id:element.id,delivered:Number(amount * weight)})
+                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                             }
                             //change selected products amount of weights and change product total amount and weight
                             await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
@@ -69,6 +69,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                     })
                     return product
                 })).then(async(products) => {
+                    console.log('orderArr :>> ', orderArr);
                     await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
                      printBill(bill,client,oldClientTotalBalance)
                     
