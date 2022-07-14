@@ -181,7 +181,18 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
                     });
             }else {
                 const dir = `${path.join("backend","views","فواتير",client.clientName)}`
-
+                const fwater = `${path.join("backend","views","فواتير")}`
+                try {
+                    // first check if directory already exists
+                    if (!fs.existsSync(fwater)) {
+                        fs.mkdirSync(fwater);
+                        console.log("Directory is created.");
+                    } else {
+                        console.log("Directory already exists.");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
                 try {
                     // first check if directory already exists
                     if (!fs.existsSync(dir)) {
