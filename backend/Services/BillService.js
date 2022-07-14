@@ -55,7 +55,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
                             if (orderFlag){
 
-                                orderArr.push({id:element.id,delivered:Number(amount * weight)})
+                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                             }
                             //change selected products amount of weights and change product total amount and weight
                             await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
@@ -69,6 +69,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                     })
                     return product
                 })).then(async(products) => {
+                    console.log('orderArr :>> ', orderArr);
                     await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
                      printBill(bill,client,oldClientTotalBalance)
                     
@@ -134,7 +135,7 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
             totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
        
-        const temp = await  ejs.renderFile(`${path.join("backend","views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
+        const temp = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
         
         
         let options = { format: 'A4' };
@@ -180,7 +181,18 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
                     });
             }else {
                 const dir = `${path.join("backend","views","فواتير",client.clientName)}`
-
+                const fwater = `${path.join("backend","views","فواتير")}`
+                try {
+                    // first check if directory already exists
+                    if (!fs.existsSync(fwater)) {
+                        fs.mkdirSync(fwater);
+                        console.log("Directory is created.");
+                    } else {
+                        console.log("Directory already exists.");
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
                 try {
                     // first check if directory already exists
                     if (!fs.existsSync(dir)) {

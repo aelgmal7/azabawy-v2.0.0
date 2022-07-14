@@ -105,9 +105,9 @@ footer p:last-child {
                 <thead>
                     <tr>
                         <td>المنتج</td>
+                        <td>عدد العبوات</td>
                         <td>وزن العبوة</td>
                         <td>سعر الكيلو</td>
-                        <td>عدد العبوات</td>
                         <td>إجمالي الوزن</td>
                         <td>السعر الإجمالي للمنتج</td>
                     </tr>
@@ -116,9 +116,9 @@ footer p:last-child {
                     <% for(product of products) { %>
                     <tr>
                         <td> <%= product.productName %></td>
+                        <td> <%= product.amount %></td>
                         <td> <%= product.weight %></td>
                         <td> <%= product.kiloPrice %></td>
-                        <td> <%= product.amount %></td>
                         <td> <%= (product.weight * product.amount) %></td>
                         <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
                         
@@ -126,8 +126,9 @@ footer p:last-child {
                     </tr>
                     <% } %>
                     <tr>
-                        <td colspan="3">الإجمالي</td>
+                        <td colspan="1">الإجمالي</td>
                         <td><%= totalAmount %></td>
+                        <td colspan="2"></td>
                         <td><%= totalWeight %></td>
                         <td><%= totalCost %></td>
                     </tr>
