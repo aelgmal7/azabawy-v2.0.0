@@ -103,7 +103,6 @@ export class AddOrderComponent implements OnInit {
   }
 
   submit(form) {
-    const ord = {};
     const id = form.controls.clientName.value.id;
     const orderDetails = {
       orderName: form.controls.orderName.value,
