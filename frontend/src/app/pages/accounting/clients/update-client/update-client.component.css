@@ -1,0 +1,22 @@
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+.btn-success {
+  color: #fff;
+  background-color: #198754;
+}
+.hide {
+  /* display: none; */
+  height: 0;
+  border: 0;
+}

@@ -33,6 +33,7 @@ import { SuppliersComponent } from './pages/accounting/suppliers/suppliers.compo
 import { AddSupplierComponent } from './pages/accounting/suppliers/add-supplier/add-supplier.component';
 import { AddClientComponent } from './pages/accounting/clients/add-client/add-client.component';
 import { PrintOptionsComponent } from './pages/new-bill/print-options/print-options.component';
+import { UpdateClientComponent } from './pages/accounting/clients/update-client/update-client.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { PrintOptionsComponent } from './pages/new-bill/print-options/print-opti
     SuppliersComponent,
     AddSupplierComponent,
     PrintOptionsComponent,
+    UpdateClientComponent,
   ],
   imports: [
     BrowserModule,

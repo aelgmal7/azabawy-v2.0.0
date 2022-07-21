@@ -45,6 +45,8 @@ export class NewBillComponent implements OnInit {
   totalPrice: number = 0;
   arr;
   printOption: number;
+  billsList: bills[] = [];
+  selectedBill: bills;
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -91,6 +93,9 @@ export class NewBillComponent implements OnInit {
   get amountPaid(): AbstractControl {
     return this.form?.get('amountPaid') as AbstractControl;
   }
+  get billsCtrl(): AbstractControl {
+    return this.form?.get('bills') as AbstractControl;
+  }
 
   ngOnInit(): void {
     console.log(this.router.url);
@@ -114,12 +119,14 @@ export class NewBillComponent implements OnInit {
       paid: [0],
       amountPaid: [''],
       notes: [''],
+      bills: [''],
     });
     if (this.router.url == '/new-sanad-direct') {
       this.amountPaid.setValidators(Validators.required);
     }
     if (this.router.url == '/new-sanad-order') {
       this.amountPaid.setValidators(Validators.required);
+      this.billsCtrl.setValidators(Validators.required);
     }
     this.billType.valueChanges.subscribe((change) => {
       this.orderName.reset();
@@ -134,16 +141,23 @@ export class NewBillComponent implements OnInit {
         const y = x[0];
         this.orders = y?.filter((e) => e.ClientId == this.clientName.value?.id);
       });
+      this._billsService
+        .getClientBills(this.clientName.value?.id)
+        .subscribe((response) => {
+          const c: any = Object.values(response.result);
+          const d: any[] = c[0];
+          d.forEach((k) => {
+            const x = {} as bills;
+            x.id = k.id;
+            this.billsList?.push(x);
+          });
+        });
     });
     this.orderName.valueChanges.subscribe((change) => {
       this._storeService.getAllProducts().subscribe((prod) => {
         const x: any[] = Object.values(prod.result);
         this.products = x[0];
         this.myProducts = this.orderName.value?.orderItems;
-
-        // const m: any[] = [];
-        // m.push(...this.myProducts, ...this.products);
-        // console.log(m);
 
         this.arr = [];
         for (let k in this.myProducts) {
@@ -308,8 +322,92 @@ export class NewBillComponent implements OnInit {
       .addDirectPay(sanad, form.controls.clientName.value.id)
       .subscribe((r) => {
         console.log(r);
+        if (Object.values(r)[1] === true) {
+          Swal.fire('تم إضافة سند القبض بنجاح!', '', 'success');
+          this.router.navigate(['/']);
+        } else {
+          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+        }
       });
-    // console.log(form.controls);
+  }
+
+  printDirectSanad(form) {
+    const sanad = {
+      printable: true,
+      date: form.controls.date.value,
+      cash: form.controls.amountPaid.value,
+      note: form.controls.notes.value,
+    };
+    this._billsService
+      .addDirectPay(sanad, form.controls.clientName.value.id)
+      .subscribe((r) => {
+        console.log(r);
+        if (Object.values(r)[1] === true) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'جاري طباعة سند القبض',
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.router.navigate(['/']);
+        } else {
+          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+        }
+      });
+  }
+
+  addBillSanad(form) {
+    const sanad = {
+      printable: false,
+      date: form.controls.date.value,
+      cash: form.controls.amountPaid.value,
+      note: form.controls.notes.value,
+    };
+    this._billsService
+      .addOrderPay(
+        sanad,
+        form.controls.bills.value.id,
+        form.controls.clientName.value.id
+      )
+      .subscribe((r) => {
+        console.log(r);
+        if (Object.values(r)[0] === true) {
+          Swal.fire('تم إضافة سند القبض بنجاح!', '', 'success');
+          this.router.navigate(['/']);
+        } else {
+          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+        }
+      });
+  }
+  printBillSanad(form) {
+    const sanad = {
+      printable: true,
+      date: form.controls.date.value,
+      cash: form.controls.amountPaid.value,
+      note: form.controls.notes.value,
+    };
+    this._billsService
+      .addOrderPay(
+        sanad,
+        form.controls.bills.value.id,
+        form.controls.clientName.value.id
+      )
+      .subscribe((r) => {
+        console.log(r);
+        if (Object.values(r)[0] === true) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'جاري طباعة سند القبض',
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.router.navigate(['/']);
+        } else {
+          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+        }
+      });
   }
 }
 export interface IOrderedProducts {
@@ -322,4 +420,7 @@ export interface IOrderedProducts {
   totalWeight: number;
   amount: number;
   orderFlag: boolean;
+}
+export interface bills {
+  id: number;
 }

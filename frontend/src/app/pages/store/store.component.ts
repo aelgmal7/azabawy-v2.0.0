@@ -145,17 +145,6 @@ export class StoreComponent implements OnInit {
     return x;
   }
 
-  // addAmount(val1, index1, index2) {
-  //   this.dataSource.data[index1].weightAndAmounts[index2].amount +=
-  //     Number(val1);
-  //   Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-  // }
-  // minAmount(val1, index1, index2) {
-  //   this.dataSource.data[index1].weightAndAmounts[index2].amount -=
-  //     Number(val1);
-  //   Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-  // }
-
   updateAmountMin(amount, weight, id) {
     amount = -amount;
     console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
@@ -212,7 +201,7 @@ export class StoreComponent implements OnInit {
       });
     });
   }
-  editDialog(prod, i) {
+  editDialog(prod) {
     let dialogRef = this.dialog.open(EditProductComponent, {
       width: '600px',
       data: prod,
