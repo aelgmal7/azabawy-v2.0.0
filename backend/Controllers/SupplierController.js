@@ -59,10 +59,10 @@ router.delete('/:supplierId',async (req, res)=> {
     }catch (err){}
 })
 
-router.put('/:clientId',async(req,res) => {
+router.put('/:supplierId',async(req,res) => {
     const supplierId = req.params.supplierId
     const {supplierName,totalBalance, paid} = req.body
-    const result = await updateSupplier(supplierName,totalBalance, paid)
+    const result = await updateSupplier(supplierId,supplierName,totalBalance, paid)
     try {
         if(result.message) {
 
