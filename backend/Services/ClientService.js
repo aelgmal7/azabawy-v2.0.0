@@ -23,7 +23,7 @@ const createClient = async({
 };
 
 const getClients = () => {
-  return Client.findAll();
+  return Client.findAll({where: {enabled: true}});
 };
 
 const deleteClient =async (clientId) => {
