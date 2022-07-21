@@ -25,7 +25,7 @@ const getClientBills =async(clientId) => {
         include: [{model:Product,where: {enabled: true}}]
     })
 }
-const addBill = async (clientId,billData,productsDetails) => {
+const addBill = async (clientId,billData,productsDetails,options) => {
     let oldClientTotalBalance=0
     try {
        const productsIds = productsDetails.map(product => product.id)
@@ -53,7 +53,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                         if(element.id === product.id){
                             const {weight,amount,kiloPrice,orderFlag} = element
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                            if (orderFlag){
+                            if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
 
                                 orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                             }
@@ -71,7 +71,9 @@ const addBill = async (clientId,billData,productsDetails) => {
                 })).then(async(products) => {
                     console.log('orderArr :>> ', orderArr);
                     await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
-                     printBill(bill,client,oldClientTotalBalance)
+                    
+                    printBill(bill,client,oldClientTotalBalance,options)
+                    
                     
                      return {
                          bill,products,
@@ -113,7 +115,7 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
 } 
 
 
-const printBill = async(bill,client,oldClientTotalBalance=null) => {
+const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
     console.log('client :>> ', client.dataValues);
     const billProducts = []
      await bill.getProducts().then(products => {
@@ -177,7 +179,10 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
                             // er = err
                             return err
                         }
-                        require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        if(options.printable){
+
+                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        }
                     });
             }else {
                 const dir = `${path.join("backend","views","فواتير",client.clientName)}`
@@ -205,7 +210,12 @@ const printBill = async(bill,client,oldClientTotalBalance=null) => {
                     console.log(err);
                 }
                 fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
-                    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    console.log(option);
+                    if (option.printable){
+                        console.log("here");
+
+                        require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    }
                 });
 
             }

@@ -7,7 +7,7 @@
 **/out-tsc
 **/bazel-out
 **/Azabaway-v2.0.0-win32-x64
-/backend/view/فواتير/**
+**/backend/view/فواتير/**
 # Node
 **/node_modules
 npm-debug.log
