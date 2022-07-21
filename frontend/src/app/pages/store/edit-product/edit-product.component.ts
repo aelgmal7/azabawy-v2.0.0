@@ -48,12 +48,6 @@ export class EditProductComponent implements OnInit {
           'error'
         );
       }
-      // if (Object.keys(response)[0] === '0') {
-      //   Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
-      //   this._dialogRef.close();
-      // } else {
-      //   Swal.fire('لم يتم تعديل المنتج!', Object.values(response)[0], 'error');
-      // }
     });
   }
 }

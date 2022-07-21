@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class AddClientComponent implements OnInit {
   form: FormGroup;
+  remainValue;
 
   constructor(
     private _fb: FormBuilder,
@@ -24,12 +25,25 @@ export class AddClientComponent implements OnInit {
     private _dialogRef: MatDialogRef<AddClientComponent>
   ) {}
 
+  get totalBalance(): AbstractControl {
+    return this.form?.get('totalBalance') as AbstractControl;
+  }
+  get paid(): AbstractControl {
+    return this.form?.get('paid') as AbstractControl;
+  }
+  get remain(): AbstractControl {
+    return this.form?.get('remain') as AbstractControl;
+  }
+
   ngOnInit() {
     this.form = this._fb.group({
       clientName: ['', Validators.required],
       totalBalance: ['', Validators.required],
       paid: ['', Validators.required],
       remain: ['', Validators.required],
+    });
+    this.paid.valueChanges.subscribe(() => {
+      this.remainValue = this.totalBalance.value - this.paid.value;
     });
   }
 

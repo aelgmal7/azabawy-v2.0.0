@@ -161,7 +161,21 @@
         </mat-form-field>
       </div>
       <div *ngIf="router.url == '/new-sanad-order'">
-        <mat-form-field class="w-100" appearance="outline">
+        <p-dropdown [options]="billsList" [(ngModel)]="selectedBill" optionLabel="id" [filter]="true" class="w-100"
+          filterBy="id" [showClear]="true" placeholder="رقم الفاتورة" formControlName="bills">
+          <ng-template pTemplate="selectedItem">
+            <div class="country-item country-item-value" *ngIf="selectedBill">
+              <div>{{selectedBill.id}}</div>
+            </div>
+          </ng-template>
+          <ng-template let-bill pTemplate="item">
+            <div class="country-item">
+              <div>{{bill.id}}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+
+        <mat-form-field class="w-100 mt-3" appearance="outline">
           <mat-label>المبلغ</mat-label>
           <input type="number" matInput formControlName="amountPaid" min="0">
           <mat-error *ngIf="form.get('amountPaid')!.hasError('required')">
@@ -203,317 +217,18 @@
       <button mat-raised-button color="primary" [disabled]="form.invalid || orderedProducts.length < 1"
         (click)="print(form)">طباعه</button>
     </div>
-    <div *ngIf="router.url == '/new-sanad-direct' || router.url == '/new-sanad-order'"
-      class="w-14 d-flex justify-content-between" id="100">
-      <button mat-raised-button class="btn-success" [disabled]="form.invalid" (click)="submit(form)">إضافة</button>
+    <div *ngIf="router.url == '/new-sanad-direct'" class="w-14 d-flex justify-content-between" id="100">
+      <button mat-raised-button class="btn-success" [disabled]="form.invalid"
+        (click)="addDirectSanad(form)">إضافة</button>
       <button mat-raised-button class="btn-danger" [routerLink]="'/'">إلغاء</button>
-      <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="print(form)">طباعه</button>
+      <button mat-raised-button color="primary" [disabled]="form.invalid"
+        (click)="printDirectSanad(form)">طباعه</button>
+    </div>
+    <div *ngIf="router.url == '/new-sanad-order'" class="w-14 d-flex justify-content-between" id="1000">
+      <button mat-raised-button class="btn-success" [disabled]="form.invalid"
+        (click)="addBillSanad(form)">إضافة</button>
+      <button mat-raised-button class="btn-danger" [routerLink]="'/'">إلغاء</button>
+      <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="printBillSanad(form)">طباعه</button>
     </div>
   </div>
 </div>
-
-<!-- <div class="container h-100 flex-column overflow-hidden">
-  <div
-    id="new-bill-form"
-    #billForm
-    class="flex-grow-1 flex-row align-center justify-start position-relative"
-  >
-    <div class="flex-row justify-space-evenly align-center gap-10 w-min-100">
-      <app-icon-btn
-        (click)="updateBillType('client')"
-        [btn]="{
-          text: 'عميل',
-          iconClasses: 'fa-solid fa-upload',
-          activeState: billType === 'client'
-        }"
-      ></app-icon-btn>
-      <app-icon-btn
-        (click)="updateBillType('provider')"
-        [btn]="{
-          text: 'مورد',
-          iconClasses: 'fa-solid fa-download',
-          activeState: billType === 'provider'
-        }"
-      ></app-icon-btn>
-      <app-icon-btn
-        (click)="updateBillType('direct-selling')"
-        [btn]="{
-          text: 'فاتورة مباشرة',
-          iconClasses: 'fa-solid fa-file-invoice',
-          activeState: billType === 'direct-selling'
-        }"
-      ></app-icon-btn>
-    </div>
-    <form class="w-min-100">
-      <div class="flex-row gap-10">
-        <div class="col-50">
-          <label for="client-name"> اسم العميل </label>
-          <input name="client-name" id="client-name" list="clients" />
-          <datalist id="clients">
-            <option value="id-1">محمود سامي</option>
-            <option value="id-2">محمد أحمد</option>
-            <option value="id-3">محمد الحسيني</option>
-            <option value="id-4">ابراهيم الدمشقي</option>
-            <option value="id-5">أحمد ماهر</option>
-          </datalist>
-        </div>
-        <div class="col-50">
-          <label for="date"> تاريخ العملية </label>
-          <input type="date" name="date" id="date" />
-        </div>
-      </div>
-
-      <br />
-      <hr />
-
-      <div class="flex-row gap-10">
-        <div class="col-50">
-          <label for="detailed-type"> نوع الفاتورة </label>
-          <select name="detailed-type" id="detailed-type">
-            <option value="selling">بيع</option>
-            <option value="back-selling">مرتجع بيع</option>
-          </select>
-        </div>
-
-        <div class="col-50">
-          <label for="order"> الطلبية </label>
-
-          <input name="order" id="order" list="orders" />
-          <datalist id="orders">
-            <option value="id-1">طلبية 1</option>
-            <option value="id-2">طلبية 2</option>
-            <option value="id-3">طلبية 3</option>
-            <option value="id-4">طلبية 4</option>
-            <option value="id-5">طلبية 5</option>
-          </datalist>
-        </div>
-      </div>
-    </form>
-    <div id="products-table" class="w-min-100 h-100 flex-column justify-center">
-      <div class="flex-row gap-10 align-end">
-        <div class="col-30">
-          <label for="product"> اختر منتج</label>
-          <input name="product" id="product" list="products" #productId />
-          <datalist id="products">
-            <option *ngFor="let prod of products" [value]="prod.id">
-              {{ prod.name }}
-            </option>
-          </datalist>
-        </div>
-        <div class="col-20">
-          <label for="price-per-kilo">سعر الكيلو</label>
-          <input
-            #kiloPrice
-            name="price-per-kilo"
-            id="price-per-kilo"
-            type="number"
-            min="0"
-          />
-        </div>
-        <div class="col-20">
-          <label for="number-of-packages">عدد الكراتين</label>
-          <input
-            #packagesNumber
-            name="number-of-packages"
-            id="number-of-packages"
-            type="number"
-            min="1"
-          />
-        </div>
-        <div class="col-30">
-          <label for="weight-of-package">وزن الكرتونة</label>
-
-          <div style="position: relative">
-            <input
-              #packageWeight
-              name="weight-of-package"
-              id="weight-of-package"
-              type="number"
-              min="0"
-              style="padding-left: 36px"
-            />
-            <div
-              style="
-                position: absolute;
-                top: 50%;
-                left: 2px;
-                transform: translate(0, -50%);
-                border: 2px #e8d2d6 solid;
-              "
-            >
-              <label
-                style="padding: 2px; border-radius: 2px"
-                [style.backgroundColor]="
-                  tinOrKilo === 'kilo' ? 'transparent' : 'pink'
-                "
-                for="weight-kilo"
-                class="w-100 flex-row justify-space-between align-center"
-                >كيلو
-                <input
-                  style="display: none"
-                  name="weight-type"
-                  value="kilo"
-                  id="weight-kilo"
-                  type="radio"
-                  [(ngModel)]="tinOrKilo"
-                />
-              </label>
-              <label
-                style="padding: 2px; border-radius: 2px"
-                [style.backgroundColor]="
-                  tinOrKilo === 'tin' ? 'transparent' : 'pink'
-                "
-                for="weight-tin"
-                class="w-100 flex-row justify-space-between align-center"
-                >طن
-                <input
-                  style="display: none"
-                  name="weight-type"
-                  id="weight-tin"
-                  type="radio"
-                  value="tin"
-                  [(ngModel)]="tinOrKilo"
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-        <app-btn
-          (click)="
-            addProduct(
-              productId.value,
-              packagesNumber.value,
-              packageWeight.value,
-              kiloPrice.value
-            )
-          "
-          [class]="{
-            'cursor-auto':
-              !productId.value ||
-              !packagesNumber.value ||
-              !packageWeight.value ||
-              !kiloPrice.value,
-            'cursor-pointer':
-              productId.value &&
-              packagesNumber.value &&
-              packageWeight.value &&
-              kiloPrice.value
-          }"
-          [btn]="{
-            text: 'أضف',
-            classes:
-              productId.value &&
-              packagesNumber.value &&
-              packageWeight.value &&
-              kiloPrice.value
-                ? 'cursor-pointer col-10'
-                : 'opacity-20 cursor-auto col-10',
-            iconClasses: 'fa-solid fa-plus'
-          }"
-        ></app-btn>
-      </div>
-
-      <br />
-      <hr />
-      <br />
-      <div class="flex-colum w-100 flex-grow-2" id="table-container">
-        <table *ngIf="billRows.length > 0" style="width: 100%">
-          <thead>
-            <th>#</th>
-            <th>اسم المنتج</th>
-            <th>عدد الكراتين</th>
-            <th>عدد الكيلوات</th>
-            <th>السعر</th>
-          </thead>
-          <tbody>
-
-            <tr *ngFor="let row of billRows">
-              <td>{{ row.productId }}</td>
-              <td>{{ row.productName }}</td>
-              <td>{{ row.packagesNumber }}</td>
-              <td>
-                {{ row.packagesNumber * row.packageWeight * row.tinOrKilo }}
-              </td>
-              <td>
-                {{
-                  row.kiloPrice *
-                    row.packagesNumber *
-                    row.packageWeight *
-                    row.tinOrKilo
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <br />
-      <hr />
-      <br />
-      <div class="flex-row gap-10">
-        <div id="all-cost" class="col-50">
-          <label for="all-cost">السعر الكلّي</label>
-          <input
-            name="all-cost"
-            placeholder="0"
-            type="number"
-            min="0"
-            [value]="totalPrice"
-          />
-        </div>
-        <div id="paid" class="col-50">
-          <label for="paid">المدفوع</label>
-          <input name="paid" placeholder="0" type="number" min="0" />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="form-submission" class="flex-row justify-space-between align-center">
-    <app-btn
-      (click)="showForm('back')"
-      [class]="{
-        'cursor-auto': firstScreen,
-        'cursor-pointer': !firstScreen
-      }"
-      [btn]="{
-        text: 'السابق',
-        classes: firstScreen ? 'opacity-20 cursor-auto' : 'cursor-pointer',
-        iconClasses: 'fa-solid fa-circle-chevron-right',
-        reverse: true
-      }"
-    ></app-btn>
-    <app-btn
-      [btn]="{
-        text: 'إلغاء',
-        classes: 'btn-cancel visibility-hidden'
-      }"
-    ></app-btn>
-    <app-btn
-      [btn]="{
-        text: 'إرسال',
-        classes: 'visibility-hidden'
-      }"
-    ></app-btn>
-    <app-btn
-      [btn]="{
-        text: 'طباعة',
-        classes: 'visibility-hidden'
-      }"
-    ></app-btn>
-    <app-btn
-      (click)="showForm('next')"
-      [class]="{
-        'cursor-auto': !billType || (lastScreen && billRows.length <= 0),
-        'cursor-pointer': billType && (billRows.length > 0 || !lastScreen)
-      }"
-      [btn]="{
-        text: 'التالي',
-        classes:
-          billType && (billRows.length > 0 || !lastScreen)
-            ? 'cursor-pointer'
-            : 'opacity-20 cursor-auto',
-        iconClasses: 'fa-solid fa-circle-chevron-left'
-      }"
-    ></app-btn>
-  </div>
-</div> -->

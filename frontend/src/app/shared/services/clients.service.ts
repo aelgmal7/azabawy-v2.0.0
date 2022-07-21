@@ -25,4 +25,14 @@ export class ClientsService {
   addNewClient(newClient: NewClient): Observable<NewClient> {
     return this.http.post<NewClient>(this.postURL, newClient);
   }
+
+  updateClient(client: NewClient, id): Observable<NewClient> {
+    const UpdateURL = `http://localhost:3000/client/${id}`;
+    return this.http.put<NewClient>(UpdateURL, client);
+  }
+
+  deleteClient(id: number): Observable<number> {
+    const deleteURL = `http://localhost:3000/client/${id}`;
+    return this.http.delete<number>(deleteURL);
+  }
 }

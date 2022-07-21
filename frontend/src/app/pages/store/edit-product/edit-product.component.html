@@ -35,6 +35,6 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button [mat-dialog-close]="0" class="btn btn-danger">إلغاء</button>
-  <button mat-raised-button class="btn btn-success" [mat-dialog-close]="data" (click)="submit(form, data.id)"
+  <button mat-raised-button class="btn btn-success" (click)="submit(form, data.id)"
     [disabled]="form.invalid || !form.dirty">تعديل</button>
 </div>

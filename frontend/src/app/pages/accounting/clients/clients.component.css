@@ -27,3 +27,7 @@ table {
   width: 50%;
   justify-content: space-evenly;
 }
+a {
+  text-decoration: none;
+  color: inherit;
+}
