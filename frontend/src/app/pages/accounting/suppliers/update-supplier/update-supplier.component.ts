@@ -28,11 +28,13 @@ export class UpdateSupplierComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.paid <= this.total;
+    this.total = this.data.totalBalance;
+    this.paid = this.data.paid;
+    console.log(this.data);
     this.form = this._fb.group({
-      supplierName: ['', Validators.required],
-      totalBalance: ['', Validators.required],
-      paid: ['', [Validators.required, Validators.max(this.total)]],
+      supplierName: [this.data.supplierName, Validators.required],
+      totalBalance: [this.data.totalBalance, Validators.required],
+      paid: [this.data.paid, [Validators.required, Validators.max(this.total)]],
     });
   }
 
@@ -47,13 +49,13 @@ export class UpdateSupplierComponent implements OnInit {
       .updateSupplier(supplier, id)
       .subscribe((response) => {
         console.log(response);
-        if (Object.values(response)[0] == true) {
+        if (Object.values(response)[1] == true) {
           Swal.fire('تم تعديل المورد بنجاح!', '', 'success');
           this._dialogRef.close();
         } else {
           Swal.fire(
             'لم يتم تعديل المورد!',
-            Object.values(response)[1].message,
+            Object.values(response)[2].message,
             'error'
           );
         }

@@ -30,4 +30,9 @@ export class SuppliersService {
     const postURL = `http://localhost:3000/supplier/${id}`;
     return this.http.put<NewSupplier>(postURL, supplier);
   }
+
+  deleteSupplier(id: number): Observable<number> {
+    const deleteURL = `http://localhost:3000/supplier/${id}`;
+    return this.http.delete<number>(deleteURL);
+  }
 }
