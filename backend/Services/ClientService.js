@@ -12,14 +12,20 @@ const createClient = async({
       paid
     ); 
     const temp = await Client.findOne({where: {clientName: client.clientName}})
+    console.log(temp);
     if (temp === null) {
       
       return Client.create(client);
-    } 
-      if (temp.enabled) return {
-        message: "client already exists",
+    }
+    if (temp.enabled){
+      return {
+        message: " client already exists",
         code:404
       }
+    } else if (!temp.enabled){
+      temp.destroy()
+      return Client.create(client)
+    }
 };
 
 const getClients = () => {
