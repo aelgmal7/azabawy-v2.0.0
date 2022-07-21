@@ -18,6 +18,8 @@ import { UpdateSupplierComponent } from './update-supplier/update-supplier.compo
 export class SuppliersComponent implements OnInit {
   dataSource: MatTableDataSource<ISupplier>;
   columnsToDisplay = ['id', 'supplierName', 'totalBalance', 'paid', 'actions'];
+
+  swalWithBootstrapButtons;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
@@ -73,6 +75,57 @@ export class SuppliersComponent implements OnInit {
         this.dataSource.data = x[0];
       });
     });
+  }
+
+  deleteClient(i) {
+    this.swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger',
+      },
+      buttonsStyling: false,
+    });
+
+    this.swalWithBootstrapButtons
+      .fire({
+        title: 'مسح هذا المورد',
+        text: 'سوف تكون غير قادر على إعادة هذه الخطوة',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'إحذف',
+        cancelButtonText: 'إلغاء',
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // this.ELEMENT_DATA.splice(i, 1);
+          this._suppliersService.deleteSupplier(i).subscribe((r) => {
+            console.log(r);
+            if (Object.values(r)[1] === true) {
+              this.swalWithBootstrapButtons.fire(
+                'تم المسح!',
+                'تم مسح العميل بنجاح!',
+                'success'
+              );
+              this._suppliersService.getAllSuppliers().subscribe((response) => {
+                const x: any[] = Object.values(response.result);
+                this.dataSource.data = x[0];
+              });
+            } else {
+              this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
+            }
+          });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          this.swalWithBootstrapButtons.fire(
+            'تم الإلغاء',
+            'هذا العميل لم يتم مسحه :)',
+            'error'
+          );
+        }
+      });
   }
 }
 export interface ISupplier {
