@@ -205,7 +205,8 @@
     </div>
     <div *ngIf="router.url == '/new-sanad-direct' || router.url == '/new-sanad-order'"
       class="w-14 d-flex justify-content-between" id="100">
-      <button mat-raised-button class="btn-success" [disabled]="form.invalid" (click)="submit(form)">إضافة</button>
+      <button mat-raised-button class="btn-success" [disabled]="form.invalid"
+        (click)="addDirectSanad(form)">إضافة</button>
       <button mat-raised-button class="btn-danger" [routerLink]="'/'">إلغاء</button>
       <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="print(form)">طباعه</button>
     </div>

@@ -1,10 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -13,43 +7,26 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./print-options.component.css'],
 })
 export class PrintOptionsComponent implements OnInit {
-  form: FormGroup;
-
   options = [
     {
       id: 1,
-      option: 'طباعة الاوبشن 1',
+      option: 'مسعرة فقط',
     },
     {
       id: 2,
-      option: 'طباعة الاوبشن 2',
+      option: 'رقم ضريبي فقط',
     },
     {
       id: 3,
-      option: 'طباعة الاوبشن 3',
+      option: 'مسعرة مع رقم ضريبي',
     },
     {
       id: 4,
-      option: 'طباعة الاوبشن 4',
+      option: 'غير مسعرة وبدون رقم ضريبي',
     },
   ];
 
-  // get optionName(): AbstractControl {
-  //   return this.form?.get('optionName') as AbstractControl;
-  // }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: number) {}
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: number,
-    private _fb: FormBuilder
-  ) {}
-
-  ngOnInit() {
-    // this.form = this._fb.group({
-    //   optionName: ['', Validators.required],
-    // });
-    // this.optionName.valueChanges.subscribe((change) => {
-    //   console.log(this.optionName.value);
-    // });
-    // this.data = this.optionName.value;
-  }
+  ngOnInit() {}
 }

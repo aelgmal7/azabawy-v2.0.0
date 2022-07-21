@@ -20,6 +20,7 @@ import { threadId } from 'worker_threads';
 import { BillsService } from 'src/app/shared/services/bills.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PrintOptionsComponent } from './print-options/print-options.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-bill',
@@ -244,7 +245,13 @@ export class NewBillComponent implements OnInit {
       productsDetails: this.orderedProducts,
     };
     this._billsService.addNewBill(bill, id).subscribe((response) => {
-      console.log(response);
+      console.log(Object.values(response)[0]);
+      if (Object.values(response)[0] === true) {
+        Swal.fire('تم إضافة الفاتورة بنجاح!', '', 'success');
+        this.router.navigate(['/']);
+      } else {
+        Swal.fire('لم يتم إضافة الفاتورة!', '', 'error');
+      }
     });
     console.log(form);
     console.log(bill);
@@ -273,10 +280,36 @@ export class NewBillComponent implements OnInit {
       };
       this._billsService.addNewBill(bill, id).subscribe((response) => {
         console.log(response);
+        if (Object.values(response)[0] === true) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'جاري طباعة الفاتورة',
+            showConfirmButton: false,
+            timer: 3000,
+          });
+          this.router.navigate(['/']);
+        } else {
+          Swal.fire('لم يتم إضافة الفاتورة!', '', 'error');
+        }
       });
       console.log(form);
       console.log(bill);
     });
+  }
+  addDirectSanad(form) {
+    const sanad = {
+      printable: false,
+      date: form.controls.date.value,
+      cash: form.controls.amountPaid.value,
+      note: form.controls.notes.value,
+    };
+    this._billsService
+      .addDirectPay(sanad, form.controls.clientName.value.id)
+      .subscribe((r) => {
+        console.log(r);
+      });
+    // console.log(form.controls);
   }
 }
 export interface IOrderedProducts {
