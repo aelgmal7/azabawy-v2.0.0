@@ -130,10 +130,10 @@
               </tr>
               <tr *ngFor="let product of orderedProducts; let i = index">
                 <td>{{product.productName}}</td>
-                <td>{{product.productWeight}}</td>
-                <td>{{product.productAmount}}</td>
+                <td>{{product.weight}}</td>
+                <td>{{product.amount}}</td>
                 <td>{{product.totalWeight}} كجم</td>
-                <td>{{product.productPrice}} ج</td>
+                <td>{{product.kiloPrice}} ج</td>
                 <td><button mat-icon-button class="text-center w-100" (click)="deleteProduct(i)">
                     <mat-icon mat-raised-button>cancel</mat-icon>
                   </button></td>
@@ -163,8 +163,8 @@
     </form>
 
     <div class="w-14 d-flex justify-content-between">
-      <button mat-raised-button class="btn-success"
-        [disabled]="form.invalid || orderedProducts.length < 1">إضافة</button>
+      <button mat-raised-button class="btn-success" [disabled]="form.invalid || orderedProducts.length < 1"
+        (click)="submit(form)">إضافة</button>
       <button mat-raised-button class="btn-danger">إلغاء</button>
       <button mat-raised-button color="primary">طباعه</button>
     </div>

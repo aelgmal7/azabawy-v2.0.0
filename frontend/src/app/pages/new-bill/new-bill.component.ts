@@ -17,6 +17,7 @@ import { StoreService } from 'src/app/shared/services/store.service';
 import { Product, BillType } from './types/types.t';
 import { PeriodicElement } from '../store/store.component';
 import { threadId } from 'worker_threads';
+import { BillsService } from 'src/app/shared/services/bills.service';
 
 @Component({
   selector: 'app-new-bill',
@@ -39,6 +40,7 @@ export class NewBillComponent implements OnInit {
   price;
   orderedProducts: IOrderedProducts[] = [];
   totalPrice: number = 0;
+  arr: number[] = [];
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -48,7 +50,7 @@ export class NewBillComponent implements OnInit {
     private _storeService: StoreService,
     private _ordersService: OrdersService,
     private _clientsService: ClientsService,
-    // private route: ActivatedRoute,
+    private _billsService: BillsService,
     public router: Router
   ) {
     console.log(router.url);
@@ -83,16 +85,6 @@ export class NewBillComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.route.paramMap.subscribe((params) => {
-    //   console.log(params);
-    // });
-
-    // this.router.events.filter(event => event instanceof NavigationEnd)
-    // .subscribe(event =>
-    //  {
-    //     this.currentRoute = event.url;
-    //     console.log(event);
-    //  });
     console.log(this.router.url);
 
     this._clientsService.getAllClients().subscribe((response) => {
@@ -101,7 +93,7 @@ export class NewBillComponent implements OnInit {
     });
 
     this.form = this._fb.group({
-      operation: ['', Validators.required],
+      // operation: ['', Validators.required],
       date: [this.myDate, Validators.required],
       totalPrice: [''],
       clientName: [''],
@@ -112,13 +104,6 @@ export class NewBillComponent implements OnInit {
       productWeights: [''],
       productAmount: [''],
       paid: [0],
-    });
-    this.operation.valueChanges.subscribe((change) => {
-      this.clientName.reset();
-      this.productName.reset();
-      this.productWeights.reset();
-      this.totalPrice2.reset();
-      this.orderedProducts = [];
     });
     this.billType.valueChanges.subscribe((change) => {
       this.orderName.reset();
@@ -140,11 +125,13 @@ export class NewBillComponent implements OnInit {
         this.products = x[0];
         this.myProducts = this.orderName.value?.orderItems;
 
-        let ar: number[] = [];
         for (let k in this.myProducts) {
-          ar.push(this.myProducts[k].productId);
+          this.arr.push(this.myProducts[k].productId);
         }
-        for (let k of ar) {
+        console.log(this.myProducts);
+        console.log(this.arr);
+
+        for (let k of this.arr) {
           this.products.sort((a, b) => {
             return a.id == k ? -1 : b.id == k ? 1 : 0;
           });
@@ -173,33 +160,64 @@ export class NewBillComponent implements OnInit {
 
   orderProduct(productName, productPrice, productWeight, productAmount) {
     const x = {} as IOrderedProducts;
+    x.id = productName.id;
     x.productName = productName.productName;
-    x.productPrice = productPrice * productWeight.weight * productAmount;
-    x.productWeight = productWeight.weight;
-    x.productAmount = productAmount;
+    x.kiloPrice = productPrice * productWeight.weight * productAmount;
+    x.weight = productWeight.weight;
+    x.amount = productAmount;
     x.totalWeight = productAmount * productWeight.weight;
+    this.arr.includes(productName.id)
+      ? (x.orderFlag = true)
+      : (x.orderFlag = false);
     this.orderedProducts?.push(x);
     this.productName.reset();
     this.kiloPrice.reset();
     this.productWeights.reset();
     this.productAmount.reset();
+    console.log(x);
+    // console.log(productName, productPrice, productWeight, productAmount);
 
     this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
-      return accumulator + object.productPrice;
+      return accumulator + object.kiloPrice;
     }, 0);
   }
   deleteProduct(i) {
     this.orderedProducts.splice(i, 1);
     this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
-      return accumulator + object.productPrice;
+      return accumulator + object.kiloPrice;
     }, 0);
     console.log(this.totalPrice);
   }
+
+  submit(form) {
+    const bill = {
+      options: {
+        printable: false,
+        type: null,
+      },
+      billData: {
+        cost: this.totalPrice,
+        paid: form.controls.paid.value,
+        date: form.controls.date.value,
+        orderId: form.controls.orderName.value.id,
+      },
+      productsDetails: this.orderedProducts,
+    };
+    this._billsService
+      .addNewBill(bill, form.controls.clientName.value.id)
+      .subscribe((response) => {
+        console.log(response);
+      });
+    console.log(form);
+    console.log(bill);
+  }
 }
 export interface IOrderedProducts {
+  id: number;
   productName: string;
-  productPrice: number;
-  productWeight: number;
+  kiloPrice: number;
+  weight: number;
   totalWeight: number;
-  productAmount: number;
+  amount: number;
+  orderFlag: boolean;
 }
