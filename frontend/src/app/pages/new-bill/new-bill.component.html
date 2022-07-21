@@ -1,6 +1,9 @@
 <div class="container1">
   <div class="header">
-    <h1>إضافة فاتورة</h1>
+    <h1 *ngIf="router.url == '/new-bill-client'">إضافة فاتورة بيع عميل</h1>
+    <h1 *ngIf="router.url == '/new-bill-direct'">إضافة فاتورة بيع مباشر</h1>
+    <h1 *ngIf="router.url == '/new-sanad-direct'">إضافة سند قبض مباشر</h1>
+    <h1 *ngIf="router.url == '/new-sanad-order'">إضافة سند قبض فاتورة</h1>
   </div>
   <div class="bg-white p-5 rounded-3 mat-elevation-z8">
     <form [formGroup]="form">
@@ -133,7 +136,7 @@
                 <td>{{product.weight}}</td>
                 <td>{{product.amount}}</td>
                 <td>{{product.totalWeight}} كجم</td>
-                <td>{{product.kiloPrice}} ج</td>
+                <td>{{product.totalPrice}} ج</td>
                 <td><button mat-icon-button class="text-center w-100" (click)="deleteProduct(i)">
                     <mat-icon mat-raised-button>cancel</mat-icon>
                   </button></td>
@@ -143,7 +146,37 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-between">
+      <div *ngIf="router.url == '/new-sanad-direct'">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>المبلغ</mat-label>
+          <input type="number" matInput formControlName="amountPaid" min="0">
+          <mat-error *ngIf="form.get('amountPaid')!.hasError('required')">
+            المبلغ <strong>مطلوب</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>الملاحظات</mat-label>
+          <textarea matInput formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+      <div *ngIf="router.url == '/new-sanad-order'">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>المبلغ</mat-label>
+          <input type="number" matInput formControlName="amountPaid" min="0">
+          <mat-error *ngIf="form.get('amountPaid')!.hasError('required')">
+            المبلغ <strong>مطلوب</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>الملاحظات</mat-label>
+          <textarea matInput formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="router.url !== '/new-sanad-direct' && router.url !== '/new-sanad-order'"
+        class="d-flex justify-content-between">
         <mat-form-field class="w-49" appearance="outline">
           <mat-label>السعر الإجمالي</mat-label>
           <input type="number" matInput formControlName="totalPrice" min="0" [value]="totalPrice">
@@ -162,11 +195,19 @@
       </div>
     </form>
 
-    <div class="w-14 d-flex justify-content-between">
+    <div *ngIf="router.url == '/new-bill-client' && '/new-bill-direct'" class="w-14 d-flex justify-content-between"
+      id="10">
       <button mat-raised-button class="btn-success" [disabled]="form.invalid || orderedProducts.length < 1"
         (click)="submit(form)">إضافة</button>
-      <button mat-raised-button class="btn-danger">إلغاء</button>
-      <button mat-raised-button color="primary">طباعه</button>
+      <button mat-raised-button class="btn-danger" [routerLink]="'/'">إلغاء</button>
+      <button mat-raised-button color="primary" [disabled]="form.invalid || orderedProducts.length < 1"
+        (click)="print(form)">طباعه</button>
+    </div>
+    <div *ngIf="router.url == '/new-sanad-direct' || router.url == '/new-sanad-order'"
+      class="w-14 d-flex justify-content-between" id="100">
+      <button mat-raised-button class="btn-success" [disabled]="form.invalid" (click)="submit(form)">إضافة</button>
+      <button mat-raised-button class="btn-danger" [routerLink]="'/'">إلغاء</button>
+      <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="print(form)">طباعه</button>
     </div>
   </div>
 </div>

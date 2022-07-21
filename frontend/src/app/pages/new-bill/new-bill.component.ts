@@ -18,6 +18,8 @@ import { Product, BillType } from './types/types.t';
 import { PeriodicElement } from '../store/store.component';
 import { threadId } from 'worker_threads';
 import { BillsService } from 'src/app/shared/services/bills.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PrintOptionsComponent } from './print-options/print-options.component';
 
 @Component({
   selector: 'app-new-bill',
@@ -32,7 +34,7 @@ export class NewBillComponent implements OnInit {
   orders: IOrders[];
   selectedOrder: IOrders;
   myProducts: IOrderItems[];
-  products: PeriodicElement[];
+  products: any[];
   selectedProduct: PeriodicElement;
   weights;
   selectedWeights;
@@ -40,7 +42,8 @@ export class NewBillComponent implements OnInit {
   price;
   orderedProducts: IOrderedProducts[] = [];
   totalPrice: number = 0;
-  arr: number[] = [];
+  arr;
+  printOption: number;
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -51,7 +54,8 @@ export class NewBillComponent implements OnInit {
     private _ordersService: OrdersService,
     private _clientsService: ClientsService,
     private _billsService: BillsService,
-    public router: Router
+    public router: Router,
+    public dialog: MatDialog
   ) {
     console.log(router.url);
   }
@@ -83,6 +87,9 @@ export class NewBillComponent implements OnInit {
   get totalPrice2(): AbstractControl {
     return this.form?.get('totalPrice') as AbstractControl;
   }
+  get amountPaid(): AbstractControl {
+    return this.form?.get('amountPaid') as AbstractControl;
+  }
 
   ngOnInit(): void {
     console.log(this.router.url);
@@ -104,7 +111,15 @@ export class NewBillComponent implements OnInit {
       productWeights: [''],
       productAmount: [''],
       paid: [0],
+      amountPaid: [''],
+      notes: [''],
     });
+    if (this.router.url == '/new-sanad-direct') {
+      this.amountPaid.setValidators(Validators.required);
+    }
+    if (this.router.url == '/new-sanad-order') {
+      this.amountPaid.setValidators(Validators.required);
+    }
     this.billType.valueChanges.subscribe((change) => {
       this.orderName.reset();
       this.productName.reset();
@@ -125,15 +140,31 @@ export class NewBillComponent implements OnInit {
         this.products = x[0];
         this.myProducts = this.orderName.value?.orderItems;
 
+        // const m: any[] = [];
+        // m.push(...this.myProducts, ...this.products);
+        // console.log(m);
+
+        this.arr = [];
         for (let k in this.myProducts) {
-          this.arr.push(this.myProducts[k].productId);
+          let o: any = {};
+          o.id = this.myProducts[k].productId;
+          o.orderItemId = this.myProducts[k].id;
+          console.log(o);
+          this.arr.push(o);
+          // this.arr.push(this.myProducts[k].productId);
         }
         console.log(this.myProducts);
         console.log(this.arr);
 
         for (let k of this.arr) {
+          this.products.map((item) => {
+            if (item.id == k.id) {
+              item.orderItemId = k.orderItemId;
+            }
+            return item;
+          });
           this.products.sort((a, b) => {
-            return a.id == k ? -1 : b.id == k ? 1 : 0;
+            return a.id == k.id ? -1 : b.id == k.id ? 1 : 0;
           });
         }
         console.log(this.products);
@@ -160,13 +191,21 @@ export class NewBillComponent implements OnInit {
 
   orderProduct(productName, productPrice, productWeight, productAmount) {
     const x = {} as IOrderedProducts;
+    // productName.productId
+    //   ? (x.id = productName.productId)
+    //   : (x.id = productName.id);
     x.id = productName.id;
+    // productName.productId ? (x.orderItemId = productName.id) : null;
+    if (productName.orderItemId) {
+      x.orderItemId = productName.orderItemId;
+    }
     x.productName = productName.productName;
-    x.kiloPrice = productPrice * productWeight.weight * productAmount;
+    x.kiloPrice = productPrice;
+    x.totalPrice = productPrice * productWeight.weight * productAmount;
     x.weight = productWeight.weight;
     x.amount = productAmount;
     x.totalWeight = productAmount * productWeight.weight;
-    this.arr.includes(productName.id)
+    this.arr.filter((item) => item.id == productName.id).length > 0
       ? (x.orderFlag = true)
       : (x.orderFlag = false);
     this.orderedProducts?.push(x);
@@ -175,7 +214,7 @@ export class NewBillComponent implements OnInit {
     this.productWeights.reset();
     this.productAmount.reset();
     console.log(x);
-    // console.log(productName, productPrice, productWeight, productAmount);
+    console.log(productName);
 
     this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
       return accumulator + object.kiloPrice;
@@ -190,6 +229,7 @@ export class NewBillComponent implements OnInit {
   }
 
   submit(form) {
+    const id = form.controls.clientName.value.id;
     const bill = {
       options: {
         printable: false,
@@ -203,19 +243,48 @@ export class NewBillComponent implements OnInit {
       },
       productsDetails: this.orderedProducts,
     };
-    this._billsService
-      .addNewBill(bill, form.controls.clientName.value.id)
-      .subscribe((response) => {
-        console.log(response);
-      });
+    this._billsService.addNewBill(bill, id).subscribe((response) => {
+      console.log(response);
+    });
     console.log(form);
     console.log(bill);
+  }
+  print(form) {
+    let dialogRef = this.dialog.open(PrintOptionsComponent, {
+      width: '400px',
+      data: this.printOption,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.printOption = result;
+      console.log(this.printOption);
+      const id = form.controls.clientName.value.id;
+      const bill = {
+        options: {
+          printable: true,
+          type: this.printOption,
+        },
+        billData: {
+          cost: this.totalPrice,
+          paid: form.controls.paid.value,
+          date: form.controls.date.value,
+          orderId: form.controls.orderName.value.id,
+        },
+        productsDetails: this.orderedProducts,
+      };
+      this._billsService.addNewBill(bill, id).subscribe((response) => {
+        console.log(response);
+      });
+      console.log(form);
+      console.log(bill);
+    });
   }
 }
 export interface IOrderedProducts {
   id: number;
+  orderItemId: number;
   productName: string;
   kiloPrice: number;
+  totalPrice: number;
   weight: number;
   totalWeight: number;
   amount: number;

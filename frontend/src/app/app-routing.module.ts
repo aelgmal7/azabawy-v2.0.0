@@ -29,6 +29,14 @@ const routes: Routes = [
     component: NewBillComponent,
   },
   {
+    path: 'new-sanad-direct',
+    component: NewBillComponent,
+  },
+  {
+    path: 'new-sanad-order',
+    component: NewBillComponent,
+  },
+  {
     path: 'new-operation',
     component: NewOperationComponent,
   },
