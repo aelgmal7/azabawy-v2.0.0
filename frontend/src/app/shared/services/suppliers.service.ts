@@ -25,4 +25,9 @@ export class SuppliersService {
   addNewSupplier(newSupplier: NewSupplier): Observable<NewSupplier> {
     return this.http.post<NewSupplier>(this.postURL, newSupplier);
   }
+
+  updateSupplier(supplier: NewSupplier, id: number): Observable<NewSupplier> {
+    const postURL = `http://localhost:3000/supplier/${id}`;
+    return this.http.put<NewSupplier>(postURL, supplier);
+  }
 }

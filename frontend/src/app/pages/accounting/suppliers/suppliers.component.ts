@@ -8,6 +8,7 @@ import { SuppliersService } from 'src/app/shared/services/suppliers.service';
 import Swal from 'sweetalert2';
 import { IClients } from '../../orders-management/add-order/add-order.component';
 import { AddSupplierComponent } from '../suppliers/add-supplier/add-supplier.component';
+import { UpdateSupplierComponent } from './update-supplier/update-supplier.component';
 
 @Component({
   selector: 'app-suppliers',
@@ -51,6 +52,19 @@ export class SuppliersComponent implements OnInit {
   addDialog() {
     let dialogRef = this.dialog.open(AddSupplierComponent, {
       width: '800px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this._suppliersService.getAllSuppliers().subscribe((response) => {
+        console.log(response);
+        const x: any[] = Object.values(response.result);
+        this.dataSource.data = x[0];
+      });
+    });
+  }
+  editDialog(supp) {
+    let dialogRef = this.dialog.open(UpdateSupplierComponent, {
+      width: '800px',
+      data: supp,
     });
     dialogRef.afterClosed().subscribe((result) => {
       this._suppliersService.getAllSuppliers().subscribe((response) => {
