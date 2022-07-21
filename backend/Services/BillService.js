@@ -53,7 +53,7 @@ const addBill = async (clientId,billData,productsDetails) => {
                         if(element.id === product.id){
                             const {weight,amount,kiloPrice,orderFlag} = element
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                            if (orderFlag){
+                            if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
 
                                 orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                             }
