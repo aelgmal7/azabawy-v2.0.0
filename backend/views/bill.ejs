@@ -94,7 +94,10 @@ footer p:last-child {
                 <h3>مصنع حلويات العزباوي</h3>
                 <h2>فاتورة بيع رقم  <%= bill.id %> </h2>
                 <div>
+                    <% if (type == 2 || type == 3 ) { %>
+                    
                     <p>الرقم الضريبي: <span>028-966-723</span></p>
+                    <% } %>
                     <p>التاريخ: <span><%= (new Date(bill.date)).toLocaleDateString('en-US') %></span></p>
                 </div>
             </header>
@@ -109,7 +112,9 @@ footer p:last-child {
                         <td>وزن العبوة</td>
                         <td>سعر الكيلو</td>
                         <td>إجمالي الوزن</td>
-                        <td>السعر الإجمالي للمنتج</td>
+                        <% if(type == 1 || type ==3) { %>
+                            <td>السعر الإجمالي للمنتج</td>
+                        <% } %>
                     </tr>
                 </thead>
                 <tbody>
@@ -120,8 +125,9 @@ footer p:last-child {
                         <td> <%= product.weight %></td>
                         <td> <%= product.kiloPrice %></td>
                         <td> <%= (product.weight * product.amount) %></td>
+                        <% if(type == 1 || type ==3) { %>
                         <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
-                        
+                        <% } %>
                         
                     </tr>
                     <% } %>
@@ -130,12 +136,16 @@ footer p:last-child {
                         <td><%= totalAmount %></td>
                         <td colspan="2"></td>
                         <td><%= totalWeight %></td>
+                        <% if(type == 1 || type ==3) { %>
                         <td><%= totalCost %></td>
+                        <% } %>
                     </tr>
                 </tbody>
             </table>
         <!-- End Table -->
         <!-- Start Info -->
+        <% if(type == 1 || type ==3) { %>
+
             <div class="info">
                 <div>
                     <p>الرصيد السابق للعميل</p>
@@ -150,6 +160,7 @@ footer p:last-child {
                     <span><%= client.totalBalance %></span>
                 </div>
             </div>
+        <% } %>
         <!-- End Info -->
         <!-- Start Footer -->
             <footer>
