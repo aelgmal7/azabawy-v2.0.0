@@ -22,7 +22,7 @@ const addDirectPayOperations = async(clientId,money , date , note= null) => {
         client.save()
         return client.createDirectPay({money:money,date:date,note:note}).then(pay => {
             pay.remainAfterOp = client.remain
-            pay.save
+            pay.save()
             return pay 
         })
     })
