@@ -1,6 +1,10 @@
 const { Client } = require("../Models/Client");
 const { ClientModel } = require("../Classes/Client");
 
+const {DirectPay } = require("../Models/DirectPay")
+const {Bill} = require("../Models/Bill")
+const {BillPay} = require("../Models/BillPay")
+
 const createClient = async({
   clientName,
   totalBalance,
@@ -71,10 +75,39 @@ const updateClient = async(clientId,clientName,totalBalance,paid) => {
   })
 }
 
+const clientAllOP = async (clientId) => {
+  const client = await Client.findOne({where: {enabled: true,id: clientId}})
+  if (!client){
+    return {
+      message: `no client with id ${clientId}`,
+      code: 404,
+    }
+  }
+  const bills =await Bill.findAll({where: {enabled: true,ClientId: clientId}})
+  const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
+    return pays.map(pay =>{
+      pay.dataValues.type =` دفع علي حساب فاتوره رقم ${ pay.BillId}`
+      return pay
+    })
+  })
+  const directPay =await DirectPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
+    return pays.map(pay =>{
+      const c = Client.findOne({where: {enabled: true,id: clientId}})
+      pay.dataValues.type =` دفع علي حساب العميل `
+      return pay
+    })})
+  let all =await  [...bills, ...directPay, ...payForBill]
+   all = all.sort((a,b)=> {
+   return a.date > b.date
+  })
+  return all
+}
+
 module.exports = {
   createClient: createClient,
   getClients : getClients,
   deleteClient:deleteClient,
-  updateClient:updateClient
+  updateClient:updateClient,
+  clientAllOP:clientAllOP
 
 };
