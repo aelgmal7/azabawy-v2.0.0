@@ -174,17 +174,22 @@ const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) =>
             }
             else{
                return items.map(item =>{
-                  const receivedItem = orderItemsArr.find(ele => ele.id ===item.id);
-                  item.delivered += receivedItem.delivered;
-                  if(item.delivered >= item.productNeededWeight) item.completed = true;
-                  item.save();
-                  return item;       
+                  
+                     const receivedItem = orderItemsArr.find(ele => ele.id ===item.id);
+                     item.delivered += receivedItem.delivered;
+                     if(item.delivered >= item.productNeededWeight) item.completed = true;
+                     item.save();
+                     return item;       
+                  
                })
             }
          }).then(items => {
-            if(items.every(item => item.completed == true)) {
-               order.completed = true;
-               order.save();
+            if(items.length >0) {
+
+               if(items.every(item => item.completed == true)) {
+                  order.completed = true;
+                  order.save();
+               }
             }
             return {order:order,
                orderItems:order.getOrderItems()}

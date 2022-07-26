@@ -70,7 +70,10 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                     return product
                 })).then(async(products) => {
                     console.log('orderArr :>> ', orderArr);
-                    await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    if (products.some(product => product.orderFlag)){
+                        
+                        await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    }
                     
                     printBill(bill,client,oldClientTotalBalance,options)
                     
