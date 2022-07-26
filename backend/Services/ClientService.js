@@ -98,7 +98,9 @@ const clientAllOP = async (clientId) => {
     })})
   let all =await  [...bills, ...directPay, ...payForBill]
    all = all.sort((a,b)=> {
-   return a.date > b.date
+    let da = new Date(a.date)
+    let db = new Date(b.date)
+   return  db - da
   })
   return all
 }
