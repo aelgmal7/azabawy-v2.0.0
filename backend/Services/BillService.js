@@ -40,6 +40,9 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             client.paid += billData.paid
             client.remain += billData.cost - billData.paid
             client.save()
+
+            bill.remainAfterOp = client.remain
+            bill.save() 
             return bill
 
         })
@@ -111,8 +114,16 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
                 }
             }
             bill.paid += money
+            client.paid += money
+            client.remain -= money
+            client.save()
             bill.save()
-            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)})
+            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)}).then(pay => {
+                pay.remainAfterOp = client.remain
+                pay.save()
+                return pay
+                  
+            })
         })
     })
 } 

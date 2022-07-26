@@ -26,8 +26,8 @@ router.get("/", async (req, res) => {
 
 router.post("/add-directPay/:clientId", async (req, res) => {
   const clientId = req.params.clientId;
-  const { cash, date, note } = req.body;
-  const result = await addDirectPayOperations(clientId, cash, date, note);
+  const { money, date, note } = req.body;
+  const result = await addDirectPayOperations(clientId, money, date, note);
   try {
     if (result.message) {
       res.send(

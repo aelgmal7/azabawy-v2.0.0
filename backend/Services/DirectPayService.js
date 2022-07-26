@@ -8,6 +8,7 @@ const getAllDirectPayOperations = async() => {
 
 
 const addDirectPayOperations = async(clientId,money , date , note= null) => {
+    console.log(money);
     return Client.findOne({where: {enabled: true,id: clientId}})
     .then((client) => {
         if (!client) {
@@ -16,7 +17,14 @@ const addDirectPayOperations = async(clientId,money , date , note= null) => {
                 code: 404,
             }
         }
-        return client.createDirectPay({money:money,date:date,note:note})
+        client.paid += money
+        client.remain -= money
+        client.save()
+        return client.createDirectPay({money:money,date:date,note:note}).then(pay => {
+            pay.remainAfterOp = client.remain
+            pay.save
+            return pay 
+        })
     })
     
 }
