@@ -87,7 +87,15 @@ router.get('/conc/:clientId',async (req, res)=> {
 router.get('/individual-bill',async (req, res)=> {
     const {type,id}= req.body
     const result = await sendIndividualBill(type,id)
-    res.send(result)
+    
+    try {
+        if(result.message){
+            res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{message:result.message}))
+            return null
+        }
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{op:result}))
+        return null
+    }catch (error){}
 })
 
 

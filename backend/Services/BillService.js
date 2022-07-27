@@ -176,7 +176,7 @@ const printPay = async(client,bill) => {
                         return err
                     }
 
-                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
                 });
         }else {
             const dir = `${path.join("backend","views","مدفوعات",client.clientName)}`
