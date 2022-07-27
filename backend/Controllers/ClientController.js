@@ -6,6 +6,7 @@ const {
      deleteClient,
      updateClient,
      clientAllOP,
+     sendIndividualBill,
     } = require('../Services/ClientService')
 const {returnedResult} = require('../Payload/ReturnedResult')
 const HTTP_STATUS_CODES =require('../Payload/statusCode.ts')
@@ -82,4 +83,12 @@ router.get('/conc/:clientId',async (req, res)=> {
         return null
     }catch (error){}
 })
+
+router.get('/individual-bill',async (req, res)=> {
+    const {type,id}= req.body
+    const result = await sendIndividualBill(type,id)
+    res.send(result)
+})
+
+
  module.exports = {clientRouter:router}

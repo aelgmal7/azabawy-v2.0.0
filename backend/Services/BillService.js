@@ -14,6 +14,7 @@ const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
 
+require('dotenv').config();
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -138,7 +139,7 @@ let coreFn = async (temp,name,client,bill,option) => {
     html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
-        if(false){
+        if(process.env.PROD == "true"){
             const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
             const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
 

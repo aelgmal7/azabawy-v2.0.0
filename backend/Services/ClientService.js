@@ -4,6 +4,10 @@ const { ClientModel } = require("../Classes/Client");
 const {DirectPay } = require("../Models/DirectPay")
 const {Bill} = require("../Models/Bill")
 const {BillPay} = require("../Models/BillPay")
+const path = require('path')
+const fs = require('fs')
+const {app} = require('electron')
+ require('dotenv').config();
 
 const createClient = async({
   clientName,
@@ -97,11 +101,6 @@ const clientAllOP = async (clientId) => {
         text: `فاتورة بيع برقم ${temp.id}`
 
       }
-
-      console.log(bill);
-      return {
-
-      }
     })
   })
   const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
@@ -143,12 +142,42 @@ const clientAllOP = async (clientId) => {
   })
   return all
 }
-const sendIndividualBill = async () => {}
+const sendIndividualBill = async (type,id) => {
+  return returnBill(id)
+}
+// 28-فتح الله-08-07-22-مسعره-برقم-ضريبي
+// `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
+const returnBill = async (id) => {
+  const bill = await Bill.findOne({where: {enabled: true,id:id}})
+  if (!bill){
+    return {
+      message: `no bill with id ${id}`,
+      code: 404,
+    }
+  }
+  const name ="مسعره-برقم-ضريبي"
+  const client = await Client.findOne({where: {enabled: true,id:bill.ClientId}})
+  const billPath = `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
+  console.log(typeof process.env.PROD);
+  if(process.env.PROD == "true"){
+    console.log("here")
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),billPath)}"`);
+
+  }else{
+    console.log("there");
+    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",billPath)}"`);
+  }
+
+  return billPath 
+}
+const returnDirectPAy = async (id) => {}
+const returnBillPAy = async (id) => {}
 module.exports = {
   createClient: createClient,
   getClients : getClients,
   deleteClient:deleteClient,
   updateClient:updateClient,
-  clientAllOP:clientAllOP
+  clientAllOP:clientAllOP,
+  sendIndividualBill:sendIndividualBill
 
 };
