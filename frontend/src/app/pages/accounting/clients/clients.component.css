@@ -28,10 +28,21 @@ tr.example-element-row:not(.example-expanded-row):active {
   margin: 8px 0;
   align-items: center;
 }
+.operations td,
+.operations th {
+  border: 1px solid #dddddd;
+  /* text-align: right; */
+  padding: 8px;
+}
+
+.operations th {
+  background-color: #dddddd;
+}
 .mat-form-field {
   font-size: 14px;
   width: 100%;
   background-color: white;
+  margin-bottom: 1rem;
 }
 .container1 {
   margin: 0 10rem;

@@ -22,6 +22,10 @@
             matTooltip="فتح فواتير العميل">{{ client.clientName
             }}</a></td>
       </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>المبلغ بالكامل</th>
+        <td mat-cell *matCellDef="let client">{{ client.totalBalance }}</td>
+      </ng-container>
       <ng-container matColumnDef="paid">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>المدفوع</th>
         <td mat-cell *matCellDef="let client">{{ client.paid }}</td>
@@ -49,16 +53,39 @@
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let client let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
           <div class="example-element-detail" [@detailExpand]="client == expandedElement ? 'expanded' : 'collapsed'">
-            Hi
-
+            <table class="mb-3 operations">
+              <tr>
+                <th>رقم الفاتورة</th>
+                <th>التاريخ</th>
+                <th>نوع العملية</th>
+                <th>قيمة الفاتورة</th>
+                <th>المدفوع</th>
+                <th>المتبقي</th>
+                <th>مديونية العميل بعد الفاتورة</th>
+                <th>عرض الفاتورة</th>
+              </tr>
+              <tr *ngFor="let operation of operations; let i = index" class="w-100">
+                <td>{{operation.id}}</td>
+                <td>{{operation.date | date:'short'}}</td>
+                <td>{{operation.type}}</td>
+                <td>{{operation.billCost}}</td>
+                <td>{{operation.paid}}</td>
+                <td>{{operation.billCost - operation.paid}}</td>
+                <td>{{operation.remainAfterOp}}</td>
+                <td><button mat-icon-button class="text-center w-100" matTooltip="عرض الفاتورة">
+                    <mat-icon mat-raised-button>
+                      open_in_new</mat-icon>
+                  </button></td>
+              </tr>
+            </table>
           </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let product; columns: columnsToDisplay;" class="example-element-row"
-        [class.example-expanded-row]="expandedElement === product"
-        (click)="expandedElement = expandedElement === product ? null : product">
+      <tr mat-row *matRowDef="let client; columns: columnsToDisplay;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === client"
+        (click)="expandedElement = expandedElement === client ? null : client" (click)="getOperations(client.id)">
       </tr>
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 

@@ -27,7 +27,7 @@ export class BillsService {
     return this.http.post<any>(PostURL, bill);
   }
   getClientBills(clientId): Observable<any> {
-    const PostURL = `http://localhost:3000/bill/client?clientId=${clientId}`;
-    return this.http.get<any>(PostURL);
+    const getURL = `http://localhost:3000/bill/client?clientId=${clientId}`;
+    return this.http.get<any>(getURL);
   }
 }

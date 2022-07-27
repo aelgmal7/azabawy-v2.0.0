@@ -34,8 +34,10 @@ import Swal from 'sweetalert2';
 export class ClientsComponent implements OnInit {
   dataSource: MatTableDataSource<IClients>;
   swalWithBootstrapButtons;
+  operations: operation[];
+  extended: boolean = false;
 
-  columnsToDisplay = ['id', 'clientName', 'paid', 'remain', 'actions'];
+  columnsToDisplay = ['id', 'clientName', 'total', 'paid', 'remain', 'actions'];
   expandedElement;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -57,7 +59,19 @@ export class ClientsComponent implements OnInit {
       const x: any[] = Object.values(client.result);
       this.dataSource.data = x[0];
       console.log(this.dataSource);
+      this.getOperations;
     });
+  }
+  getOperations(id) {
+    this._clientsService.getClientOperations(id).subscribe((response) => {
+      const x: any[] = Object.values(response.result);
+      this.operations = x[0];
+      console.log(x[0]);
+    });
+  }
+  show() {
+    this.extended = !this.extended;
+    alert(this.extended);
   }
 
   applyFilter(event: Event) {
@@ -145,4 +159,14 @@ export class ClientsComponent implements OnInit {
         }
       });
   }
+}
+export interface operation {
+  id: number;
+  date: number;
+  type: number;
+  billCost: number;
+  paid: number;
+  remain: number;
+  remainAfterOp: number;
+  show: number;
 }
