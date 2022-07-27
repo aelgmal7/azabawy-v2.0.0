@@ -1,7 +1,7 @@
 const  { Sequelize, Model, DataTypes } = require('sequelize');
 const {sequelize} = require('../DataBase')
-class DirectPay extends Model {} 
-DirectPay.init({
+class Pay extends Model {} 
+Pay.init({
     id: {
         type:Sequelize.INTEGER,
         autoIncrement: true,
@@ -15,11 +15,6 @@ DirectPay.init({
         type:Sequelize.STRING,
         allowNull: true
     },
-    remainAfterOp : {
-        type:Sequelize.FLOAT,
-        allowNull: false,
-        defaultValue:0.0
-    },
     date: { 
         type:DataTypes.DATE,
         allowNull: false,
@@ -32,7 +27,7 @@ DirectPay.init({
 
 },{
         sequelize,
-        modelName:'directPay'
+        modelName:'pay'
 })
-DirectPay.build()
-module.exports = {DirectPay}
+Pay.build()
+module.exports = {Pay}

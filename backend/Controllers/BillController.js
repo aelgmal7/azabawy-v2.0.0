@@ -20,6 +20,7 @@ router.post('/add-bill/:clientId', async (req, res) =>{
     const billData = req.body.billData
     const products = req.body.productsDetails
     const options = req.body.options
+  
     const result = await addBill(clientId,billData,products,options)
     try {
          res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))

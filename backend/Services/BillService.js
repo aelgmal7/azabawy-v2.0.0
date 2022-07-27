@@ -14,6 +14,7 @@ const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
 
+require('dotenv').config();
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -40,6 +41,9 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             client.paid += billData.paid
             client.remain += billData.cost - billData.paid
             client.save()
+
+            bill.remainAfterOp = client.remain
+            bill.save() 
             return bill
 
         })
@@ -70,7 +74,10 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                     return product
                 })).then(async(products) => {
                     console.log('orderArr :>> ', orderArr);
-                    await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    if (products.some(product => product.orderFlag)){
+                        
+                        await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    }
                     
                     printBill(bill,client,oldClientTotalBalance,options)
                     
@@ -108,12 +115,106 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
                 }
             }
             bill.paid += money
+            client.paid += money
+            client.remain -= money
+            client.save()
             bill.save()
-            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)})
+            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)}).then(pay => {
+                pay.remainAfterOp = client.remain
+                pay.save()
+                return pay
+                  
+            })
         })
     })
 } 
 
+
+
+let coreFn = async (temp,name,client,bill,option) => {
+
+    let options = { format: 'A4' };
+    // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
+    let file = { content: temp };
+    html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
+        const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
+        console.log("PDF Buffer:-", pdfBuffer);
+        if(process.env.PROD == "true"){
+            const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
+            const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
+
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(fwaterDirProd)) {
+                    fs.mkdirSync(fwaterDirProd);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(clientDirProd)) {
+                    fs.mkdirSync(clientDirProd);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}`,pdfBuffer,err => {
+                    if(err) {
+                        console.log(err)
+                        // er = err
+                        return err
+                    }
+                    if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+
+                        require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                    }
+                });
+        }else {
+            const dir = `${path.join("backend","views","فواتير",client.clientName)}`
+            const fwater = `${path.join("backend","views","فواتير")}`
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(fwater)) {
+                    fs.mkdirSync(fwater);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
+                console.log(option);
+                if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                    console.log("here");
+
+                    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                }
+            });
+
+        }
+
+    })
+}
 
 const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
     console.log('client :>> ', client.dataValues);
@@ -137,91 +238,18 @@ const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
             totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
        
-        const temp = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance})
+        const priced = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:1})
+        const tax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:2})
+        const priceWithTax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:3})
+        const empty = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:4})
         
-        
-        let options = { format: 'A4' };
-        // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
-        let file = { content: temp };
-        html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
-            const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
-            console.log("PDF Buffer:-", pdfBuffer);
-            if(false){
-                const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
-                const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
-
-                try {
-                    // first check if directory already exists
-                    if (!fs.existsSync(fwaterDirProd)) {
-                        fs.mkdirSync(fwaterDirProd);
-                        console.log("Directory is created.");
-                    } else {
-                        console.log("Directory already exists.");
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-
-                try {
-                    // first check if directory already exists
-                    if (!fs.existsSync(clientDirProd)) {
-                        fs.mkdirSync(clientDirProd);
-                        console.log("Directory is created.");
-                    } else {
-                        console.log("Directory already exists.");
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-                    fs.writeFile(`${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}`,pdfBuffer,err => {
-                        if(err) {
-                            console.log(err)
-                            // er = err
-                            return err
-                        }
-                        if(options.printable){
-
-                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
-                        }
-                    });
-            }else {
-                const dir = `${path.join("backend","views","فواتير",client.clientName)}`
-                const fwater = `${path.join("backend","views","فواتير")}`
-                try {
-                    // first check if directory already exists
-                    if (!fs.existsSync(fwater)) {
-                        fs.mkdirSync(fwater);
-                        console.log("Directory is created.");
-                    } else {
-                        console.log("Directory already exists.");
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-                try {
-                    // first check if directory already exists
-                    if (!fs.existsSync(dir)) {
-                        fs.mkdirSync(dir);
-                        console.log("Directory is created.");
-                    } else {
-                        console.log("Directory already exists.");
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-                fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
-                    console.log(option);
-                    if (option.printable){
-                        console.log("here");
-
-                        require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
-                    }
-                });
-
-            }
-
-        })
+        coreFn(priced,"مسعره",client,bill,option)
+        coreFn(tax,"رقم-ضريبي",client,bill,option)
+        coreFn(priceWithTax,"مسعره-برقم-ضريبي",client,bill,option)
+        coreFn(empty,"خاليه",client,bill,option)
+       
     })
+  
         
     }
     module.exports = {

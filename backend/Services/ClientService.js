@@ -1,6 +1,14 @@
 const { Client } = require("../Models/Client");
 const { ClientModel } = require("../Classes/Client");
 
+const {DirectPay } = require("../Models/DirectPay")
+const {Bill} = require("../Models/Bill")
+const {BillPay} = require("../Models/BillPay")
+const path = require('path')
+const fs = require('fs')
+const {app} = require('electron')
+ require('dotenv').config();
+
 const createClient = async({
   clientName,
   totalBalance,
@@ -71,10 +79,105 @@ const updateClient = async(clientId,clientName,totalBalance,paid) => {
   })
 }
 
+const clientAllOP = async (clientId) => {
+  const client = await Client.findOne({where: {enabled: true,id: clientId}})
+  if (!client){
+    return {
+      message: `no client with id ${clientId}`,
+      code: 404,
+    }
+  }
+  const bills =await Bill.findAll({where: {enabled: true,ClientId: clientId}}).then( (bills) => {
+    return bills.map( (bill) =>{
+      const temp = bill.dataValues
+      return {
+        id: temp.id,
+        paid: temp.paid,
+        date: temp.date,
+        remainAfterOp: temp.remainAfterOp,
+        clientId: temp.clientId,
+        billCost: temp.cost,
+        type: "فاتورة بيع",
+        text: `فاتورة بيع برقم ${temp.id}`
+
+      }
+    })
+  })
+  const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
+    return pays.map(pay =>{
+      const temp = pay.dataValues
+      return {
+        id: temp.id,
+        paid: temp.money,
+        date: temp.date,
+        note: temp.note,
+        remainAfterOp: temp.remainAfterOp,
+        billId: temp.billId,
+        clientId: temp.clientId,
+        text: ` دفع علي حساب فاتوره رقم ${ temp.BillId}`,
+        type: "حساب فاتورة"
+      }
+     
+    })
+  })
+  const directPay =await DirectPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
+    return pays.map(pay =>{
+      const temp = pay.dataValues
+      return {
+        id: temp.id,
+        paid: temp.money,
+        date: temp.date,
+        note: temp.note,
+        remainAfterOp: temp.remainAfterOp,
+        clientId: temp.clientId,
+        text: temp.note,
+        type: "عملية دفع مباشرة"
+      }
+    })})
+  let all =await  [...bills, ...directPay, ...payForBill]
+   all = all.sort((a,b)=> {
+    let da = new Date(a.date)
+    let db = new Date(b.date)
+   return  db - da
+  })
+  return all
+}
+const sendIndividualBill = async (type,id) => {
+  return returnBill(id)
+}
+// 28-فتح الله-08-07-22-مسعره-برقم-ضريبي
+// `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
+const returnBill = async (id) => {
+  const bill = await Bill.findOne({where: {enabled: true,id:id}})
+  if (!bill){
+    return {
+      message: `no bill with id ${id}`,
+      code: 404,
+    }
+  }
+  const name ="مسعره-برقم-ضريبي"
+  const client = await Client.findOne({where: {enabled: true,id:bill.ClientId}})
+  const billPath = `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
+  console.log(typeof process.env.PROD);
+  if(process.env.PROD == "true"){
+    console.log("here")
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),billPath)}"`);
+
+  }else{
+    console.log("there");
+    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",billPath)}"`);
+  }
+
+  return billPath 
+}
+const returnDirectPAy = async (id) => {}
+const returnBillPAy = async (id) => {}
 module.exports = {
   createClient: createClient,
   getClients : getClients,
   deleteClient:deleteClient,
-  updateClient:updateClient
+  updateClient:updateClient,
+  clientAllOP:clientAllOP,
+  sendIndividualBill:sendIndividualBill
 
 };

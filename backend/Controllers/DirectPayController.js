@@ -4,6 +4,10 @@ const {
   getAllDirectPayOperations,
   addDirectPayOperations,
 } = require("../Services/DirectPayService");
+const {
+  getAllPayOperations,
+  addPayOperations,
+} = require("../Services/PayService")
 const { returnedResult } = require("../Payload/ReturnedResult");
 const { HTTP_STATUS_CODES } = require("../Payload/statusCode.ts");
 
@@ -24,10 +28,18 @@ router.get("/", async (req, res) => {
   } catch (err) {}
 });
 
-router.post("/add-directPay/:clientId", async (req, res) => {
-  const clientId = req.params.clientId;
-  const { cash, date, note } = req.body;
-  const result = await addDirectPayOperations(clientId, cash, date, note);
+router.post("/add-directPay/", async (req, res) => {
+  const clientId = req.query.clientId;
+  console.log(clientId);
+  const { money, date, note } = req.body;
+  let result ;
+  if ( clientId == 'null'){
+
+    result = await addPayOperations( money, date, note);
+  }else {
+
+     result = await addDirectPayOperations(clientId, money, date, note);
+  }
   try {
     if (result.message) {
       res.send(
