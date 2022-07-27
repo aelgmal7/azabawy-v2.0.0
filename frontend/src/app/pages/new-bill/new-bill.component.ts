@@ -5,18 +5,16 @@ import {
 import { OrdersService } from './../../shared/services/orders.service';
 import { IClients } from './../orders-management/add-order/add-order.component';
 import { ClientsService } from './../../shared/services/clients.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { StoreService } from 'src/app/shared/services/store.service';
-import { Product, BillType } from './types/types.t';
 import { PeriodicElement } from '../store/store.component';
-import { threadId } from 'worker_threads';
 import { BillsService } from 'src/app/shared/services/bills.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PrintOptionsComponent } from './print-options/print-options.component';
@@ -106,7 +104,6 @@ export class NewBillComponent implements OnInit {
     });
 
     this.form = this._fb.group({
-      // operation: ['', Validators.required],
       date: [this.myDate, Validators.required],
       totalPrice: [''],
       clientName: [''],

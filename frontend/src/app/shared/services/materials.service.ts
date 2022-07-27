@@ -18,8 +18,8 @@ export class MaterialsService {
     this.dataStore = { materials: [] };
   }
 
-  getAllMaterials(): Observable<IMaterials> {
-    return this.http.get<IMaterials>(this.Url);
+  getAllMaterials(): Observable<any> {
+    return this.http.get<any>(this.Url);
   }
 
   addNewMaterial(newMaterial: IMaterials): Observable<IMaterials> {

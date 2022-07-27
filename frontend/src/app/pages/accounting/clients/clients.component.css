@@ -1,6 +1,33 @@
 table {
   width: 100%;
 }
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+  cursor: pointer;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  /* display: flex; */
+}
+.row-detail {
+  display: flex;
+  flex-direction: row;
+  margin: 8px 0;
+  align-items: center;
+}
 .mat-form-field {
   font-size: 14px;
   width: 100%;

@@ -54,7 +54,7 @@ export class AddMaterialsComponent implements OnInit {
       amount1: [''],
     });
 
-    this.filteredOptions = this.type.valueChanges.pipe(
+    this.filteredOptions = this.type?.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value))
     );

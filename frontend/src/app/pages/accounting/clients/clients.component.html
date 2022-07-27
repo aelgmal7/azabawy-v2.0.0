@@ -46,52 +46,21 @@
       </ng-container>
 
       <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-      <!-- <ng-container matColumnDef="expandedDetail">
+      <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let client let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
           <div class="example-element-detail" [@detailExpand]="client == expandedElement ? 'expanded' : 'collapsed'">
-            <div class="row-detail" *ngFor="let kartona of client.weightAndAmounts; let i = index">
-              <span class="example-element-description">الكراتين من الوزن</span>
-              <span class="example-element-description highlight" id="weight">{{ kartona.weight
-                }}</span>
-              <span class="example-element-description">الكمية المتاحة</span>
-              <span class="example-element-description highlight">{{ kartona.amount }}</span>
-              <span class="example-element-description">تعديل الكمية</span>
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-danger"
-                  (click)="updateAmountMin(input.value, kartona.weight, client.id)"
-                  (click)="input.value= ''">-</button>
-                <input type="number" class="form-control" id="input" placeholder="الكمية" #input>
-                <button type="button" class="btn btn-success"
-                  (click)="updateAmountAdd(input.value, kartona.weight, client.id)"
-                  (click)="input.value = ''">+</button>
-              </div>
-              <button mat-icon-button [disabled]="client.weightAndAmounts.length == 1"
-                (click)="deleteWeight(client.id, kartona.weight)" color="warn" matTooltip="حذف">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-            <div class="row-detail">
-              <span class="example-element-description">الكراتين من الوزن</span>
-              <input type="number" class="form-control example-element-description" #weight1 [(ngModel)]="weight"
-                placeholder=" الوزن">
-              <span class="example-element-description">الكمية المتاحة</span>
-              <input type="number" class="form-control example-element-description" #amount1 [(ngModel)]="amount"
-                placeholder=" الكمية">
-
-              <button mat-raised-button color="primary" class="addWight" [disabled]="!weight || !amount"
-                (click)="addNewWeight(weight1.value, amount1.value, client.id, r)">أضف
-                الوزن الجديد</button>
-
-              <p class="text-error1" id="text-error1" [hidden]="!visible">هذا الوزن تم إضافته بالفعل</p>
-            </div>
+            Hi
 
           </div>
         </td>
-      </ng-container> -->
+      </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let client; columns: columnsToDisplay;" class="example-element-row">
+      <tr mat-row *matRowDef="let product; columns: columnsToDisplay;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === product"
+        (click)="expandedElement = expandedElement === product ? null : product">
       </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="mb-5"></mat-paginator>

@@ -9,6 +9,7 @@ import { OrdersManagementComponent } from './pages/orders-management/orders-mana
 import { MaterialsComponent } from './pages/materials/materials.component';
 import { ClientsComponent } from './pages/accounting/clients/clients.component';
 import { SuppliersComponent } from './pages/accounting/suppliers/suppliers.component';
+import { ProduceProductComponent } from './pages/store/produce-product/produce-product.component';
 
 // TODO some routes need children
 const routes: Routes = [
@@ -35,6 +36,10 @@ const routes: Routes = [
   {
     path: 'new-sanad-order',
     component: NewBillComponent,
+  },
+  {
+    path: 'produce-product',
+    component: ProduceProductComponent,
   },
   {
     path: 'new-operation',
