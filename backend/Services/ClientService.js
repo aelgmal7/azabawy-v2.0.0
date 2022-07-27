@@ -83,18 +83,57 @@ const clientAllOP = async (clientId) => {
       code: 404,
     }
   }
-  const bills =await Bill.findAll({where: {enabled: true,ClientId: clientId}})
+  const bills =await Bill.findAll({where: {enabled: true,ClientId: clientId}}).then( (bills) => {
+    return bills.map( (bill) =>{
+      const temp = bill.dataValues
+      return {
+        id: temp.id,
+        paid: temp.paid,
+        date: temp.date,
+        remainAfterOp: temp.remainAfterOp,
+        clientId: temp.clientId,
+        billCost: temp.cost,
+        type: "فاتورة بيع",
+        text: `فاتورة بيع برقم ${temp.id}`
+
+      }
+
+      console.log(bill);
+      return {
+
+      }
+    })
+  })
   const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
-      pay.dataValues.type =` دفع علي حساب فاتوره رقم ${ pay.BillId}`
-      return pay
+      const temp = pay.dataValues
+      return {
+        id: temp.id,
+        paid: temp.money,
+        date: temp.date,
+        note: temp.note,
+        remainAfterOp: temp.remainAfterOp,
+        billId: temp.billId,
+        clientId: temp.clientId,
+        text: ` دفع علي حساب فاتوره رقم ${ temp.BillId}`,
+        type: "حساب فاتورة"
+      }
+     
     })
   })
   const directPay =await DirectPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
-      const c = Client.findOne({where: {enabled: true,id: clientId}})
-      pay.dataValues.type =` دفع علي حساب العميل `
-      return pay
+      const temp = pay.dataValues
+      return {
+        id: temp.id,
+        paid: temp.money,
+        date: temp.date,
+        note: temp.note,
+        remainAfterOp: temp.remainAfterOp,
+        clientId: temp.clientId,
+        text: temp.note,
+        type: "عملية دفع مباشرة"
+      }
     })})
   let all =await  [...bills, ...directPay, ...payForBill]
    all = all.sort((a,b)=> {
@@ -104,7 +143,7 @@ const clientAllOP = async (clientId) => {
   })
   return all
 }
-
+const sendIndividualBill = async () => {}
 module.exports = {
   createClient: createClient,
   getClients : getClients,
