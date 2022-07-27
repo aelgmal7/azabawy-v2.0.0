@@ -89,8 +89,8 @@ export class MaterialsComponent implements OnInit {
   ngOnInit(): void {
     this._materialsService.getAllMaterials().subscribe((response) => {
       console.log(response);
+      this.dataSource.data = response;
     });
-    this.dataSource.data = this.ELEMENT_DATA;
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
