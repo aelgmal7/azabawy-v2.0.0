@@ -48,6 +48,7 @@ export class NewBillComponent implements OnInit {
   selectedBill: bills;
   billProducts: any[];
   selectedBillProducts: PeriodicElement;
+  orderId;
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -61,7 +62,7 @@ export class NewBillComponent implements OnInit {
     public router: Router,
     public dialog: MatDialog
   ) {
-    console.log(router.url);
+    // console.log(router.url);
   }
 
   get operation(): AbstractControl {
@@ -99,7 +100,7 @@ export class NewBillComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.router.url);
+    // console.log(this.router.url);
 
     this._clientsService.getAllClients().subscribe((response) => {
       const c: any = Object.values(response.result);
@@ -172,12 +173,12 @@ export class NewBillComponent implements OnInit {
           let o: any = {};
           o.id = this.myProducts[k].productId;
           o.orderItemId = this.myProducts[k].id;
-          console.log(o);
+          // console.log(o);
           this.arr.push(o);
           // this.arr.push(this.myProducts[k].productId);
         }
-        console.log(this.myProducts);
-        console.log(this.arr);
+        // console.log(this.myProducts);
+        // console.log(this.arr);
 
         for (let k of this.arr) {
           this.products.map((item) => {
@@ -190,7 +191,7 @@ export class NewBillComponent implements OnInit {
             return a.id == k.id ? -1 : b.id == k.id ? 1 : 0;
           });
         }
-        console.log(this.products);
+        // console.log(this.products);
       });
     });
     this.productName.valueChanges.subscribe((change) => {
@@ -200,6 +201,7 @@ export class NewBillComponent implements OnInit {
         const z = y?.filter((e) => e.id == this.productName.value?.id);
         this.weights = z[0]?.weightAndAmounts;
         this.price = z[0]?.kiloPrice;
+        console.log(y);
         console.log(z);
       });
     });
@@ -214,11 +216,7 @@ export class NewBillComponent implements OnInit {
 
   orderProduct(productName, productPrice, productWeight, productAmount) {
     const x = {} as IOrderedProducts;
-    // productName.productId
-    //   ? (x.id = productName.productId)
-    //   : (x.id = productName.id);
     x.id = productName.id;
-    // productName.productId ? (x.orderItemId = productName.id) : null;
     if (productName.orderItemId) {
       x.orderItemId = productName.orderItemId;
     }
@@ -236,11 +234,11 @@ export class NewBillComponent implements OnInit {
     this.kiloPrice.reset();
     this.productWeights.reset();
     this.productAmount.reset();
-    console.log(x);
-    console.log(productName);
+    // console.log(x);
+    // console.log(productName);
 
     this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
-      return accumulator + object.kiloPrice;
+      return accumulator + object.totalPrice;
     }, 0);
   }
   deleteProduct(i) {
@@ -248,11 +246,14 @@ export class NewBillComponent implements OnInit {
     this.totalPrice = this.orderedProducts.reduce((accumulator, object) => {
       return accumulator + object.kiloPrice;
     }, 0);
-    console.log(this.totalPrice);
+    // console.log(this.totalPrice);
   }
 
   submit(form) {
     const id = form.controls.clientName.value.id;
+    form.controls.orderName.value?.id
+      ? (this.orderId = form.controls.orderName.value?.id)
+      : (this.orderId = null);
     const bill = {
       options: {
         printable: false,
@@ -262,7 +263,7 @@ export class NewBillComponent implements OnInit {
         cost: this.totalPrice,
         paid: form.controls.paid.value,
         date: form.controls.date.value,
-        orderId: form.controls.orderName.value.id,
+        orderId: this.orderId,
       },
       productsDetails: this.orderedProducts,
     };
@@ -275,7 +276,6 @@ export class NewBillComponent implements OnInit {
         Swal.fire('لم يتم إضافة الفاتورة!', '', 'error');
       }
     });
-    console.log(form);
     console.log(bill);
   }
   print(form) {

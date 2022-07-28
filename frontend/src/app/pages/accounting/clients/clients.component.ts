@@ -34,7 +34,7 @@ import Swal from 'sweetalert2';
 export class ClientsComponent implements OnInit {
   dataSource: MatTableDataSource<IClients>;
   swalWithBootstrapButtons;
-  operations: operation[];
+  operations: operation[] = [];
   extended: boolean = false;
 
   columnsToDisplay = ['id', 'clientName', 'total', 'paid', 'remain', 'actions'];
@@ -76,7 +76,6 @@ export class ClientsComponent implements OnInit {
     };
     this._clientsService.getIndividualBill(bill).subscribe((response) => {
       console.log(response);
-      (err) => console.log(err);
     });
   }
 
