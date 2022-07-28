@@ -51,17 +51,41 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             // creating bill details 
             const orderArr = []
             return await Product.findAll({where :{ id:{[Op.or] :productsIds}}}).then(async(products)=> {
+                // console.log(products);
+                const productsContainer =[]
+                let tempProducts= products
+                 await productsIds.map(async(id) => {
+                      products.map((product) => {
+                        // console.log(product);
+                        // console.log(id);
+                        // console.log(id);
+                        // console.log(product.dataValues.id);
+                        if(id == product.dataValues.id) {
+                            // console.log(product);
+                            // Promise.resolve(product);
+                            productsContainer.push(product); 
+                        }
+                    })
+                    return productsContainer
+                })
+                return productsContainer
+                
+            }).then(async(products)=> {
+                // console.log(products);
                 return await bill.addProducts(products.map(product =>{
 
                     productsDetails.map(async(element) => {
                         if(element.id === product.id){
                             const {weight,amount,kiloPrice,orderFlag} = element
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                            if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                            if (billData.orderId !== null){
 
-                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                                    
+                                    orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                }
                             }
-                            //change selected products amount of weights and change product total amount and weight
+                                //change selected products amount of weights and change product total amount and weight
                             await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
                                 item.amount -= Number(amount);
                                 product.totalAmount -= Number(amount);
@@ -74,9 +98,14 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                     return product
                 })).then(async(products) => {
                     console.log('orderArr :>> ', orderArr);
-                    if (products.some(product => product.orderFlag)){
-                        
-                        await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    console.log(products);
+                    if (productsDetails.some(product => product.orderFlag)){
+                        console.log( Number(clientId),billData.orderId,);
+                        console.log("clientId,billData.orderId,");
+                        if(billData.billData !== null){
+                            
+                            await changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
+                        }
                     }
                     
                     printBill(bill,client,oldClientTotalBalance,options)
@@ -124,14 +153,98 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
                 pay.save()
                 return pay
                   
+            }).then(pay => {
+                printPay(client,pay)
+                return pay
             })
         })
     })
 } 
 
+const printPay = async(client,bill) => {
+
+    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","pay.ejs")}`,{bill:bill,client})
+
+    let options = { format: 'A4' };
+    // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
+    let file = { content: pay };
+    html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
+        const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
+        console.log("PDF Buffer:-", pdfBuffer);
+        if(process.env.PROD == "true"){
+            const fwaterDirProd = `${path.join(app.getPath('userData'),"مدفوعات")}`
+            const clientDirProd = `${path.join(app.getPath('userData'),"مدفوعات",client.clientName)}`
+
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(fwaterDirProd)) {
+                    fs.mkdirSync(fwaterDirProd);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(clientDirProd)) {
+                    fs.mkdirSync(clientDirProd);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}`,pdfBuffer,err => {
+                    if(err) {
+                        console.log(err)
+                        // er = err
+                        return err
+                    }
+
+                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
+                });
+        }else {
+            const dir = `${path.join("backend","views","مدفوعات",client.clientName)}`
+            const fwater = `${path.join("backend","views","مدفوعات")}`
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(fwater)) {
+                    fs.mkdirSync(fwater);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            fs.writeFile(`${path.join("backend","views","مدفوعات",pdfPath)}`,pdfBuffer,err => {
+                require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",pdfPath)}"`);
+                
+            });
+
+        }
+
+    })
+}
 
 
-let coreFn = async (temp,name,client,bill,option) => {
+
+const coreFn = async (temp,name,client,bill,option) => {
 
     let options = { format: 'A4' };
     // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
@@ -172,9 +285,12 @@ let coreFn = async (temp,name,client,bill,option) => {
                         // er = err
                         return err
                     }
-                    if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                    if(option.printable === true) {
 
-                        require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                            
+                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        }
                     }
                 });
         }else {
@@ -203,11 +319,13 @@ let coreFn = async (temp,name,client,bill,option) => {
                 console.log(err);
             }
             fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
-                console.log(option);
-                if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
-                    console.log("here");
+                if(option.printable === true) {
 
-                    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                        console.log("here");
+                        
+                        require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    }
                 }
             });
 
@@ -217,7 +335,7 @@ let coreFn = async (temp,name,client,bill,option) => {
 }
 
 const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
-    console.log('client :>> ', client.dataValues);
+    // console.log('client :>> ', client.dataValues);
     const billProducts = []
      await bill.getProducts().then(products => {
         products.forEach(product =>{

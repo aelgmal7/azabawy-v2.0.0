@@ -143,7 +143,15 @@ const clientAllOP = async (clientId) => {
   return all
 }
 const sendIndividualBill = async (type,id) => {
-  return returnBill(id)
+  if(type== "فاتورة بيع"){
+
+    return returnBill(id)
+  }else if(type==  "حساب فاتورة"){
+    returnBillPAy(id)
+  }else if(type== "عملية دفع مباشرة"){
+    returnDirectPAy(id)
+  }
+  return "done"
 }
 // 28-فتح الله-08-07-22-مسعره-برقم-ضريبي
 // `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
@@ -170,8 +178,48 @@ const returnBill = async (id) => {
 
   return billPath 
 }
-const returnDirectPAy = async (id) => {}
-const returnBillPAy = async (id) => {}
+const returnDirectPAy = async (id) => {
+  const directPay= await DirectPay.findOne({where: {enabled: true,id:id}})
+  if(!directPay){
+    return  {
+      message: `no paying with id ${id}`,
+      code: 404,
+    }
+  }
+  const client = await Client.findOne({where: {enabled: true,id:directPay.ClientId}})
+  const billPath = `${client.clientName}/${directPay.id}-${client.clientName}-${(new Date(directPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
+  console.log(typeof process.env.PROD);
+  if(process.env.PROD == "true"){
+    console.log("here")
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+
+  }else{
+    console.log("there");
+    require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",billPath)}"`);
+  }
+}
+const returnBillPAy = async (id) => {
+
+  const billPay= await BillPay.findOne({where: {enabled: true,id:id}})
+  if(!billPay){
+    return  {
+      message: `no paying with id ${id}`,
+      code: 404,
+    }
+  }
+  const client = await Client.findOne({where: {enabled: true,id:billPay.ClientId}})
+  const billPath = `${client.clientName}/${billPay.id}-${client.clientName}-${(new Date(billPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
+  console.log(typeof process.env.PROD);
+  if(process.env.PROD == "true"){
+    console.log("here")
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+
+  }else{
+    console.log("there");
+    require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",billPath)}"`);
+  }
+
+}
 module.exports = {
   createClient: createClient,
   getClients : getClients,

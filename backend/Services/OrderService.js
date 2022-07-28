@@ -157,6 +157,7 @@ const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) =>
          const ids = orderItemsArr.map(obj => {
             return obj.id
          })
+         console.log(ids);
       const order = orders.find(order => order.dataValues.id == orderId)
          if(order === undefined) {
             return {
@@ -165,8 +166,9 @@ const changeOrderItemsDeliveredWeight = async(clientId,orderId,orderItemsArr) =>
                }
          }
          return order.getOrderItems({where: { id:{[Op.or] :ids}}}).then(items =>{
+            console.log(items);
          
-            if(items.length < ids.length) {
+            if(items.length < 1) {
                return {
                   message: ` some orderItems don't exist`,
                   code: 404,

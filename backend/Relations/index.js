@@ -45,8 +45,8 @@ exports.relations =() => {
     Bill.belongsTo(Client)
 
     // bill - product
-    Bill.belongsToMany(Product,{through:BillItem})
-    Product.belongsToMany(Bill,{through:BillItem})
+    Bill.belongsToMany(Product,{through:{model:BillItem,unique: false}})
+    Product.belongsToMany(Bill,{through:{model:BillItem,unique: false}})
 
     // bill - billPay
     Bill.hasMany(BillPay)
