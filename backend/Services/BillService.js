@@ -15,7 +15,6 @@ const path = require('path')
 const fs = require('fs')
 
 require('dotenv').config();
-const azb =[]
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -49,110 +48,94 @@ const getClientBills =async(clientId) => {
 
     })
 }
+
+
 const addBill = async (clientId,billData,productsDetails,options) => {
     let oldClientTotalBalance=0
     try {
+        var mohamed =[]
        const productsIds = productsDetails.map(product => product.id)
-        return Client.findByPk(clientId).then((client)=> {
-            oldClientTotalBalance = client.totalBalance
-            //creating bill
-            return client.createBill({cost:billData.cost,clientId:clientId,paid:billData.paid,date:billData.date}).then((bill)=> {
-            return bill
-        }).then((bill)=> {
-            // client accounting for bill
-            client.totalBalance += billData.cost
+       const client = await Client.findByPk(clientId)
+       oldClientTotalBalance = client.totalBalance
+        const bill = await client.createBill({cost:billData.cost,clientId:clientId,paid:billData.paid,date:billData.date})
+        //client changes
+        client.totalBalance += billData.cost
             client.paid += billData.paid
             client.remain += billData.cost - billData.paid
-            client.save()
+            await client.save()
 
+            //bill changes
             bill.remainAfterOp = client.remain
-            bill.save() 
-            return bill
-
-        })
-        .then(async (bill)=> {
-            // creating bill details 
+            await bill.save()
+            
+            // product work 
+            const products = await Product.findAll({where :{ id:{[Op.or] :productsIds}}})
+            // console.log(products.length);
             const orderArr = []
             const repeatedProducts=[]
-            return await Product.findAll({where :{ id:{[Op.or] :productsIds}}}).then(async(products)=> {
-                // console.log(products);
-                const productsContainer =[]
-                let tempProducts= products
-                 await productsIds.map(async(id) => {
-                      products.map((product) => {
+
+            const productsContainer =[]
+            productsIds.map(async(id) => {
+                      products.forEach((product) => {
                        
                         if(id == product.dataValues.id) {
                            
                             productsContainer.push(product); 
                         }
                     })
-                    return productsContainer
                 })
-                return productsContainer
-                
-            }).then((products)=> {
-                // console.log(products);
-                return  bill.addProducts(products.map(product =>{
-                    // console.log(products.length);
-                    productsDetails.map((element,index) => {
-                        // console.log(repeatedProducts);
-                        if(element.id === product.id){
-                            if(!repeatedProducts.includes(index)){
-                            //    console.log(element);
-                                // if( repeatedProducts.find(item => item.id == element.id && item.index == index)){
-                                    repeatedProducts.push(index)
-                                    
-                                    const {weight,amount,kiloPrice,orderFlag} = element
-                                    console.log(weight,amount, product.productName);
-                                    product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                                    // product.save();
-                                    // console.log(product.BillItem);
-
+                // console.log("container",productsContainer);
+                let billItem= null
+                let arr =[]
+                productsContainer.forEach((product) => {
+                productsDetails.forEach((element,index) => {
+                    if(element.id === product.id){
+                        if(!repeatedProducts.includes(index)){
+                            repeatedProducts.push(index)
+                            const {weight,amount,kiloPrice,orderFlag} = element
+                            // console.log(weight,amount, product.productName);
+                             billItem = bill.addProduct(product,{through:{productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}})
+                             arr.push(billItem);   
+                            //  console.log(arr);
+                             //console.log("here",billProducts);
+                            console.log("وربنا شغال");
+                            // order handling
                             if (billData.orderId !== null){
-
                                 if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
-                                    
-                                    orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                                 }
                             }
-                            //change selected products amount of weights and change product total amount and weight
-                             WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                            //weights handling
+                            WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
                                 item.amount -= Number(amount);
                                 product.totalAmount -= Number(amount);
                                 product.totalWeight -= (Number(weight) * Number(amount)); 
                                 item.save()
                                 product.save();
                             })
-
-                            }
-                        // }
-                        }
-                    })
-                    azb.push(product)
-                    return product
-                })).then((products) => {
-                    // console.log('orderArr :>> ', orderArr);
-                    //  console.log(azb);
-                    if (productsDetails.some(product => product.orderFlag)){
-                        // console.log( Number(clientId),billData.orderId,);
-                        // console.log("clientId,billData.orderId,");
-                        if(billData.billData !== null){
-                            
-                             changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
                         }
                     }
-                    
-                    printBill(bill,client,oldClientTotalBalance,options)
-                    
-                    
-                     return {
-                         bill,products,
-                    }
-                })
             })
-            //    return await  bill.addProduct(product,{through:{productName:product.productName,weight:50,amount:40,kiloPrice:12}})
         })
-    })
+             const finalArr = await Promise.all(arr);
+            // let temp = billProducts[mohamed.length - 1];
+
+            if (productsDetails.some(product => product.orderFlag)){
+                // console.log( Number(clientId),billData.orderId,);
+                // console.log("clientId,billData.orderId,");
+                if(billData.billData !== null){
+                    
+                     changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
+                }
+            }
+            
+            printBill(bill,client,oldClientTotalBalance,options)
+            
+            
+             return {
+                 bill,products:finalArr,
+                    }
+     
 }catch (err) {}
 
 }
@@ -368,9 +351,11 @@ const coreFn = async (temp,name,client,bill,option) => {
     })
 }
 
-const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
+const printBill = async(bill1,client,oldClientTotalBalance=null,option) => {
     // console.log('client :>> ', client.dataValues);
     const billProducts = []
+    const bill = await Bill.findOne({where: {enabled: true,id: bill1.id}})
+    // console.log(bill);
      await bill.getProducts().then(products => {
         products.forEach(product =>{
             const {productName,weight,amount,kiloPrice} = product.billItem.dataValues
