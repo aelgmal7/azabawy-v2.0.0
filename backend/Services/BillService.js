@@ -53,7 +53,6 @@ const getClientBills =async(clientId) => {
 const addBill = async (clientId,billData,productsDetails,options) => {
     let oldClientTotalBalance=0
     try {
-        var mohamed =[]
        const productsIds = productsDetails.map(product => product.id)
        const client = await Client.findByPk(clientId)
        oldClientTotalBalance = client.totalBalance
@@ -101,7 +100,9 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                             console.log("وربنا شغال");
                             // order handling
                             if (billData.orderId !== null){
+                                console.log("in order section");
                                 if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                                    console.log(`adding order item with id ${element.orderItemId} to orderArr`);
                                 orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                                 }
                             }
