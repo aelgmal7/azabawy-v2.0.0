@@ -15,6 +15,7 @@ const path = require('path')
 const fs = require('fs')
 
 require('dotenv').config();
+const azb =[]
 
 const getAllBills = async() => {
     return Bill.findAll({where: {enabled: true},
@@ -72,6 +73,7 @@ const addBill = async (clientId,billData,productsDetails,options) => {
         .then(async (bill)=> {
             // creating bill details 
             const orderArr = []
+            const repeatedProducts=[]
             return await Product.findAll({where :{ id:{[Op.or] :productsIds}}}).then(async(products)=> {
                 // console.log(products);
                 const productsContainer =[]
@@ -88,14 +90,24 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                 })
                 return productsContainer
                 
-            }).then(async(products)=> {
+            }).then((products)=> {
                 // console.log(products);
-                return await bill.addProducts(products.map(product =>{
-
-                    productsDetails.map(async(element) => {
+                return  bill.addProducts(products.map(product =>{
+                    // console.log(products.length);
+                    productsDetails.map((element,index) => {
+                        // console.log(repeatedProducts);
                         if(element.id === product.id){
-                            const {weight,amount,kiloPrice,orderFlag} = element
-                            product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
+                            if(!repeatedProducts.includes(index)){
+                            //    console.log(element);
+                                // if( repeatedProducts.find(item => item.id == element.id && item.index == index)){
+                                    repeatedProducts.push(index)
+                                    
+                                    const {weight,amount,kiloPrice,orderFlag} = element
+                                    console.log(weight,amount, product.productName);
+                                    product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
+                                    // product.save();
+                                    // console.log(product.BillItem);
+
                             if (billData.orderId !== null){
 
                                 if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
@@ -103,26 +115,30 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                                     orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
                                 }
                             }
-                                //change selected products amount of weights and change product total amount and weight
-                            await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                            //change selected products amount of weights and change product total amount and weight
+                             WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
                                 item.amount -= Number(amount);
                                 product.totalAmount -= Number(amount);
                                 product.totalWeight -= (Number(weight) * Number(amount)); 
                                 item.save()
                                 product.save();
                             })
+
+                            }
+                        // }
                         }
                     })
+                    azb.push(product)
                     return product
-                })).then(async(products) => {
-                    console.log('orderArr :>> ', orderArr);
-                    console.log(products);
+                })).then((products) => {
+                    // console.log('orderArr :>> ', orderArr);
+                    //  console.log(azb);
                     if (productsDetails.some(product => product.orderFlag)){
-                        console.log( Number(clientId),billData.orderId,);
-                        console.log("clientId,billData.orderId,");
+                        // console.log( Number(clientId),billData.orderId,);
+                        // console.log("clientId,billData.orderId,");
                         if(billData.billData !== null){
                             
-                            await changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
+                             changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
                         }
                     }
                     
