@@ -34,6 +34,15 @@ const getClientBills =async(clientId) => {
         return await container
        
        
+    }).then((container) => {
+        return container.map(bill => {
+            const billId= bill[0].billItem.BillId
+            return {
+                billId,
+                products:container
+            }
+        })
+
     })
 }
 const addBill = async (clientId,billData,productsDetails,options) => {
