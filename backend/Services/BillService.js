@@ -22,8 +22,18 @@ const getAllBills = async() => {
         })
 }
 const getClientBills =async(clientId) => {
-    return Bill.findAll({where: {enabled: true,clientId:clientId},
-        include: [{model:Product,where: {enabled: true}}]
+     return await Bill.findAll({where: {enabled: true,clientId:clientId}})
+     .then( async(bills)=> {
+        const container =[]
+        for (let index = 0; index < bills.length; index++) {
+
+            const element = await bills[index].getProducts();
+            container.push(await element)
+            
+        }
+        return await container
+       
+       
     })
 }
 const addBill = async (clientId,billData,productsDetails,options) => {
@@ -56,13 +66,9 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                 let tempProducts= products
                  await productsIds.map(async(id) => {
                       products.map((product) => {
-                        // console.log(product);
-                        // console.log(id);
-                        // console.log(id);
-                        // console.log(product.dataValues.id);
+                       
                         if(id == product.dataValues.id) {
-                            // console.log(product);
-                            // Promise.resolve(product);
+                           
                             productsContainer.push(product); 
                         }
                     })
