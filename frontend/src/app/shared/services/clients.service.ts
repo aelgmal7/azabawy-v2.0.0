@@ -35,4 +35,13 @@ export class ClientsService {
     const deleteURL = `http://localhost:3000/client/${id}`;
     return this.http.delete<number>(deleteURL);
   }
+
+  getClientOperations(clientId): Observable<any> {
+    const getURL = `http://localhost:3000/client/conc/${clientId}`;
+    return this.http.get<any>(getURL);
+  }
+  getIndividualBill(bill): Observable<any> {
+    const getURL = 'http://localhost:3000/client/individual-bill';
+    return this.http.post<any>(getURL, bill);
+  }
 }
