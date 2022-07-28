@@ -51,6 +51,27 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             // creating bill details 
             const orderArr = []
             return await Product.findAll({where :{ id:{[Op.or] :productsIds}}}).then(async(products)=> {
+                // console.log(products);
+                const productsContainer =[]
+                let tempProducts= products
+                 await productsIds.map(async(id) => {
+                      products.map((product) => {
+                        // console.log(product);
+                        // console.log(id);
+                        // console.log(id);
+                        // console.log(product.dataValues.id);
+                        if(id == product.dataValues.id) {
+                            // console.log(product);
+                            // Promise.resolve(product);
+                            productsContainer.push(product); 
+                        }
+                    })
+                    return productsContainer
+                })
+                return productsContainer
+                
+            }).then(async(products)=> {
+                // console.log(products);
                 return await bill.addProducts(products.map(product =>{
 
                     productsDetails.map(async(element) => {
@@ -74,9 +95,11 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                     return product
                 })).then(async(products) => {
                     console.log('orderArr :>> ', orderArr);
-                    if (products.some(product => product.orderFlag)){
-                        
-                        await changeOrderItemsDeliveredWeight(clientId,billData.orderId,orderArr)
+                    console.log(products);
+                    if (productsDetails.some(product => product.orderFlag)){
+                        console.log( Number(clientId),billData.orderId,);
+                        console.log("clientId,billData.orderId,");
+                        await changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
                     }
                     
                     printBill(bill,client,oldClientTotalBalance,options)
@@ -256,9 +279,12 @@ const coreFn = async (temp,name,client,bill,option) => {
                         // er = err
                         return err
                     }
-                    if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                    if(option.printable === true) {
 
-                        require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                            
+                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                        }
                     }
                 });
         }else {
@@ -287,11 +313,13 @@ const coreFn = async (temp,name,client,bill,option) => {
                 console.log(err);
             }
             fs.writeFile(`${path.join("backend","views","فواتير",pdfPath)}`,pdfBuffer,err => {
-                console.log(option);
-                if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
-                    console.log("here");
+                if(option.printable === true) {
 
-                    require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
+                        console.log("here");
+                        
+                        require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",pdfPath)}"`);
+                    }
                 }
             });
 
@@ -301,7 +329,7 @@ const coreFn = async (temp,name,client,bill,option) => {
 }
 
 const printBill = async(bill,client,oldClientTotalBalance=null,option) => {
-    console.log('client :>> ', client.dataValues);
+    // console.log('client :>> ', client.dataValues);
     const billProducts = []
      await bill.getProducts().then(products => {
         products.forEach(product =>{
