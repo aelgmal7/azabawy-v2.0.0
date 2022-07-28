@@ -28,6 +28,7 @@ const getClientBills =async(clientId) => {
         for (let index = 0; index < bills.length; index++) {
 
             const element = await bills[index].getProducts();
+            // console.log(element);
             container.push(await element)
             
         }
@@ -35,11 +36,13 @@ const getClientBills =async(clientId) => {
        
        
     }).then((container) => {
-        return container.map(bill => {
+        console.log(container.length);
+        return container
+        .map(bill => {
             const billId= bill[0].billItem.BillId
             return {
                 billId,
-                products:container
+                products:bill
             }
         })
 
