@@ -78,11 +78,14 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                         if(element.id === product.id){
                             const {weight,amount,kiloPrice,orderFlag} = element
                             product.billItem = {productName:product.productName,weight:weight,amount:amount,kiloPrice:kiloPrice}
-                            if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                            if (billData.orderId !== null){
 
-                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                                    
+                                    orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                }
                             }
-                            //change selected products amount of weights and change product total amount and weight
+                                //change selected products amount of weights and change product total amount and weight
                             await WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
                                 item.amount -= Number(amount);
                                 product.totalAmount -= Number(amount);
@@ -99,7 +102,10 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                     if (productsDetails.some(product => product.orderFlag)){
                         console.log( Number(clientId),billData.orderId,);
                         console.log("clientId,billData.orderId,");
-                        await changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
+                        if(billData.billData !== null){
+                            
+                            await changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
+                        }
                     }
                     
                     printBill(bill,client,oldClientTotalBalance,options)
