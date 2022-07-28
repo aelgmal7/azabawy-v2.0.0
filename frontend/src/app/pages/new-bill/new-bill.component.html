@@ -56,7 +56,7 @@
         </mat-form-field>
 
 
-        <div *ngIf="billType.value == 'بيع'">
+        <div *ngIf="billType.value == 'بيع' && clientName.value">
           <p-dropdown [options]="orders" [(ngModel)]="selectedOrder" optionLabel="orderName" [filter]="true"
             class="w-49" filterBy="orderName" [showClear]="true" placeholder="إسم الطلبية" formControlName="orderName">
             <ng-template pTemplate="selectedItem">
@@ -79,6 +79,95 @@
                 <ng-template pTemplate="selectedItem">
                   <div class="country-item country-item-value" *ngIf="selectedProduct">
                     <div>{{selectedProduct.productName}}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-product pTemplate="item">
+                  <div class="country-item">
+                    <div>{{product.productName}}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <mat-form-field appearance="outline" class="w-20">
+                <mat-label>سعر الكيلو</mat-label>
+                <input type="number" matInput formControlName="kiloPrice" min="1" [(ngModel)]="price">
+                <mat-error *ngIf="form.get('kiloPrice')!.hasError('required')">
+                  سعر الكيلو <strong>مطلوب</strong>
+                </mat-error>
+              </mat-form-field>
+
+              <p-dropdown [options]="weights" [(ngModel)]="selectedWeights" optionLabel="weight" [filter]="true"
+                filterBy="weight" [showClear]="true" placeholder="وزن الكرتونة" formControlName="productWeights"
+                class="w-20">
+                <ng-template pTemplate="selectedItem">
+                  <div class="country-item country-item-value" *ngIf="selectedWeights">
+                    <div>{{selectedWeights.weight}}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-weight pTemplate="item">
+                  <div class="country-item">
+                    <div>{{weight.weight}}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+
+              <mat-form-field class="w-49" appearance="outline" class="w-20">
+                <mat-label>عدد الكراتين</mat-label>
+                <input type="number" matInput formControlName="productAmount" [readonly]="!productWeights.value ">
+                <mat-hint *ngIf="amount">عدد الكراتين المتاحة <strong> {{amount}}</strong></mat-hint>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" class="h-fit mt-3"
+                [disabled]="productAmount.invalid || !productAmount.value || !kiloPrice.value || !productWeights.value"
+                (click)="orderProduct(productName.value, kiloPrice.value, productWeights.value, productAmount.value)">أضف
+                منتج</button>
+            </div>
+            <table *ngIf="orderedProducts.length > 0" class="mb-3">
+              <tr>
+                <th>إسم المنتج</th>
+                <th>وزن الكرتونة</th>
+                <th>عدد الكراتين</th>
+                <th>الوزن الكلي</th>
+                <th>السعر</th>
+                <th></th>
+              </tr>
+              <tr *ngFor="let product of orderedProducts; let i = index">
+                <td>{{product.productName}}</td>
+                <td>{{product.weight}}</td>
+                <td>{{product.amount}}</td>
+                <td>{{product.totalWeight}} كجم</td>
+                <td>{{product.totalPrice}} ج</td>
+                <td><button mat-icon-button class="text-center w-100" (click)="deleteProduct(i)">
+                    <mat-icon mat-raised-button>cancel</mat-icon>
+                  </button></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="billType.value == 'بيع مرتجع' && clientName.value">
+          <p-dropdown [options]="billsList" [(ngModel)]="selectedBill" optionLabel="id" [filter]="true" class="w-100"
+            filterBy="id" [showClear]="true" placeholder="رقم الفاتورة" formControlName="bills">
+            <ng-template pTemplate="selectedItem">
+              <div class="country-item country-item-value" *ngIf="selectedBill">
+                <div>{{selectedBill.id}}</div>
+              </div>
+            </ng-template>
+            <ng-template let-bill pTemplate="item">
+              <div class="country-item">
+                <div>{{bill.id}}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <div class="mt-3">
+            <div class="d-flex justify-content-between ">
+              <p-dropdown [options]="billProducts" [(ngModel)]="selectedBillProducts" optionLabel="productName"
+                [filter]="true" filterBy="productName" [showClear]="true" placeholder="إسم المنتج"
+                formControlName="productName" class="w-20">
+                <ng-template pTemplate="selectedItem">
+                  <div class="country-item country-item-value" *ngIf="selectedBillProducts">
+                    <div>{{selectedBillProducts.productName}}</div>
                   </div>
                 </ng-template>
                 <ng-template let-product pTemplate="item">

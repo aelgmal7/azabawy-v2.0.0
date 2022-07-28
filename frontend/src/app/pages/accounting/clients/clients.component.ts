@@ -69,9 +69,15 @@ export class ClientsComponent implements OnInit {
       console.log(x[0]);
     });
   }
-  show() {
-    this.extended = !this.extended;
-    alert(this.extended);
+  show(op) {
+    const bill = {
+      id: op.id,
+      type: op.type,
+    };
+    this._clientsService.getIndividualBill(bill).subscribe((response) => {
+      console.log(response);
+      (err) => console.log(err);
+    });
   }
 
   applyFilter(event: Event) {

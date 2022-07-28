@@ -43,8 +43,11 @@ export class NewBillComponent implements OnInit {
   totalPrice: number = 0;
   arr;
   printOption: number;
+  clientBills;
   billsList: bills[] = [];
   selectedBill: bills;
+  billProducts: any[];
+  selectedBillProducts: PeriodicElement;
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -142,13 +145,21 @@ export class NewBillComponent implements OnInit {
         .getClientBills(this.clientName.value?.id)
         .subscribe((response) => {
           const c: any = Object.values(response.result);
-          const d: any[] = c[0];
-          d.forEach((k) => {
+          this.clientBills = c[0];
+          this.clientBills.forEach((k) => {
             const x = {} as bills;
             x.id = k.id;
             this.billsList?.push(x);
           });
         });
+    });
+    this.billsCtrl.valueChanges.subscribe(() => {
+      this.clientBills.forEach((k) => {
+        let x;
+        this.billProducts = k.products;
+      });
+      console.log(this.clientBills);
+      console.log(this.billProducts);
     });
     this.orderName.valueChanges.subscribe((change) => {
       this._storeService.getAllProducts().subscribe((prod) => {
