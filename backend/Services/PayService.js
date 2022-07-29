@@ -81,9 +81,30 @@ const printPay = async(bill) => {
 
   })
 }
+const returnPay =async (id) => {
+    
+  const pay= await Pay.findOne({where: {enabled: true,id:id}})
+  if(!pay){
+    return  {
+      message: `no paying with id ${id}`,
+      code: 404,
+    }
+  }
+  const pdfPath =`${pay.id}-${(new Date(pay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
+  console.log(typeof process.env.PROD);
+  if(process.env.PROD == "true"){
+    console.log("here")
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
 
+  }else{
+    console.log("there");
+    require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",pdfPath)}"`);
+}
+return pdfPath
+}
 
 module.exports = {
     getAllPayOperations,
-    addPayOperations
+    addPayOperations,
+    returnPay
 }

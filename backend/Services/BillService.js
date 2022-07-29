@@ -25,6 +25,7 @@ const getClientBills =async(clientId) => {
      return await Bill.findAll({where: {enabled: true,clientId:clientId}})
      .then( async(bills)=> {
         const container =[]
+        // get products for individual bill
         for (let index = 0; index < bills.length; index++) {
 
             const element = await bills[index].getProducts();
@@ -39,6 +40,8 @@ const getClientBills =async(clientId) => {
         // console.log(container.length);
         return container
         .map(bill => {
+
+            // reformat products object 
             const billId= bill[0].billItem.BillId
             if(billId == 1){
 
