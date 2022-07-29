@@ -25,6 +25,7 @@ const getClientBills =async(clientId) => {
      return await Bill.findAll({where: {enabled: true,clientId:clientId}})
      .then( async(bills)=> {
         const container =[]
+        // get products for individual bill
         for (let index = 0; index < bills.length; index++) {
 
             const element = await bills[index].getProducts();
@@ -36,13 +37,47 @@ const getClientBills =async(clientId) => {
        
        
     }).then((container) => {
-        console.log(container.length);
+        // console.log(container.length);
         return container
         .map(bill => {
+
+            // reformat products object 
             const billId= bill[0].billItem.BillId
+            if(billId == 1){
+
+                 console.log(bill);
+            }
+            const productsContainer = []
+            const products = bill.map((product,index)=>{
+                const item ={
+                    id:product.id,
+                    productName:product.productName,
+                    weights:[
+                        {
+                            id:product.billItem.id,
+                            weight:product.billItem.weight,
+                            amount:product.billItem.amount,
+                            billId: product.billItem.BillId,
+                            productId: product.billItem.productId
+                        }
+                    ]
+
+                }
+                if(index == 0){
+                    productsContainer.push(item)
+                }else if(productsContainer.filter(element=> element.id === item.id ).length>0){
+                    const innerIndex = productsContainer.findIndex(element => element.id == item.id)
+                    // console.log(productsContainer[innerIndex]);
+                    productsContainer[innerIndex].weights.push(item.weights[0])
+                }else {
+                    productsContainer.push(item)
+                }
+
+
+            })
             return {
                 billId,
-                products:bill
+                products:productsContainer
             }
         })
 

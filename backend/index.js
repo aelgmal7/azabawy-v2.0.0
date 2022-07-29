@@ -25,6 +25,7 @@ const  {sequelize} = require('./DataBase/index')
  const {supplierRouter} = require('./Controllers/SupplierController')
  const {billRouter} = require('./Controllers/BillController')
  const {directPayRouter} = require('./Controllers/DirectPayController')
+ const {accountingRouter} = require('./Controllers/GeneralAccountingController')
  
  temp.sayHi()
  const server = () => {
@@ -43,6 +44,7 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/supplier',supplierRouter);
     app.use('/bill',billRouter);
     app.use('/directPay',directPayRouter)
+    app.use('/accounting',accountingRouter)
    // console.log(Client === sequelize.models.Client); // true
    
 

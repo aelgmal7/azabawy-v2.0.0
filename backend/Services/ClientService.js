@@ -131,9 +131,10 @@ const clientAllOP = async (clientId) => {
         remainAfterOp: temp.remainAfterOp,
         clientId: temp.clientId,
         text: temp.note,
-        type: "عملية دفع مباشرة"
+        type: "عملية دفع مباشرة عميل"
       }
-    })})
+    })
+  })
   let all =await  [...bills, ...directPay, ...payForBill]
    all = all.sort((a,b)=> {
     let da = new Date(a.date)
@@ -148,7 +149,7 @@ const sendIndividualBill = async (type,id) => {
     return returnBill(id)
   }else if(type==  "حساب فاتورة"){
     returnBillPAy(id)
-  }else if(type== "عملية دفع مباشرة"){
+  }else if(type== "عملية دفع مباشرة عميل"){
     returnDirectPAy(id)
   }
   return "done"
@@ -226,6 +227,10 @@ module.exports = {
   deleteClient:deleteClient,
   updateClient:updateClient,
   clientAllOP:clientAllOP,
-  sendIndividualBill:sendIndividualBill
+  sendIndividualBill:sendIndividualBill,
+  returnBillPAy:returnBillPAy,
+  returnBill:returnBill,
+  returnDirectPAy:returnDirectPAy
+
 
 };
