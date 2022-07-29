@@ -149,7 +149,7 @@ export class NewBillComponent implements OnInit {
           this.clientBills = c[0];
           this.clientBills.forEach((k) => {
             const x = {} as bills;
-            x.id = k.id;
+            x.id = k.billId;
             this.billsList?.push(x);
           });
         });
