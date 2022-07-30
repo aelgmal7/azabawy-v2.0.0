@@ -20,8 +20,8 @@ const getAllOp =async() => {
           remainAfterOp: temp.remainAfterOp,
           clientId: temp.clientId,
           billCost: temp.cost,
-          type: "فاتورة بيع",
-          text: `فاتورة بيع برقم ${temp.id}`
+          type: temp.type,
+          text: `فاتورة ${temp.type =='فاتوره مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
   
         }
       })
@@ -79,7 +79,7 @@ const getAllOp =async() => {
 }
 
 const openIndividual = async (id,type) => {
-    if(type== "فاتورة بيع"){
+    if(type== "فاتورة بيع" || type== 'فاتوره مرتجع بيع'){
 
         returnBill(id)
       }else if(type==  "حساب فاتورة"){

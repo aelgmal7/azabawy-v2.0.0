@@ -92,7 +92,7 @@ footer p:last-child {
         <!--Start Header  -->
             <header>
                 <h3>مصنع حلويات العزباوي</h3>
-                <h2>فاتورة بيع رقم  <%= bill.id %> </h2>
+                <h2>فاتورة <%=billType %> رقم  <%= bill.id %> </h2>
                 <div>
                     <% if (type == 2 || type == 3 ) { %>
                     
@@ -151,10 +151,12 @@ footer p:last-child {
                     <p>الرصيد السابق للعميل</p>
                     <span><%= oldClientTotalBalance %></span>
                 </div>
+                <% if (billType !== 'فاتوره مرتجع بيع') { %>
                 <div>
                     <p>المبلغ المدفوع</p>
                     <span> <%=bill.paid %> جنيه</span>
                 </div>
+                <% }%>
                 <div>
                     <p>رصيد العميل بعد الفاتوره</p>
                     <span><%= client.totalBalance %></span>

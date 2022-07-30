@@ -91,16 +91,27 @@ const addBill = async (clientId,billData,productsDetails,options) => {
        const productsIds = productsDetails.map(product => product.id)
        const client = await Client.findByPk(clientId)
        oldClientTotalBalance = client.totalBalance
-        const bill = await client.createBill({cost:billData.cost,clientId:clientId,paid:billData.paid,date:billData.date})
-        //client changes
-        client.totalBalance += billData.cost
+       //client changes
+       const bill = await client.createBill({cost:billData.cost,clientId:clientId,type:billData.type,paid:billData.paid,date:billData.date})
+       if (billData.type ==='فاتوره مرتجع بيع'){
+
+           
+           console.log("in rag3");
+            client.totalBalance -= billData.cost
+            client.remain -= billData.cost
+            await client.save()
+
+        }else{
+
+            client.totalBalance += billData.cost
             client.paid += billData.paid
             client.remain += billData.cost - billData.paid
             await client.save()
-
+            
             //bill changes
             bill.remainAfterOp = client.remain
             await bill.save()
+        }
             
             // product work 
             const products = await Product.findAll({where :{ id:{[Op.or] :productsIds}}})
@@ -134,22 +145,38 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                              //console.log("here",billProducts);
                             console.log("وربنا شغال");
                             // order handling
-                            if (billData.orderId !== null){
-                                console.log("in order section");
-                                if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
-                                    console.log(`adding order item with id ${element.orderItemId} to orderArr`);
-                                orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                            if (billData.type !=='فاتوره مرتجع بيع'){
+
+                                if (billData.orderId !== null){
+                                    console.log("in order section");
+                                    if (orderFlag !== null && orderFlag === true && element.orderItemId !== null) {
+                                        console.log(`adding order item with id ${element.orderItemId} to orderArr`);
+                                        orderArr.push({id:element.orderItemId,delivered:Number(amount * weight)})
+                                    }
                                 }
                             }
-                            //weights handling
-                            WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
-                                item.amount -= Number(amount);
-                                product.totalAmount -= Number(amount);
-                                product.totalWeight -= (Number(weight) * Number(amount)); 
-                                item.save()
-                                product.save();
-                            })
-                        }
+                                //weights handling
+                                if (billData.type ==='فاتوره مرتجع بيع'){
+                                    
+                                    WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                                        item.amount += Number(amount);
+                                        product.totalAmount += Number(amount);
+                                        product.totalWeight += (Number(weight) * Number(amount)); 
+                                        item.save()
+                                        product.save();
+                                    })
+
+                                }else {
+
+                                    WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                                        item.amount -= Number(amount);
+                                        product.totalAmount -= Number(amount);
+                                        product.totalWeight -= (Number(weight) * Number(amount)); 
+                                        item.save()
+                                        product.save();
+                                    })
+                                }
+                            }
                     }
             })
         })
@@ -159,13 +186,13 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             if (productsDetails.some(product => product.orderFlag)){
                 // console.log( Number(clientId),billData.orderId,);
                 // console.log("clientId,billData.orderId,");
-                if(billData.billData !== null){
+                if(billData.orderId !== null){
                     
                      changeOrderItemsDeliveredWeight(clientId,JSON.stringify(billData.orderId),orderArr)
                 }
             }
-            
-            printBill(bill,client,oldClientTotalBalance,options)
+                console.log(options);
+            printBill(bill,client,oldClientTotalBalance,options,billData.type)
             
             
              return {
@@ -387,11 +414,12 @@ const coreFn = async (temp,name,client,bill,option) => {
     })
 }
 
-const printBill = async(bill1,client,oldClientTotalBalance=null,option) => {
+const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType) => {
     // console.log('client :>> ', client.dataValues);
     const billProducts = []
     const bill = await Bill.findOne({where: {enabled: true,id: bill1.id}})
     // console.log(bill);
+    console.log(option);
      await bill.getProducts().then(products => {
         products.forEach(product =>{
             const {productName,weight,amount,kiloPrice} = product.billItem.dataValues
@@ -411,10 +439,10 @@ const printBill = async(bill1,client,oldClientTotalBalance=null,option) => {
             totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
        
-        const priced = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:1})
-        const tax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:2})
-        const priceWithTax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:3})
-        const empty = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:4})
+        const priced = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:1,billType})
+        const tax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:2,billType})
+        const priceWithTax = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:3,billType})
+        const empty = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:4,billType})
         
         coreFn(priced,"مسعره",client,bill,option)
         coreFn(tax,"رقم-ضريبي",client,bill,option)
