@@ -55,7 +55,13 @@
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let client let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
           <div class="example-element-detail" [@detailExpand]="client == expandedElement ? 'expanded' : 'collapsed'">
+
             <div *ngIf="operations.length > 0">
+              <div class="d-flex mb-2">
+                <button mat-raised-button color="primary">عرض كل الفواتير بشكل مختصر</button>
+                <button mat-raised-button color="primary" class="me-2">عرض كل الفواتير بشكل
+                  كامل</button>
+              </div>
               <table class="mb-3 operations">
                 <tr>
                   <th>رقم الفاتورة</th>
@@ -82,14 +88,8 @@
                     </button></td>
                 </tr>
               </table>
-              <div class="d-flex mb-2">
-                <button mat-raised-button color="primary">عرض كل الفواتير بشكل مختصر</button>
-                <button mat-raised-button color="primary" class="me-2">عرض كل الفواتير بشكل
-                  كامل</button>
-
-              </div>
             </div>
-            <p *ngIf="operations.length == 0">لا يوجد أي فواتير لهذا العميل بعد</p>
+            <!-- <p *ngIf="operations.length == 0">لا يوجد أي فواتير لهذا العميل بعد</p> -->
           </div>
         </td>
       </ng-container>
