@@ -20,7 +20,7 @@ Bill.init({
     },
     paid: {
         type:Sequelize.FLOAT,
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0.0
     },
     remainAfterOp : {
