@@ -228,16 +228,30 @@ const returnBillPAy = async (id) => {
 
 
 
-const printClientAllOp =async (clientId) => {
+const printClientAllOpDetails =async (clientId) => {
   const ops = await clientAllOP(clientId)
   const client = await Client.findOne({where: {enabled: true,id:clientId}})
-  const printing = await printCore(client,ops)
+  const printing = await printCore(client,ops,true)
   return printing
   
 }
-const printCore = async (client,ops)=> {
-  const printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBills.ejs")}`,{ops})
+const printClientAllOpShort =async (clientId) => {
+  const ops = await clientAllOP(clientId)
+  const client = await Client.findOne({where: {enabled: true,id:clientId}})
+  const printing = await printCore(client,ops,false)
+  return printing
   
+}
+const printCore = async (client,ops,details)=> {
+  let printable;
+  if (details == true){
+
+     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInDetails.ejs")}`,{ops})
+  }else{
+     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInShort.ejs")}`,{ops})
+
+  }
+  console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
   let file = { content: printable };
@@ -331,7 +345,8 @@ module.exports = {
   returnBillPAy:returnBillPAy,
   returnBill:returnBill,
   returnDirectPAy:returnDirectPAy,
-  printClientAllOp:printClientAllOp
+  printClientAllOpDetails:printClientAllOpDetails,
+  printClientAllOpShort:printClientAllOpShort
 
 
 };

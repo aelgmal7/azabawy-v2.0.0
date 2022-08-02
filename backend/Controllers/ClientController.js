@@ -7,7 +7,8 @@ const {
   updateClient,
   clientAllOP,
   sendIndividualBill,
-  printClientAllOp
+  printClientAllOpDetails,
+  printClientAllOpShort,
 } = require("../Services/ClientService");
 const { returnedResult } = require("../Payload/ReturnedResult");
 const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
@@ -122,9 +123,19 @@ router.post("/individual-bill", async (req, res) => {
 });
 
 
-router.get('/print-all-ops/:clientId',async (req, res)=> {
+router.get('/print-all-ops-details/:clientId',async (req, res)=> {
   const clientId = req.params.clientId;
-  const result = await printClientAllOp(clientId);
+  const result = await printClientAllOpDetails(clientId);
+  try {
+    res.send(
+      returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { op: result })
+    );
+  }catch (error) {}
+})
+
+router.get('/print-all-ops-short/:clientId',async (req, res)=> {
+  const clientId = req.params.clientId;
+  const result = await printClientAllOpShort(clientId);
   try {
     res.send(
       returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { op: result })
