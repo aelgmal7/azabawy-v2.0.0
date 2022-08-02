@@ -1,4 +1,5 @@
 const {Bill} = require('../Models/Bill')
+const {Client} = require('../Models/Client')
 const {BillPay} = require('../Models/BillPay')
 const {DirectPay} = require('../Models/DirectPay')
 const {Pay} = require('../Models/Pay')
@@ -11,14 +12,16 @@ const {returnPay} =require('./PayService')
 
 const getAllOp =async() => {
     let bills = await Bill.findAll({where: {enabled: true}})
+    const clients = await  Client.findAll({where:{enabled:true}})
     bills = bills.map( (bill) =>{
         const temp = bill.dataValues
         return {
           id: temp.id,
+          clientName:clients.find(c => c.id === temp.ClientId).clientName,
           paid: temp.paid,
           date: temp.date,
           remainAfterOp: temp.remainAfterOp,
-          clientId: temp.clientId,
+          clientId: temp.ClientId,
           billCost: temp.cost,
           type: temp.type,
           text: `فاتورة ${temp.type =='فاتوره مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
@@ -32,6 +35,7 @@ const getAllOp =async() => {
         const temp = pay.dataValues
         return {
           id: temp.id,
+          clientName:clients.find(c => c.id === temp.ClientId).clientName,
           paid: temp.money,
           date: temp.date,
           note: temp.note,
@@ -49,6 +53,7 @@ const getAllOp =async() => {
         const temp = pay.dataValues
         return {
           id: temp.id,
+          clientName:clients.find(c => c.id === temp.ClientId).clientName,
           paid: temp.money,
           date: temp.date,
           note: temp.note,
