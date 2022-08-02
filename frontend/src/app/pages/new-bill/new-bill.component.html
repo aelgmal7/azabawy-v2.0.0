@@ -19,7 +19,8 @@
         </mat-form-field> -->
 
         <p-dropdown [options]="clients" [(ngModel)]="selectedClient" optionLabel="clientName" [filter]="true"
-          class="w-49" filterBy="clientName" [showClear]="true" placeholder="إسم العميل" formControlName="clientName">
+          class="w-49" filterBy="clientName" [showClear]="true" [placeholder]="placeholder"
+          formControlName="clientName">
           <ng-template pTemplate="selectedItem">
             <div class="country-item country-item-value" *ngIf="selectedClient">
               <div>{{selectedClient.clientName}}</div>
@@ -185,12 +186,12 @@
                 </mat-error>
               </mat-form-field>
 
-              <p-dropdown [options]="weights" [(ngModel)]="selectedWeights" optionLabel="weight" [filter]="true"
+              <p-dropdown [options]="billWeights" [(ngModel)]="selectedBillWeights" optionLabel="weight" [filter]="true"
                 filterBy="weight" [showClear]="true" placeholder="وزن الكرتونة" formControlName="productWeights"
                 class="w-20">
                 <ng-template pTemplate="selectedItem">
-                  <div class="country-item country-item-value" *ngIf="selectedWeights">
-                    <div>{{selectedWeights.weight}}</div>
+                  <div class="country-item country-item-value" *ngIf="selectedBillWeights">
+                    <div>{{selectedBillWeights.weight}}</div>
                   </div>
                 </ng-template>
                 <ng-template let-weight pTemplate="item">
@@ -280,7 +281,7 @@
 
       <div *ngIf="router.url !== '/new-sanad-direct' && router.url !== '/new-sanad-order'"
         class="d-flex justify-content-between">
-        <mat-form-field class="w-49" appearance="outline">
+        <mat-form-field class="w-49" appearance="outline" id="totalPrice">
           <mat-label>السعر الإجمالي</mat-label>
           <input type="number" matInput formControlName="totalPrice" min="0" [value]="totalPrice">
           <mat-error *ngIf="form.get('totalPrice')!.hasError('required')">
@@ -288,7 +289,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field class="w-49" appearance="outline">
+        <mat-form-field class="w-49" appearance="outline" id="paid">
           <mat-label>المدفوع</mat-label>
           <input type="number" matInput formControlName="paid" min="0">
           <mat-error *ngIf="form.get('paid')!.hasError('required')">

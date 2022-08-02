@@ -37,6 +37,8 @@ export class NewBillComponent implements OnInit {
   selectedProduct: PeriodicElement;
   weights;
   selectedWeights;
+  billWeights;
+  selectedBillWeights;
   amount;
   price;
   orderedProducts: IOrderedProducts[] = [];
@@ -49,6 +51,9 @@ export class NewBillComponent implements OnInit {
   billProducts: any[];
   selectedBillProducts: PeriodicElement;
   orderId;
+  paidElement: HTMLElement;
+  totalPriceElement: HTMLElement;
+  placeholder = 'إسم العميل';
 
   operations = ['عميل', 'مورد', 'بيع مباشر'];
   bills = ['بيع', 'بيع مرتجع'];
@@ -129,12 +134,28 @@ export class NewBillComponent implements OnInit {
       this.amountPaid.setValidators(Validators.required);
       this.billsCtrl.setValidators(Validators.required);
     }
+    if (this.router.url == '/new-bill-client') {
+      this.clientName.setValidators(Validators.required);
+      this.placeholder = 'إسم العميل*';
+    }
+
     this.billType.valueChanges.subscribe((change) => {
       this.orderName.reset();
       this.productName.reset();
       this.productWeights.reset();
       this.totalPrice2.reset();
       this.orderedProducts = [];
+      if (this.billType.value == 'بيع مرتجع') {
+        const a = document.getElementById('paid');
+        this.paidElement = a!;
+        this.paidElement.style.display = 'none';
+        const b = document.getElementById('totalPrice');
+        this.totalPriceElement = b!;
+        this.totalPriceElement.style.width = '100%';
+      } else {
+        this.paidElement.style.display = 'unset';
+        this.totalPriceElement.style.width = '49%';
+      }
     });
     this.clientName.valueChanges.subscribe((change) => {
       this._ordersService.getAllOrders().subscribe((orders) => {
@@ -152,14 +173,15 @@ export class NewBillComponent implements OnInit {
             x.id = k.billId;
             this.billsList?.push(x);
           });
+          console.log(this.clientBills);
         });
     });
     this.billsCtrl.valueChanges.subscribe(() => {
-      this.clientBills.forEach((k) => {
-        let x;
-        this.billProducts = k.products;
-      });
-      console.log(this.clientBills);
+      this.productName.reset();
+      let x: billProducts[];
+      x = this.clientBills.filter((k) => k.billId == this.billsCtrl.value?.id);
+      this.billProducts = x[0]?.products;
+      console.log(this.billsCtrl.value?.id);
       console.log(this.billProducts);
     });
     this.orderName.valueChanges.subscribe((change) => {
@@ -173,12 +195,8 @@ export class NewBillComponent implements OnInit {
           let o: any = {};
           o.id = this.myProducts[k].productId;
           o.orderItemId = this.myProducts[k].id;
-          // console.log(o);
           this.arr.push(o);
-          // this.arr.push(this.myProducts[k].productId);
         }
-        // console.log(this.myProducts);
-        // console.log(this.arr);
 
         for (let k of this.arr) {
           this.products.map((item) => {
@@ -191,19 +209,18 @@ export class NewBillComponent implements OnInit {
             return a.id == k.id ? -1 : b.id == k.id ? 1 : 0;
           });
         }
-        // console.log(this.products);
       });
     });
     this.productName.valueChanges.subscribe((change) => {
+      this.amount = null;
       this._storeService.getAllProducts().subscribe((prod) => {
         const x: any[] = Object.values(prod.result);
         const y = x[0];
         const z = y?.filter((e) => e.id == this.productName.value?.id);
         this.weights = z[0]?.weightAndAmounts;
         this.price = z[0]?.kiloPrice;
-        console.log(y);
-        console.log(z);
       });
+      this.billWeights = this.productName.value?.weights;
     });
     this.productWeights.valueChanges.subscribe((change) => {
       this.amount = this.productWeights.value?.amount;
@@ -254,6 +271,14 @@ export class NewBillComponent implements OnInit {
     form.controls.orderName.value?.id
       ? (this.orderId = form.controls.orderName.value?.id)
       : (this.orderId = null);
+    let type;
+    this.billType.value == 'بيع'
+      ? (type = 'فاتورة بيع')
+      : (type = 'فاتورة مرتجع بيع');
+    let paid;
+    this.billType.value == 'بيع'
+      ? (paid = form.controls.paid.value)
+      : (paid = null);
     const bill = {
       options: {
         printable: false,
@@ -261,9 +286,10 @@ export class NewBillComponent implements OnInit {
       },
       billData: {
         cost: this.totalPrice,
-        paid: form.controls.paid.value,
+        paid: paid,
         date: form.controls.date.value,
         orderId: this.orderId,
+        type: type,
       },
       productsDetails: this.orderedProducts,
     };
@@ -287,6 +313,14 @@ export class NewBillComponent implements OnInit {
       this.printOption = result;
       console.log(this.printOption);
       const id = form.controls.clientName.value.id;
+      let type;
+      this.billType.value == 'بيع'
+        ? (type = 'فاتورة بيع')
+        : (type = 'فاتورة مرتجع بيع');
+      let paid;
+      this.billType.value == 'بيع'
+        ? (paid = form.controls.paid.value)
+        : (paid = null);
       const bill = {
         options: {
           printable: true,
@@ -294,9 +328,10 @@ export class NewBillComponent implements OnInit {
         },
         billData: {
           cost: this.totalPrice,
-          paid: form.controls.paid.value,
+          paid: paid,
           date: form.controls.date.value,
           orderId: form.controls.orderName.value.id,
+          type: type,
         },
         productsDetails: this.orderedProducts,
       };
@@ -431,4 +466,8 @@ export interface IOrderedProducts {
 }
 export interface bills {
   id: number;
+}
+export interface billProducts {
+  billId: number;
+  products: [];
 }

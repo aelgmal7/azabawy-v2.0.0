@@ -15,6 +15,7 @@ import { IClients } from '../../orders-management/add-order/add-order.component'
 import { AddClientComponent } from './add-client/add-client.component';
 import { UpdateClientComponent } from './update-client/update-client.component';
 import Swal from 'sweetalert2';
+import { BillsService } from 'src/app/shared/services/bills.service';
 
 @Component({
   selector: 'app-clients',
@@ -35,7 +36,7 @@ export class ClientsComponent implements OnInit {
   dataSource: MatTableDataSource<IClients>;
   swalWithBootstrapButtons;
   operations: operation[] = [];
-  extended: boolean = false;
+  // loading: boolean = false;
 
   columnsToDisplay = ['id', 'clientName', 'total', 'paid', 'remain', 'actions'];
   expandedElement;
@@ -43,6 +44,7 @@ export class ClientsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     public dialog: MatDialog,
+    private _billsService: BillsService,
     private _clientsService: ClientsService
   ) {
     this.dataSource = new MatTableDataSource();
@@ -59,7 +61,6 @@ export class ClientsComponent implements OnInit {
       const x: any[] = Object.values(client.result);
       this.dataSource.data = x[0];
       console.log(this.dataSource);
-      this.getOperations;
     });
   }
   getOperations(id) {
@@ -68,6 +69,9 @@ export class ClientsComponent implements OnInit {
       this.operations = x[0];
       console.log(x[0]);
     });
+    // this._billsService.getClientBills(id).subscribe((response) => {
+    //   console.log('response :>> ', Object.values(response.result));
+    // });
   }
   show(op) {
     const bill = {
