@@ -36,7 +36,7 @@ export class ClientsComponent implements OnInit {
   dataSource: MatTableDataSource<IClients>;
   swalWithBootstrapButtons;
   operations: operation[] = [];
-  // loading: boolean = false;
+  loading: boolean;
 
   columnsToDisplay = ['id', 'clientName', 'total', 'paid', 'remain', 'actions'];
   expandedElement;
@@ -67,7 +67,6 @@ export class ClientsComponent implements OnInit {
     this._clientsService.getClientOperations(id).subscribe((response) => {
       const x: any[] = Object.values(response.result);
       this.operations = x[0];
-      console.log(x[0]);
     });
     // this._billsService.getClientBills(id).subscribe((response) => {
     //   console.log('response :>> ', Object.values(response.result));
@@ -171,6 +170,7 @@ export class ClientsComponent implements OnInit {
 }
 export interface operation {
   id: number;
+  clientId: number;
   date: number;
   type: number;
   billCost: number;

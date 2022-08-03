@@ -153,7 +153,11 @@ export class NewBillComponent implements OnInit {
         this.totalPriceElement = b!;
         this.totalPriceElement.style.width = '100%';
       } else {
+        const a = document.getElementById('paid');
+        this.paidElement = a!;
         this.paidElement.style.display = 'unset';
+        const b = document.getElementById('totalPrice');
+        this.totalPriceElement = b!;
         this.totalPriceElement.style.width = '49%';
       }
     });
