@@ -10,13 +10,27 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="outline">
+    <!-- <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>المورد</mat-label>
       <input type="text" matInput formControlName="supplierId" [(ngModel)]="data.supplierId">
       <mat-error *ngIf="form.get('supplierId')!.hasError('required')">
         المورد <strong>مطلوب</strong>
       </mat-error>
-    </mat-form-field>
+    </mat-form-field> -->
+
+    <p-dropdown [options]="suppliers" [(ngModel)]="selectedSupplier" optionLabel="supplierName" [filter]="true"
+      class="w-100" filterBy="supplierName" [showClear]="true" placeholder="إسم المورد" formControlName="supplierId">
+      <ng-template pTemplate="selectedItem">
+        <div class="country-item country-item-value" *ngIf="selectedSupplier">
+          <div>{{selectedSupplier.supplierName}}</div>
+        </div>
+      </ng-template>
+      <ng-template let-supplier pTemplate="item">
+        <div class="country-item">
+          <div>{{supplier.supplierName}}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
 
     <!-- <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>النوع</mat-label>
@@ -92,7 +106,7 @@
       <ul *ngFor="let kartona of karateen; let i = index">
         <li class="position-relative order">
           <p>
-            {{kartona.amount}} كرتونة من وزن {{kartona.weight}}
+            {{kartona.a}} كرتونة من وزن {{kartona.w}}
           </p>
           <button mat-icon-button class="position-absolute top-0 start-0" (click)="deleteWeight(i)"
             [swal]="['تم حذف المادة الخام بنجاح!', '', 'error']">

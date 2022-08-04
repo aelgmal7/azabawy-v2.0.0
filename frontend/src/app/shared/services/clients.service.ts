@@ -44,4 +44,12 @@ export class ClientsService {
     const getURL = 'http://localhost:3000/client/individual-bill';
     return this.http.post<any>(getURL, bill);
   }
+  printAllOpsShort(id): Observable<any> {
+    const getURL = `http://localhost:3000/client/print-all-ops-short/${id}`;
+    return this.http.get<any>(getURL);
+  }
+  printAllOpsDetails(id): Observable<any> {
+    const getURL = `http://localhost:3000/client/print-all-ops-details/${id}`;
+    return this.http.get<any>(getURL);
+  }
 }

@@ -10,6 +10,7 @@ import { MaterialsComponent } from './pages/materials/materials.component';
 import { ClientsComponent } from './pages/accounting/clients/clients.component';
 import { SuppliersComponent } from './pages/accounting/suppliers/suppliers.component';
 import { ProduceProductComponent } from './pages/store/produce-product/produce-product.component';
+import { LogsComponent } from './pages/accounting/logs/logs.component';
 
 // TODO some routes need children
 const routes: Routes = [
@@ -68,6 +69,10 @@ const routes: Routes = [
   {
     path: 'suppliers',
     component: SuppliersComponent,
+  },
+  {
+    path: 'logs',
+    component: LogsComponent,
   },
   {
     path: '**',

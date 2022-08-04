@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import Swal from 'sweetalert2';
 import { kartona } from '../store/add-product/add-product.component';
 import { MaterialsService } from 'src/app/shared/services/materials.service';
+import { SuppliersService } from 'src/app/shared/services/suppliers.service';
 @Component({
   selector: 'app-materials',
   templateUrl: './materials.component.html',

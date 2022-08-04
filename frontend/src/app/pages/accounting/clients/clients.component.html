@@ -57,8 +57,10 @@
           <div class="example-element-detail" [@detailExpand]="client == expandedElement ? 'expanded' : 'collapsed'">
             <div *ngIf="operations.length > 0">
               <div class="d-flex mb-2">
-                <button mat-raised-button color="primary">عرض كل الفواتير بشكل مختصر</button>
-                <button mat-raised-button color="primary" class="me-2">عرض كل الفواتير بشكل
+                <button mat-raised-button color="primary" (click)="printOpsShort(client.id)">طباعة كل الفواتير بشكل
+                  مختصر</button>
+                <button mat-raised-button color="primary" (click)="printOpsDetails(client.id)" class="me-2">طباعة كل
+                  الفواتير بشكل
                   كامل</button>
               </div>
               <table class="mb-3 operations">
@@ -80,7 +82,7 @@
                   <td>{{operation.paid}}</td>
                   <td>{{operation.billCost - operation.paid}}</td>
                   <td>{{operation.remainAfterOp}}</td>
-                  <td><button mat-icon-button class="text-center w-100" matTooltip="عرض الفاتورة"
+                  <td><button mat-icon-button class="text-center w-100" matTooltip="عرض العملية"
                       (click)="show(operation)">
                       <mat-icon mat-raised-button>
                         open_in_new</mat-icon>
