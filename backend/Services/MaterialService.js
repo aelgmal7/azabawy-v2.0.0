@@ -60,7 +60,9 @@ const getAllMaterials = async () => {
 
     try {
         const suppliers = await Supplier.findAll({where: {enabled: true}})
-       let materials = await  Material.findAll({where : {enabled: true}})
+       let materials = await  Material.findAll({where : {enabled: true},        include: [{model:WeightAndAmountMat,where: {enabled: true}}]
+       })
+       const weightsAndAmountsMat = await WeightAndAmountMat.findAll({where: {enabled: true}})
         const temp =  materials.map(async(material) =>{
             const supplierName= suppliers.find((supplier) => supplier.id === material.SupplierId).supplierName
             const response =  {
@@ -73,7 +75,14 @@ const getAllMaterials = async () => {
                 alarm:material.alarm,
                 enabled:material.enabled,
                 SupplierId:material.SupplierId,
-                supplierName:supplierName
+                supplierName:supplierName,
+                weightAndAmountMats: material.weightAndAmountMats.map(item=> {
+                    return {
+                        id:item.id,
+                        w: item.weight,
+                        a: item.amount
+                }
+                })
             }
            return response
         })
