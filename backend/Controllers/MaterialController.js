@@ -23,8 +23,14 @@ router.post('/add-material',async (req, res)=> {
             unit,
             alarm,
             supplierId})
-        res.send(result)
-    }catch (err) {
+            if(result.message){
+
+                res.send(returnedResult( HTTP_STATUS_CODES['CODE_500'],false,{message:result.message}))
+            }else {
+
+                res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))
+            }
+        }catch (err) {
         console.error(err)
     }
 })
