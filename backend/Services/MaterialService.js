@@ -45,16 +45,22 @@ const createMaterial =async ({
             }
         }
     }
-    const material = new MaterialModel(materialName, weightsAndAmountsMat, kiloPrice,unit,alarm)
-    console.log(material);
+    const materialM= new MaterialModel(materialName, weightsAndAmountsMat, kiloPrice,unit,alarm)
+    // console.log(material);
 
-    const newRecord= await supplier.createMaterial(material).then((material) => {
-        const temp =  weightsAndAmountsMat.map(async(e) => {
-            return await material.createWeightAndAmountMat({weight:e.w,amount:e.a,materialName:material.materialName})
-        })
-        return Promise.resolve(temp)
+    const material= await supplier.createMaterial(materialM)
+    
+    const temp = await  weightsAndAmountsMat.map(async(e) => {
+        const a =  await material.createWeightAndAmountMat({weight:e.w,amount:e.a,materialName:material.materialName})
+        return  Promise.resolve(a)
     })
-    return await Promise.resolve(newRecord)
+    
+    console.log(temp);
+    const response = {
+        material: material,
+        weightAndAmountMats: await Promise.all(temp)
+    }
+    return response
 }
 const getAllMaterials = async () => {
 
