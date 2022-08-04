@@ -43,7 +43,8 @@ export class MaterialsComponent implements OnInit {
   ELEMENT_DATA: IMaterials[] = [
     {
       materialName: 'Agwa',
-      supplierId: 'Moataz Handy',
+      supplierId: 5,
+      supplierName: 'Moataz Handy',
       unit: 'Kg',
       alarm: 202,
       kiloPrice: 10,
@@ -51,7 +52,8 @@ export class MaterialsComponent implements OnInit {
     },
     {
       materialName: 'Agwa2',
-      supplierId: 'Moataz',
+      supplierId: 5,
+      supplierName: 'Moataz Handy',
       unit: 'Kg',
       alarm: 20,
       kiloPrice: 104,
@@ -280,7 +282,8 @@ export class MaterialsComponent implements OnInit {
 }
 export interface IMaterials {
   materialName: string;
-  supplierId: string;
+  supplierId: number;
+  supplierName: string;
   unit: string;
   alarm: number;
   kiloPrice: number;

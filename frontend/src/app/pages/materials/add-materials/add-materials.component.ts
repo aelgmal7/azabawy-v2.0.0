@@ -101,7 +101,7 @@ export class AddMaterialsComponent implements OnInit {
   submit(form) {
     const mat = {} as IMaterials;
     mat.materialName = form.controls.materialName?.value;
-    mat.supplierId = '45';
+    // mat.supplierId = '45';
     // mat.supplierId = form.controls.supplierId?.value.id;
     mat.alarm = form.controls.alarm?.value;
     mat.unit = form.controls.unit?.value;

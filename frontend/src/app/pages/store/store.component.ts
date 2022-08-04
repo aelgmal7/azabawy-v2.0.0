@@ -194,7 +194,6 @@ export class StoreComponent implements OnInit {
       width: '800px',
     });
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
       this._storeService.getAllProducts().subscribe((prod) => {
         this.x = Object.values(prod.result);
         this.dataSource.data = this.x[0];

@@ -15,34 +15,34 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>م</th>
         <td mat-cell *matCellDef="let operation">{{ operation.id }}</td>
       </ng-container>
-      <ng-container matColumnDef="MaterialName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المادة</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.MaterialName }}</td>
-      </ng-container>
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>التاريخ</th>
         <td mat-cell *matCellDef="let operation">{{ operation.date | date:'short' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المادة/المنتج</th>
+        <td mat-cell *matCellDef="let operation">{{ operation.name }}</td>
       </ng-container>
       <ng-container matColumnDef="reason">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>سبب التغيير</th>
         <td mat-cell *matCellDef="let operation"><span>{{ operation.reason}}</span>
         </td>
       </ng-container>
-      <ng-container matColumnDef="amountBefore">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية قبل التغيير</th>
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>الوزن</th>
+        <td mat-cell *matCellDef="let operation">{{ operation.weight}}</td>
+      </ng-container>
+      <ng-container matColumnDef="oldAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية قبل العملية</th>
         <td mat-cell *matCellDef="let operation">{{ operation.amountBefore }}</td>
       </ng-container>
-      <ng-container matColumnDef="amountAfter">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية بعد التغيير</th>
+      <ng-container matColumnDef="newAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية بعد العملية</th>
         <td mat-cell *matCellDef="let operation">{{ operation.amountAfter }}</td>
       </ng-container>
-      <ng-container matColumnDef="totalAmountBefore">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية الكلية قبل التغيير</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.totalAmountBefore}}</td>
-      </ng-container>
-      <ng-container matColumnDef="totalAmountAfter">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية الكلية بعد التغيير</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.totalAmountAfter}}</td>
+      <ng-container matColumnDef="delta">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>مقدار التغيير</th>
+        <td mat-cell *matCellDef="let operation">{{ operation.delta}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

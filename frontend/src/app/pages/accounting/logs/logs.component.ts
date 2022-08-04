@@ -16,13 +16,13 @@ export class LogsComponent implements OnInit {
 
   columnsToDisplay = [
     'id',
-    'MaterialName',
     'date',
+    'name',
     'reason',
-    'amountBefore',
-    'amountAfter',
-    'totalAmountBefore',
-    'totalAmountAfter',
+    'weight',
+    'oldAmount',
+    'newAmount',
+    'delta',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -40,13 +40,13 @@ export class LogsComponent implements OnInit {
     this.dataSource.data = [
       {
         id: 5,
-        MaterialName: 'اسمنت',
         date: 20,
+        name: 'اسمنت',
         reason: 'اسمنتاسمنت',
-        amountBefore: 50,
-        amountAfter: 40,
-        totalAmountBefore: 30,
-        totalAmountAfter: 20,
+        weight: 50,
+        oldAmount: 40,
+        newAmount: 30,
+        delta: 20,
       },
     ];
   }
@@ -61,11 +61,11 @@ export class LogsComponent implements OnInit {
 }
 export interface log {
   id: number;
-  MaterialName: string;
+  name: string;
   date: number;
   reason: string;
-  amountBefore: number;
-  amountAfter: number;
-  totalAmountBefore: number;
-  totalAmountAfter: number;
+  weight: number;
+  oldAmount: number;
+  newAmount: number;
+  delta: number;
 }
