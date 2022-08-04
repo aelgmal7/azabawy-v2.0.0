@@ -176,3 +176,25 @@ module.exports ={
     updateProduct:updateProduct,
     changeAmountOfWeight:changeAmountOfWeight
 }
+
+// const p = {
+//     materialInfo : [
+//         {
+//             id,
+//             materialName,
+//             weight,
+//             amount,
+//             weightId
+//         },
+//     ],
+//         productInfo : {
+//             id,
+//             productName,
+//             weightsAndAmounts : [
+//                 {
+//                     weight,
+//                     amount,
+//                 }
+//             ]
+//         }
+// }

@@ -6,9 +6,9 @@ const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
 
 router.get('/', (req, res)=> {
 
-    const response = [{
+    const result = [{
         id:1,
-        data : new Date(),
+        date : new Date(),
         name:"mo3",
         reason: " فاتروه بيع رقم 5 ",
         weight: 20,
@@ -16,7 +16,7 @@ router.get('/', (req, res)=> {
         newAmount:10,
         delta: -5
     }]
-    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result:response}))
+    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))
 
 })
 
