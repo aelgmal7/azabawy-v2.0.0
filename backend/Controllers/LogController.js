@@ -16,7 +16,7 @@ router.get('/', (req, res)=> {
         newAmount:10,
         delta: -5
     }]
-    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{response}))
+    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result:response}))
 
 })
 
