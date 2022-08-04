@@ -34,11 +34,11 @@
       </ng-container>
       <ng-container matColumnDef="oldAmount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية قبل العملية</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.amountBefore }}</td>
+        <td mat-cell *matCellDef="let operation">{{ operation.oldAmount }}</td>
       </ng-container>
       <ng-container matColumnDef="newAmount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>الكمية بعد العملية</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.amountAfter }}</td>
+        <td mat-cell *matCellDef="let operation">{{ operation.newAmount }}</td>
       </ng-container>
       <ng-container matColumnDef="delta">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>مقدار التغيير</th>

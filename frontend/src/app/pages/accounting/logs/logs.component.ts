@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { LogsService } from 'src/app/shared/services/logs.service';
 
 @Component({
   selector: 'app-logs',
@@ -27,7 +28,7 @@ export class LogsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
+  constructor(private logsService: LogsService) {
     this.dataSource = new MatTableDataSource();
   }
 
@@ -37,18 +38,22 @@ export class LogsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource.data = [
-      {
-        id: 5,
-        date: 20,
-        name: 'اسمنت',
-        reason: 'اسمنتاسمنت',
-        weight: 50,
-        oldAmount: 40,
-        newAmount: 30,
-        delta: 20,
-      },
-    ];
+    // this.dataSource.data = [
+    //   {
+    //     id: 5,
+    //     date: 20,
+    //     name: 'اسمنت',
+    //     reason: 'اسمنتاسمنت',
+    //     weight: 50,
+    //     oldAmount: 40,
+    //     newAmount: 30,
+    //     delta: 20,
+    //   },
+    // ];
+    this.logsService.getAllLogs().subscribe((response) => {
+      console.log(response.result.response);
+      this.dataSource.data = response.result.response;
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
