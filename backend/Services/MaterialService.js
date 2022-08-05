@@ -97,10 +97,21 @@ const getAllMaterials = async () => {
         console.log(err)
     }
 }
+const deleteMaterial= async (materialId)=> {
+    const material = await Material.findOne({where: {enabled: true,id: materialId}})
+    if (material === null) return {
+        message: `no material with id ${materialId}`,
+        code : 404
+    }
+    material.enabled = false
+    material.save();
+    return material
+}
 
 
 module.exports = {
     createMaterial :createMaterial,
-    getAllMaterials :getAllMaterials
+    getAllMaterials :getAllMaterials,
+    deleteMaterial:deleteMaterial
 
 }
