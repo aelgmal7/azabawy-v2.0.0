@@ -66,9 +66,9 @@ const getAllMaterials = async () => {
 
     try {
         const suppliers = await Supplier.findAll({where: {enabled: true}})
-       let materials = await  Material.findAll({where : {enabled: true},        include: [{model:WeightAndAmountMat,where: {enabled: true}}]
+       let materials = await  Material.findAll({where : {enabled: true},include: [{model:WeightAndAmountMat,where: {enabled: true}}]
        })
-       const weightsAndAmountsMat = await WeightAndAmountMat.findAll({where: {enabled: true}})
+    //    const weightsAndAmountsMat = await WeightAndAmountMat.findAll({where: {enabled: true}})
         const temp =  materials.map(async(material) =>{
             const supplierName= suppliers.find((supplier) => supplier.id === material.SupplierId).supplierName
             const response =  {
@@ -107,11 +107,39 @@ const deleteMaterial= async (materialId)=> {
     material.save();
     return material
 }
+const updateMaterial = async (materialId,materialName,alarm,kiloPrice) => {
+    const material = await Material.findOne({where: {id: materialId}})
+    if (material === null) return {
+        message: `no material with id ${materialId}`,
+        code : 404
+    }
+    material.materialName = materialName;
+    material.kiloPrice = kiloPrice;
+    material.alarm = alarm;
+    material.save();
+    return material;
+}
 
+const deleteMaterialWeight = async (materialId,weightReq)=> {
+    const material = await Material.findOne({where: {enabled: true,id: materialId}})
+    if (material === null) return {
+        message: `no material with id ${materialId}`,
+        code : 404
+    }
+    const weightAmount = await WeightAndAmountMat.findOne({where:{enabled: true,materialName:material.materialName,weight:weightReq}})
+    material.totalAmount -= Number(weightAmount.amount)
+    material.totalWeight -= Number(weightAmount.amount) * Number(weightAmount.weight)
+    material.save();
+    weightAmount.enabled = false
+    weightAmount.save();
+    return material
+}
 
 module.exports = {
     createMaterial :createMaterial,
     getAllMaterials :getAllMaterials,
-    deleteMaterial:deleteMaterial
+    deleteMaterial:deleteMaterial,
+    updateMaterial:updateMaterial,
+    deleteMaterialWeight:deleteMaterialWeight
 
 }
