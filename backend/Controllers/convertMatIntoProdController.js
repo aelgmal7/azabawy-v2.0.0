@@ -1,21 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
+const {convertMat} = require("../Services/convertMatIntoProdService")
 const { returnedResult } = require("../Payload/ReturnedResult");
 const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
 
-router.post('/create', (req, res)=> {
-
-    const result = [{
-        id:1,
-        date : new Date(),
-        name:"mo3",
-        reason: " فاتروه بيع رقم 5 ",
-        weight: 20,
-        oldAmount: 15,
-        newAmount:10,
-        delta: -5
-    }]
+router.post('/create', async(req, res)=> {
+    const {materialInfo,productInfo} = req.body
+    const result = await convertMat(materialInfo,productInfo)
+    console.log(result);
     res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))
 
 })

@@ -27,7 +27,7 @@ const  {sequelize} = require('./DataBase/index')
  const {directPayRouter} = require('./Controllers/DirectPayController')
  const {accountingRouter} = require('./Controllers/GeneralAccountingController')
  const {logRouter} = require('./Controllers/LogController')
- const {convertMat} = require('./Controllers/convertMatIntoProd')
+ const {convertMat} = require('./Controllers/convertMatIntoProdController')
  
  temp.sayHi()
  const server = () => {
