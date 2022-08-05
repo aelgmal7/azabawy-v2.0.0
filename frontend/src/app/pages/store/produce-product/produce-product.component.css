@@ -47,9 +47,9 @@
   -o-border-radius: 8px;
 }
 
-::ng-deep .mat-dialog-content {
+/* ::ng-deep .mat-dialog-content {
   height: 24rem;
-}
+} */
 
 :host ::ng-deep .p-dropdown {
   width: 100%;

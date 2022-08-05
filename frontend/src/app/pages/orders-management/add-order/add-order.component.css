@@ -56,9 +56,9 @@
   width: 0 !important;
 }
 
-::ng-deep .mat-dialog-content {
+/* ::ng-deep .mat-dialog-content {
   height: 24rem;
-}
+} */
 
 :host ::ng-deep .p-dropdown {
   width: 100%;

@@ -48,9 +48,9 @@ th {
   background-color: #dddddd;
 }
 
-::ng-deep .mat-dialog-content {
+/* ::ng-deep .mat-dialog-content {
   height: 24rem;
-}
+} */
 
 :host ::ng-deep .p-dropdown {
   width: 100%;

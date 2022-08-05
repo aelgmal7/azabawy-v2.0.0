@@ -1,8 +1,8 @@
 button {
   display: inline-block;
   padding: 25px 30px;
-  font-size: 1.5rem;
-  background-color: #86a0a0;
+  font-size: 1.2rem;
+  background-color: #858f67;
   box-shadow: 0 0 20px 5px rgb(0 0 0 / 15%);
   border: none;
   border-radius: 20px;
@@ -19,11 +19,11 @@ button:hover {
 }
 
 button:active {
-  background-color: #786f7f;
+  background-color: #4b5238;
 }
 
 button p {
-  font-size: 3rem;
+  font-size: 2rem;
   text-align: center;
 }
 
