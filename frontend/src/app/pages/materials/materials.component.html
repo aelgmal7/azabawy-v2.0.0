@@ -54,7 +54,7 @@
               <mat-icon class="text-primary">edit</mat-icon>
             </button>
             <span class="line"></span>
-            <button mat-icon-button (click)="deleteMaterial(i)" matTooltip="حذف">
+            <button mat-icon-button (click)="deleteMaterial(material.id)" matTooltip="حذف">
               <mat-icon class="text-danger">delete</mat-icon>
             </button>
           </div>
@@ -73,14 +73,14 @@
               <span class="example-element-description highlight">{{ kartona.a }}</span>
               <span class="example-element-description">تعديل الكمية</span>
               <div class="btn-group" role="group">
-                <button type="button" class="btn btn-danger" (click)="minAmount(input.value, r, i)"
-                  (click)="input.value= ''">-</button>
+                <button type="button" class="btn btn-danger"
+                  (click)="updateAmountMin(input.value, kartona.w, material.id)" (click)="input.value= ''">-</button>
                 <input type="number" class="form-control" id="input" #input>
-                <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
-                  (click)="input.value = ''">+</button>
+                <button type="button" class="btn btn-success"
+                  (click)="updateAmountAdd(input.value, kartona.w, material.id)" (click)="input.value = ''">+</button>
               </div>
-              <button mat-icon-button [disabled]="material.weightAndAmountMats.length == 1" (click)="deleteWeight(r, i)"
-                color="warn" matTooltip="حذف">
+              <button mat-icon-button [disabled]="material.weightAndAmountMats.length == 1"
+                (click)="deleteWeight(material.id, kartona.w)" color="warn" matTooltip="حذف">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

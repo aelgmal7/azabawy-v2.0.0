@@ -42,6 +42,7 @@ export class MaterialsComponent implements OnInit {
 
   ELEMENT_DATA: IMaterials[] = [
     {
+      id: 5,
       materialName: 'Agwa',
       supplierId: 5,
       supplierName: 'Moataz Handy',
@@ -51,6 +52,8 @@ export class MaterialsComponent implements OnInit {
       weightsAndAmountsMat: [{ w: 320, a: 10 }],
     },
     {
+      id: 5,
+
       materialName: 'Agwa2',
       supplierId: 5,
       supplierName: 'Moataz Handy',
@@ -115,7 +118,7 @@ export class MaterialsComponent implements OnInit {
 
     this.swalWithBootstrapButtons
       .fire({
-        title: 'مسح هذه المادة',
+        title: 'مسح هذه المادة الخام؟',
         text: 'سوف تكون غير قادر على إعادة هذه الخطوة',
         icon: 'warning',
         showCancelButton: true,
@@ -125,13 +128,21 @@ export class MaterialsComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.swalWithBootstrapButtons.fire(
-            'تم المسح!',
-            'تم المسح بنجاح!',
-            'success'
-          );
-          this.ELEMENT_DATA.splice(i, 1);
-          this.dataSource.data = this.ELEMENT_DATA;
+          this._materialsService.deleteMaterial(i).subscribe((response) => {
+            console.log(response);
+            if (Object.values(response)[0] === true) {
+              this.swalWithBootstrapButtons.fire(
+                'تم المسح!',
+                'تم المسح بنجاح!',
+                'success'
+              );
+              this._materialsService.getAllMaterials().subscribe((response) => {
+                this.dataSource.data = response;
+              });
+            } else {
+              this.swalWithBootstrapButtons.fire('لم يتم المسح!', '', 'error');
+            }
+          });
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
@@ -144,7 +155,7 @@ export class MaterialsComponent implements OnInit {
         }
       });
   }
-  deleteWeight(index1, index2) {
+  deleteWeight(id, weight) {
     this.swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
@@ -165,13 +176,27 @@ export class MaterialsComponent implements OnInit {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.swalWithBootstrapButtons.fire(
-            'تم المسح!',
-            'تم المسح بنجاح!',
-            'success'
-          );
-          this.ELEMENT_DATA[index1].weightsAndAmountsMat.splice(index2, 1);
-          this.dataSource.data = this.ELEMENT_DATA;
+          this._materialsService
+            .deleteWeight(id, weight)
+            .subscribe((response) => {
+              console.log(response['succeeded'] == true);
+              if (response['succeeded'] == true) {
+                this.swalWithBootstrapButtons.fire(
+                  'تم المسح!',
+                  'تم مسح الوزن بنجاح!',
+                  'success'
+                );
+                this._materialsService.getAllMaterials().subscribe((prod) => {
+                  this.dataSource.data = prod;
+                });
+              } else {
+                this.swalWithBootstrapButtons.fire(
+                  'لم يتم المسح!',
+                  '',
+                  'error'
+                );
+              }
+            });
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
@@ -200,13 +225,46 @@ export class MaterialsComponent implements OnInit {
     return x;
   }
 
-  addAmount(val1, index1, index2) {
-    this.dataSource.data[index1].weightsAndAmountsMat[index2].a += Number(val1);
-    Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+  updateAmountAdd(amount, weight, id) {
+    console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
+    this._materialsService
+      .updateAmount(id, amount, weight)
+      .subscribe((response) => {
+        console.log(response);
+        if (Object.values(response)[0] == true) {
+          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+          this._materialsService.getAllMaterials().subscribe((response) => {
+            this.dataSource.data = response;
+          });
+        } else {
+          Swal.fire(
+            'لم يتم تعديل الكمية!',
+            response['result'].result.message,
+            'error'
+          );
+        }
+      });
   }
-  minAmount(val1, index1, index2) {
-    this.dataSource.data[index1].weightsAndAmountsMat[index2].a -= Number(val1);
-    Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+  updateAmountMin(amount, weight, id) {
+    amount = -amount;
+    console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
+    this._materialsService
+      .updateAmount(id, amount, weight)
+      .subscribe((response) => {
+        console.log(response);
+        if (Object.values(response)[0] == true) {
+          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+          this._materialsService.getAllMaterials().subscribe((response) => {
+            this.dataSource.data = response;
+          });
+        } else {
+          Swal.fire(
+            'لم يتم تعديل الكمية!',
+            response['result'].result.message,
+            'error'
+          );
+        }
+      });
   }
   addDialog() {
     let dialogRef = this.dialog.open(AddMaterialsComponent, {
@@ -246,20 +304,23 @@ export class MaterialsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log(typeof result);
-      if (typeof result === 'object') {
-        this.ELEMENT_DATA.splice(i, 1, result);
-        this.dataSource.data = this.ELEMENT_DATA;
-        Swal.fire('تم تعديل المادة الخام بنجاح!', '', 'success');
-      } else {
-        // Swal.fire('تم الإلغاء!', '', 'error');
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'تم الإلغاء!',
-          showConfirmButton: false,
-          timer: 800,
-        });
-      }
+      this._materialsService.getAllMaterials().subscribe((response) => {
+        console.log(response);
+        this.dataSource.data = response;
+      });
+      // if (typeof result === 'object') {
+      //   this.ELEMENT_DATA.splice(i, 1, result);
+      //   this.dataSource.data = this.ELEMENT_DATA;
+      //   Swal.fire('تم تعديل المادة الخام بنجاح!', '', 'success');
+      // } else {
+      //   Swal.fire({
+      //     position: 'center',
+      //     icon: 'error',
+      //     title: 'تم الإلغاء!',
+      //     showConfirmButton: false,
+      //     timer: 800,
+      //   });
+      // }
     });
   }
   addNewWeight(w, a, index1) {
@@ -281,6 +342,7 @@ export class MaterialsComponent implements OnInit {
   }
 }
 export interface IMaterials {
+  id: number;
   materialName: string;
   supplierId: number;
   supplierName: string;

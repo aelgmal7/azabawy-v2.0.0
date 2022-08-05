@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { PeriodicElement } from '../store.component';
 import { MaterialsService } from 'src/app/shared/services/materials.service';
+import { LogsService } from 'src/app/shared/services/logs.service';
 
 @Component({
   selector: 'app-produce-product',
@@ -36,7 +37,9 @@ export class ProduceProductComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private materialsService: MaterialsService,
-    private productsService: StoreService
+    private logsService: LogsService,
+    private productsService: StoreService,
+    public router: Router
   ) {}
 
   get materialName(): AbstractControl {
@@ -160,6 +163,15 @@ export class ProduceProductComponent implements OnInit {
       materialInfo: this.myMaterials,
       productInfo: this.productInfo,
     };
+    this.logsService.matToProd(obj).subscribe((response) => {
+      console.log('response :>> ', response);
+      if (Object.values(response)[0] === true) {
+        Swal.fire('تم إنتاج كمية من المنتج بنجاح!', '', 'success');
+        this.router.navigate(['/']);
+      } else {
+        Swal.fire('لم يتم إنتاج كمية من المنتج!', '', 'error');
+      }
+    });
     console.log(obj);
   }
 }

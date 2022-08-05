@@ -19,4 +19,8 @@ export class LogsService {
     const getURL = `http://localhost:3000/log/`;
     return this.http.get<any>(getURL);
   }
+  matToProd(prod): Observable<any> {
+    const getURL = `http://localhost:3000/convertMat/create`;
+    return this.http.post<any>(getURL, prod);
+  }
 }
