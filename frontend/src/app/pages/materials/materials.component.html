@@ -22,7 +22,7 @@
       </ng-container>
       <ng-container matColumnDef="supplierName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>إسم المورد</th>
-        <td mat-cell *matCellDef="let material">{{ material.supplierId }}</td>
+        <td mat-cell *matCellDef="let material">{{ material.supplierName }}</td>
       </ng-container>
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>عدد الكراتين</th>
@@ -65,7 +65,7 @@
       <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let material let r = dataIndex" [attr.colspan]="columnsToDisplay.length">
           <div class="example-element-detail" [@detailExpand]="material == expandedElement ? 'expanded' : 'collapsed'">
-            <div class="row-detail" *ngFor="let kartona of material.weightsAndAmountsMat; let i = index">
+            <div class="row-detail" *ngFor="let kartona of material.weightAndAmountMats; let i = index">
               <span class="example-element-description">الكراتين من الوزن</span>
               <span class="example-element-description highlight" id="weight">{{ kartona.w
                 }}</span>
@@ -79,8 +79,8 @@
                 <button type="button" class="btn btn-success" (click)="addAmount(input.value, r, i)"
                   (click)="input.value = ''">+</button>
               </div>
-              <button mat-icon-button [disabled]="material.weightsAndAmountsMat.length == 1"
-                (click)="deleteWeight(r, i)" color="warn" matTooltip="حذف">
+              <button mat-icon-button [disabled]="material.weightAndAmountMats.length == 1" (click)="deleteWeight(r, i)"
+                color="warn" matTooltip="حذف">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
@@ -90,11 +90,11 @@
               <span class="example-element-description">الكمية المتاحة</span>
               <input type="number" class="form-control example-element-description" #amount1 [(ngModel)]="amount">
 
-              <button mat-raised-button color="primary" class="addWight"
+              <!-- <button mat-raised-button color="primary" class="addWight"
                 (click)="addNewWeight(weight1.value, amount1.value, r)">أضف
                 الوزن الجديد</button>
 
-              <p class="text-error1" id="text-error1" [hidden]="!visible">هذا الوزن تم إضافته بالفعل</p>
+              <p class="text-error1" id="text-error1" [hidden]="!visible">هذا الوزن تم إضافته بالفعل</p> -->
             </div>
 
           </div>

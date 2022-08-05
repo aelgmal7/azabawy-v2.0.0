@@ -21,6 +21,10 @@ export class VerticalNavbarComponent implements OnInit {
       link: '/new-bill',
     },
     {
+      text: 'سجل السحب',
+      link: '/logs',
+    },
+    {
       text: 'عملية على الخزنة',
       link: '/new-operation',
     },

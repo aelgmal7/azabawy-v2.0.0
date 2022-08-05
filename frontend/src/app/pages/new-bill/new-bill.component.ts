@@ -182,11 +182,10 @@ export class NewBillComponent implements OnInit {
     });
     this.billsCtrl.valueChanges.subscribe(() => {
       this.productName.reset();
-      let x: billProducts[];
-      x = this.clientBills.filter((k) => k.billId == this.billsCtrl.value?.id);
-      this.billProducts = x[0]?.products;
-      console.log(this.billsCtrl.value?.id);
-      console.log(this.billProducts);
+      let x: billProducts[] = [];
+      let q: billProducts[] = [];
+      x = this.clientBills?.filter((k) => k.billId == this.billsCtrl.value?.id);
+      x?.forEach((k) => (this.billProducts = k.products));
     });
     this.orderName.valueChanges.subscribe((change) => {
       this._storeService.getAllProducts().subscribe((prod) => {

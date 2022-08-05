@@ -167,6 +167,30 @@ export class ClientsComponent implements OnInit {
         }
       });
   }
+  printOpsShort(id) {
+    this._clientsService.printAllOpsShort(id).subscribe((response) => {
+      console.log(response);
+      Swal.fire({
+        position: 'center',
+        imageUrl: './../../../../assets/images/Gear-0.3s-203px.svg',
+        title: 'جاري طباعة العمليات بشكل مختصر',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    });
+  }
+  printOpsDetails(id) {
+    this._clientsService.printAllOpsDetails(id).subscribe((response) => {
+      console.log(response);
+      Swal.fire({
+        position: 'center',
+        imageUrl: './../../../../assets/images/Gear-0.3s-203px.svg',
+        title: 'جاري طباعة العمليات بشكل كامل',
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    });
+  }
 }
 export interface operation {
   id: number;
