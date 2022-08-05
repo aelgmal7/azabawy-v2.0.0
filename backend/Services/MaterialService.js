@@ -135,11 +135,27 @@ const deleteMaterialWeight = async (materialId,weightReq)=> {
     return material
 }
 
+const changeAmountOfMaterial= async(materialId,weightReq,newAmount) => {
+    const material = await Material.findOne({where: {enabled: true,id: materialId}})
+    if (material === null) return {
+        message: `no material with id ${materialId}`,
+        code : 404
+    }
+    const weightAmount = await WeightAndAmountMat.findOne({where:{enabled: true,materialName:material.materialName,weight:weightReq}})
+    material.totalAmount += Number(newAmount)
+    material.totalWeight += Number(newAmount) * Number(weightAmount.weight)
+    material.save();
+    weightAmount.amount += Number(newAmount)
+    weightAmount.save();
+    return material
+
+}
 module.exports = {
     createMaterial :createMaterial,
     getAllMaterials :getAllMaterials,
     deleteMaterial:deleteMaterial,
     updateMaterial:updateMaterial,
-    deleteMaterialWeight:deleteMaterialWeight
+    deleteMaterialWeight:deleteMaterialWeight,
+    changeAmountOfMaterial:changeAmountOfMaterial
 
 }
