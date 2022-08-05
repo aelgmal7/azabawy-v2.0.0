@@ -6,31 +6,55 @@ const {WeightAndAmountMat} = require("../Models/WeightAndAmountMat")
 
 const convertMat = async(materialInfo,productInfo) => {
     const materials = await Material.findAll({where: {enabled: true}})
-    const changes = materialInfo.map(async (material)=> {
+    const products = await Product.findAll({where: {enabled: true}})
+    // material changes
+    const materialChanges = materialInfo.map(async (material)=> {
         const item = await WeightAndAmountMat.findOne({where:{enabled: true, id:material.weightId}})
         if (item == null ) {
             return null
         }else {
-            console.log("here");
             const mat = materials.find(m => m.id === material.id)
-            item.amount += material.amount
+            item.amount -= material.amount
             item.save();
-            mat.totalAmount += Number(material.amount);
-            mat.totalWeight += (Number(material.amount) * Number(material.weight))
+            mat.totalAmount -= Number(material.amount);
+            mat.totalWeight -= (Number(material.amount) * Number(material.weight))
             mat.save()
             return mat
         }
     })
-    const tmp = await Promise.all(changes)
-    if (tmp.includes(null)){
-        console.log("object");
+
+    // product changes
+    const prod = products.find(i => i.id == productInfo.id)
+    if (!prod) return {
+        message: 'Product not found',
+        code: 404,
+    }
+    const productChanges = productInfo.weightsAndAmounts.map(async(weightAmount)=> {
+        const item = await WeightAndAmount.findOne({where: {enabled: true,productName:productInfo.productName,weight: weightAmount.weight}})
+        if (item == null ) {
+            return null
+        }else {
+        item.amount += weightAmount.amount;
+        item.save();
+        prod.totalAmount += Number(weightAmount.amount);
+        prod.totalWeight += (Number(weightAmount.amount) * Number(weightAmount.weight))
+        prod.save()
+        return prod
+        }
+    })
+
+    const matTmp = await Promise.all(materialChanges)
+    const prodTmp = await Promise.all(productChanges)
+    if (matTmp.includes(null) || prodTmp.includes(null)){
         return {
-            message: 'material weight not found',
-            code: 404,
+            message: 'some weights of materials or product not found',
+            code: 500,
         } 
     }else {
-        console.log("object");
-        return await Promise.all(changes)
+        return {
+            matTmp,
+            prodTmp
+        }
     }
     // console.log(await Promise.all(changes));
 

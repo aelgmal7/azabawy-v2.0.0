@@ -7,8 +7,14 @@ const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
 router.post('/create', async(req, res)=> {
     const {materialInfo,productInfo} = req.body
     const result = await convertMat(materialInfo,productInfo)
-    console.log(result);
-    res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))
+    
+    if(result.message){
+
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_404'],false,{result}))
+    }else {
+
+        res.send(returnedResult( HTTP_STATUS_CODES['CODE_200'],true,{result}))
+    }
 
 })
 
