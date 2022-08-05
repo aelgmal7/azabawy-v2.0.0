@@ -4,7 +4,7 @@ const router = express.Router();
 const { returnedResult } = require("../Payload/ReturnedResult");
 const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
 
-router.get('/', (req, res)=> {
+router.post('/create', (req, res)=> {
 
     const result = [{
         id:1,
