@@ -22,12 +22,16 @@ export class ProduceProductComponent implements OnInit {
   form: FormGroup;
   materials;
   selectedMaterial;
-  weights;
-  selectedWeight;
+  materialWeights;
+  materialSelectedWeight;
+  productWeights;
+  productSelectedWeight;
   amount;
-  myMaterials: addProduct[] = [];
+  myMaterials: addMaterial[] = [];
   products;
   selectedProduct;
+  addProductWeights: addProductWeights[] = [];
+  productInfo: addProduct;
 
   constructor(
     private _fb: FormBuilder,
@@ -72,7 +76,7 @@ export class ProduceProductComponent implements OnInit {
       productWeight: [''],
       productAmount: [''],
       materialName: [''],
-      materialWight: [''],
+      materialWeight: [''],
       materialAmount: [''],
     });
 
@@ -81,12 +85,12 @@ export class ProduceProductComponent implements OnInit {
         // const x: any[] = Object.values(prod.result);
         // const y = x[0];
         const z = mat?.filter((e) => e.id == this.materialName.value?.id);
-        this.weights = z[0]?.weightAndAmounts;
-        console.log(z);
+        this.materialWeights = z[0]?.weightAndAmountMats;
+        console.log(this.materialWeights);
       });
     });
     this.materialWeight?.valueChanges.subscribe((change) => {
-      this.amount = this.materialWeight.value?.amount;
+      this.amount = this.materialWeight.value?.a;
       console.log(this.amount);
       this.materialAmount.setValidators([
         Validators.max(this.amount),
@@ -94,54 +98,84 @@ export class ProduceProductComponent implements OnInit {
       ]);
     });
     this.productName?.valueChanges.subscribe((change) => {
+      this.addProductWeights = [];
+      this.addProductWeights = [];
       this.productsService.getAllProducts().subscribe((prod) => {
         const x: any[] = Object.values(prod.result);
         const y = x[0];
         const z = y?.filter((e) => e.id == this.productName.value?.id);
-        this.weights = z[0]?.weightAndAmounts;
+        this.productWeights = z[0]?.weightAndAmounts;
         console.log(z);
       });
     });
-    this.productWeight?.valueChanges.subscribe((change) => {
-      this.amount = this.productWeight.value?.amount;
-      console.log(this.amount);
-      this.productAmount.setValidators([
-        Validators.max(this.amount),
-        Validators.min(1),
-      ]);
-    });
   }
-  addProduct(name, weight, amount) {
-    if (
-      this.myMaterials?.filter((e) => {
-        e.weight == weight;
-      }).length > 0
-    ) {
-      if (
-        this.myMaterials?.filter((e) => {
-          e.name == name;
-        }).length > 0
-      ) {
-        console.log(true);
-      }
-    } else {
-      const prod = {} as addProduct;
-      prod.name = name.productName;
-      prod.weight = weight.weight;
-      prod.amount = Number(amount);
-      this.myMaterials?.push(prod);
-      this.materialName.reset();
-      this.materialWeight.reset();
-      this.materialAmount.reset();
-      console.log(this.myMaterials);
-    }
+  addMaterial(name, weight, amount) {
+    // if (
+    //   this.myMaterials?.filter((e) => {
+    //     e.weight == weight;
+    //   }).length > 0
+    // ) {
+    //   if (
+    //     this.myMaterials?.filter((e) => {
+    //       e.name == name;
+    //     }).length > 0
+    //   ) {
+    //     console.log(true);
+    //   }
+    // } else {
+    // }
+    const mat = {} as addMaterial;
+    mat.id = name.id;
+    mat.materialName = name.materialName;
+    mat.weightId = weight.id;
+    mat.weight = weight.w;
+    mat.amount = Number(amount);
+    this.myMaterials?.push(mat);
+    this.materialName.reset();
+    this.materialWeight.reset();
+    this.materialAmount.reset();
+    console.log(this.myMaterials);
   }
-  deleteProduct(i) {
+  deleteMaterial(i) {
     this.myMaterials.splice(i, 1);
   }
+  addProduct(name, weight, amount) {
+    const weights = {} as addProductWeights;
+    weights.weight = weight.weight;
+    weights.amount = amount;
+    this.addProductWeights?.push(weights);
+    this.productWeight.reset();
+    this.productAmount.reset();
+    this.productInfo = {
+      id: name.id,
+      productName: name.productName,
+      weightsAndAmounts: this.addProductWeights,
+    };
+  }
+  deleteProduct(i) {
+    this.addProductWeights.splice(i, 1);
+  }
+  submit() {
+    const obj = {
+      materialInfo: this.myMaterials,
+      productInfo: this.productInfo,
+    };
+    console.log(obj);
+  }
+}
+export interface addMaterial {
+  id: string;
+  materialName: string;
+  weightId: number;
+  weight: number;
+  amount: number;
 }
 export interface addProduct {
-  name: string;
+  id: number;
+  productName: string;
+  weightsAndAmounts: addProductWeights[];
+}
+export interface addProductWeights {
   weight: number;
   amount: number;
 }
