@@ -144,10 +144,12 @@ const changeAmountOfMaterial= async(materialId,weightReq,newAmount) => {
         code : 404
     }
     const weightAmount = await WeightAndAmountMat.findOne({where:{enabled: true,materialName:material.materialName,weight:weightReq}})
+    const oldAmount = weightAmount.amount
     material.totalAmount += Number(newAmount)
     material.totalWeight += Number(newAmount) * Number(weightAmount.weight)
     material.save();
     weightAmount.amount += Number(newAmount)
+    createLog(new Date(),material.materialName,'تغير كميه الوزن', weightReq,oldAmount,weightAmount.amount,newAmount)
     weightAmount.save();
     return material
 
