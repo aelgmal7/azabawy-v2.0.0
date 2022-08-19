@@ -1,174 +1,155 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
     <head>
-        <!-- meta links -->
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- CSS link -->
-        <!-- <link rel="stylesheet" href="style.css"> -->
-        <!-- Tittle -->
-        <title>فاتورة</title>
         <style>
+            *{
+                margin: 0;
+                direction:rtl;
+            }
+            .header {
+                text-align: center;
+            }
+            h1,h2,.tax-date,h3{
+                margin-top:1em !important;
+                margin-bottom:-5px;
 
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+            }
+            .container { 
+                width:90%;
+                margin:auto;
+                margin-top:0px;
+                height: 90%;
+            }
+            .tax-date {
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body {
-    font-family: 'Amiri', serif;
-    min-height: 100vh;
-    max-width: 90%;
-    margin: auto;
-}
-p {
-    font-weight: 700;
-}
-/* Start Header */
-header {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-header h2 {
-    margin: 0.8rem 0 0.5rem;
-}
-header h3{
-    font-size: 0.9rem;
-}
-header div {
-    min-width: 40%;
-    display: flex;
-    justify-content: space-between;
-}
-header p span {
-    font-weight: 400;
-}
-/* End Header */
+                width:40%;
+                margin:auto;
+                display:flex;
+                justify-content:space-around;
+            }
+            .bill-container {
+                /* width:90%; */
+                margin:auto;
+                text-align: right;
+                direction:rtl;
+            }
 
-/* Start Table */
-table {
-    width: 100%;
-    border-spacing: 0;
-}
-table caption {
-    text-align: start;
-}
-table thead td {
-    text-align: center;
-}
-table td {
-    padding: 10px;
-    border: 1px solid #000;
-}
-/* End Table */
-
-/* Start Info */
-.info {
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    margin-top: 20px;
-}
-/* End Info */
-
-/* Start Footer */
-footer p:first-child {
-    margin: 30px;
-    text-align: center;
-}
-footer p:last-child {
-    text-align: end;
-}
-/* End Footer */
-
+            /* .bill-table {
+                width: 90%;
+                margin:auto;
+            } */
+            
+            table {
+                width: 100%;
+                border-spacing: 0;
+                direction:rtl
+            }
+            .bill-container caption {
+                text-align: start;
+            }
+            table thead td {
+                text-align: center;
+            }
+            table td {
+                padding: 10px;
+                border: 1px solid #000;
+            }
+            footer p:first-child {
+                margin: 30px;
+                text-align: center;
+            }
+            footer p:last-child {
+                text-align: end;
+            }
+            .info {
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-top: 20px;
+            }
         </style>
     </head>
     <body>
-        <!--Start Header  -->
-            <header>
-                <h3>مصنع حلويات العزباوي</h3>
+        <div class="container">
+            <div class="header">
+                <h1> مصنع حلويات العزباوي </h1>
                 <h2>فاتورة <%=billType %> رقم  <%= bill.id %> </h2>
-                <div>
+
+                <div class="tax-date">
                     <% if (type == 2 || type == 3 ) { %>
                     
                     <p>الرقم الضريبي: <span>028-966-723</span></p>
                     <% } %>
                     <p>التاريخ: <span><%= (new Date(bill.date)).toLocaleDateString('en-US') %></span></p>
                 </div>
-            </header>
-        <!--End Header  -->
-        <!-- Start Table -->
-            <table>
-                <caption>السادة: <span><%=client.clientName %></span></caption>
-                <thead>
-                    <tr>
-                        <td>المنتج</td>
-                        <td>عدد العبوات</td>
-                        <td>وزن العبوة</td>
-                        <td>سعر الكيلو</td>
-                        <td>إجمالي الوزن</td>
-                        <% if(type == 1 || type ==3) { %>
-                            <td>السعر الإجمالي للمنتج</td>
-                        <% } %>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for(product of products) { %>
-                    <tr>
-                        <td> <%= product.productName %></td>
-                        <td> <%= product.amount %></td>
-                        <td> <%= product.weight %></td>
-                        <td> <%= product.kiloPrice %></td>
-                        <td> <%= (product.weight * product.amount) %></td>
-                        <% if(type == 1 || type ==3) { %>
-                        <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
-                        <% } %>
-                        
-                    </tr>
-                    <% } %>
-                    <tr>
-                        <td colspan="1">الإجمالي</td>
-                        <td><%= totalAmount %></td>
-                        <td colspan="2"></td>
-                        <td><%= totalWeight %></td>
-                        <% if(type == 1 || type ==3) { %>
-                        <td><%= totalCost %></td>
-                        <% } %>
-                    </tr>
-                </tbody>
-            </table>
-        <!-- End Table -->
-        <!-- Start Info -->
-        <% if(type == 1 || type ==3) { %>
-
-            <div class="info">
-                <div>
-                    <p>الرصيد السابق للعميل</p>
-                    <span><%= oldClientTotalBalance %></span>
-                </div>
-                <% if (billType !== 'فاتوره مرتجع بيع') { %>
-                <div>
-                    <p>المبلغ المدفوع</p>
-                    <span> <%=bill.paid %> جنيه</span>
-                </div>
-                <% }%>
-                <div>
-                    <p>رصيد العميل بعد الفاتوره</p>
-                    <span><%= client.totalBalance %></span>
-                </div>
             </div>
-        <% } %>
-        <!-- End Info -->
-        <!-- Start Footer -->
-            <footer>
-                <p>إستلمت البضاعة الموضّحة بعاليه في حاله جيدة و تحت مسؤوليتي وأتعهد بدفع قيمه البضاعة لأمر الشركة أو لمن تؤول إليه و التقاضي بالجهة التي ترغبها الشركة .</p>
-                <p>توقيع المستلم</p>
-            </footer>
-        <!-- End Footer -->
+            <div class="bill-container">
+                <h3>السادة: <span> <%=client.clientName %> </span></h3>
+                <div class="bill-table">
+                    <table>
+                        <tr>
+                            <td>المنتج</td>
+                            <td>عدد العبوات</td>
+                            <td>وزن العبوة</td>
+                            <td>سعر الكيلو</td>
+                            <td>إجمالي الوزن</td>
+                            <% if(type == 1 || type ==3) { %>
+                                <td>السعر الإجمالي للمنتج</td>
+                            <% } %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(product of products) { %>
+                            <tr>
+                                <td> <%= product.productName %></td>
+                                <td> <%= product.amount %></td>
+                                <td> <%= product.weight %></td>
+                                <td> <%= product.kiloPrice %></td>
+                                <td> <%= (product.weight * product.amount) %></td>
+                                <% if(type == 1 || type ==3) { %>
+                                <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
+                                <% } %>
+                                
+                            </tr>
+                            <% } %>
+                            <tr>
+                                <td colspan="1">الإجمالي</td>
+                                <td><%= totalAmount %></td>
+                                <td colspan="2"></td>
+                                <td><%= totalWeight %></td>
+                                <% if(type == 1 || type ==3) { %>
+                                <td><%= totalCost %></td>
+                                <% } %>
+                            </tr>
+                        </tbody>
+                </table>
+            </div>
+            <% if(type == 1 || type ==3) { %>
+
+                <div class="info">
+                    <div>
+                        <p>الرصيد السابق للعميل</p>
+                        <span><%= oldClientTotalBalance %></span>
+                    </div>
+                    <% if (billType !== 'فاتوره مرتجع بيع') { %>
+                    <div>
+                        <p>المبلغ المدفوع</p>
+                        <span> <%=bill.paid %> جنيه</span>
+                    </div>
+                    <% }%>
+                    <div>
+                        <p>رصيد العميل بعد الفاتوره</p>
+                        <span><%= client.totalBalance %></span>
+                    </div>
+                </div>
+            <% } %>
+            <!-- End Info -->
+            <!-- Start Footer -->
+                <footer>
+                    <p>إستلمت البضاعة الموضّحة بعاليه في حاله جيدة و تحت مسؤوليتي وأتعهد بدفع قيمه البضاعة لأمر الشركة أو لمن تؤول إليه و التقاضي بالجهة التي ترغبها الشركة .</p>
+                    <p>توقيع المستلم</p>
+                </footer>
+            </div>
+            
+        </div>
     </body>
 </html>

@@ -1,5 +1,7 @@
 const { Client } = require("../Models/Client");
+const { BillItem } = require("../Models/BillItem");
 const { ClientModel } = require("../Classes/Client");
+const { Product } = require("../Models/Product");
 
 const {DirectPay } = require("../Models/DirectPay")
 const {Bill} = require("../Models/Bill")
@@ -24,7 +26,7 @@ const createClient = async({
       paid
     ); 
     const temp = await Client.findOne({where: {clientName: client.clientName}})
-    console.log(temp);
+    // console.log(temp);
     if (temp === null) {
       
       return Client.create(client);
@@ -91,20 +93,28 @@ const clientAllOP = async (clientId) => {
       code: 404,
     }
   }
+  const billItems = await BillItem.findAll({where: {enabled: true}})
   const bills =await Bill.findAll({where: {enabled: true,ClientId: clientId}}).then( (bills) => {
-    return bills.map( (bill) =>{
+    return bills.map(  (bill) =>{
+      // console.log(products[0]);
+      // const products =  Promise.resolve(bill.getProducts().then(products => products))
       const temp = bill.dataValues
+      const products = billItems.filter( (product) =>product.BillId === temp.id)
+      //  console.log(bill);
+   
       return {
         id: temp.id,
         paid: temp.paid,
         date: temp.date,
         remainAfterOp: temp.remainAfterOp,
-        clientId: temp.clientId,
+        clientId: temp.ClientId,
         billCost: temp.cost,
         type: temp.type,
+        products:products.map(p => p.dataValues),
         text: `فاتورة ${temp.type =='فاتوره مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
 
       }
+
     })
   })
   const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
@@ -116,8 +126,8 @@ const clientAllOP = async (clientId) => {
         date: temp.date,
         note: temp.note,
         remainAfterOp: temp.remainAfterOp,
-        billId: temp.billId,
-        clientId: temp.clientId,
+        billId: temp.BillId,
+        clientId: temp.ClientId,
         text: ` دفع علي حساب فاتوره رقم ${ temp.BillId}`,
         type: "حساب فاتورة"
       }
@@ -133,7 +143,7 @@ const clientAllOP = async (clientId) => {
         date: temp.date,
         note: temp.note,
         remainAfterOp: temp.remainAfterOp,
-        clientId: temp.clientId,
+        clientId: temp.ClientId,
         text: temp.note,
         type: "عملية دفع مباشرة عميل"
       }
@@ -145,6 +155,7 @@ const clientAllOP = async (clientId) => {
     let db = new Date(b.date)
    return  db - da
   })
+  console.log(all);
   return all
 }
 const sendIndividualBill = async (type,id) => {
@@ -171,13 +182,13 @@ const returnBill = async (id) => {
   const name ="مسعره-برقم-ضريبي"
   const client = await Client.findOne({where: {enabled: true,id:bill.ClientId}})
   const billPath = `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
-  console.log(typeof process.env.PROD);
+  // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
-    console.log("here")
+    // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),billPath)}"`);
 
   }else{
-    console.log("there");
+    // console.log("there");
     require('child_process').exec(`explorer.exe "${path.join("backend","views","فواتير",billPath)}"`);
   }
 
@@ -193,13 +204,13 @@ const returnDirectPAy = async (id) => {
   }
   const client = await Client.findOne({where: {enabled: true,id:directPay.ClientId}})
   const billPath = `${client.clientName}/${directPay.id}-${client.clientName}-${(new Date(directPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
-  console.log(typeof process.env.PROD);
+  // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
-    console.log("here")
+    // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
 
   }else{
-    console.log("there");
+    // console.log("there");
     require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",billPath)}"`);
   }
 }
@@ -214,13 +225,13 @@ const returnBillPAy = async (id) => {
   }
   const client = await Client.findOne({where: {enabled: true,id:billPay.ClientId}})
   const billPath = `${client.clientName}/${billPay.id}-${client.clientName}-${(new Date(billPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
-  console.log(typeof process.env.PROD);
+  // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
-    console.log("here")
+    // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
 
   }else{
-    console.log("there");
+    // console.log("there");
     require('child_process').exec(`explorer.exe "${path.join("backend","views","مدفوعات",billPath)}"`);
   }
 
@@ -245,20 +256,23 @@ const printClientAllOpShort =async (clientId) => {
 const printCore = async (client,ops,details)=> {
   let printable;
   if (details == true){
+    // console.log(client);
 
-     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInDetails.ejs")}`,{ops})
+     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInDetails.ejs")}`,{client,ops})
   }else{
-     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInShort.ejs")}`,{ops})
+     printable = await  ejs.renderFile(`${path.join(__dirname,'..',"views","AllBillsInShort.ejs")}`,{client,ops})
 
   }
-  console.log(ops);
+  // TODO remove return 
+  return printable
+  // console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
   let file = { content: printable };
   const name = "حساب"
   html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
       const pdfPath =`${client.clientName}/-${client.clientName}-${(new Date()).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
-      console.log("PDF Buffer:-", pdfBuffer);
+      // console.log("PDF Buffer:-", pdfBuffer);
       if(process.env.PROD == "true"){
           const fwaterDirProd = `${path.join(app.getPath('userData'),"حسابات")}`
           const clientDirProd = `${path.join(app.getPath('userData'),"حسابات",client.clientName)}`
@@ -267,28 +281,28 @@ const printCore = async (client,ops,details)=> {
               // first check if directory already exists
               if (!fs.existsSync(fwaterDirProd)) {
                   fs.mkdirSync(fwaterDirProd);
-                  console.log("Directory is created.");
+                  // console.log("Directory is created.");
               } else {
-                  console.log("Directory already exists.");
+                  // console.log("Directory already exists.");
               }
           } catch (err) {
-              console.log(err);
+              // console.log(err);
           }
 
           try {
               // first check if directory already exists
               if (!fs.existsSync(clientDirProd)) {
                   fs.mkdirSync(clientDirProd);
-                  console.log("Directory is created.");
+                  // console.log("Directory is created.");
               } else {
-                  console.log("Directory already exists.");
+                  // console.log("Directory already exists.");
               }
           } catch (err) {
-              console.log(err);
+              // console.log(err);
           }
               fs.writeFile(`${path.join(path.join(app.getPath('userData'),"حسابات"),pdfPath)}`,pdfBuffer,err => {
                   if(err) {
-                      console.log(err)
+                      // console.log(err)
                       // er = err
                       return err
                   }
@@ -304,27 +318,27 @@ const printCore = async (client,ops,details)=> {
               // first check if directory already exists
               if (!fs.existsSync(fwater)) {
                   fs.mkdirSync(fwater);
-                  console.log("Directory is created.");
+                  // console.log("Directory is created.");
               } else {
-                  console.log("Directory already exists.");
+                  // console.log("Directory already exists.");
               }
           } catch (err) {
-              console.log(err);
+              // console.log(err);
           }
           try {
               // first check if directory already exists
               if (!fs.existsSync(dir)) {
                   fs.mkdirSync(dir);
-                  console.log("Directory is created.");
+                  // console.log("Directory is created.");
               } else {
-                  console.log("Directory already exists.");
+                  // console.log("Directory already exists.");
               }
           } catch (err) {
-              console.log(err);
+              // console.log(err);
           }
           fs.writeFile(`${path.join("backend","views","حسابات",pdfPath)}`,pdfBuffer,err => {
 
-                      console.log("here");
+                      // console.log("here");
                       
                       require('child_process').exec(`explorer.exe "${path.join("backend","views","حسابات",pdfPath)}"`);
                 
