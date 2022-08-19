@@ -4,9 +4,209 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <style>
+         *{
+                margin: 0;
+                direction:rtl;
+            }
+            .header {
+                text-align: center;
+            }
+            h1,h2,.tax-date,h3,h4,table,p{
+                margin-top:1em !important;
+                margin-bottom:-5px;
+
+            }
+            .container { 
+                width:90%;
+                margin:auto;
+                margin-top:0px;
+                height: 90%;
+            }
+            .tax-date {
+
+                width:40%;
+                margin:auto;
+                display:flex;
+                justify-content:space-around;
+            }
+            .bill-container {
+                /* width:90%; */
+                margin:auto;
+                text-align: right;
+                direction:rtl;
+            }
+            .container .header h3 {
+                text-align: right;
+                
+            }
+            .direct-pay {
+                border: 1px solid #000;         
+                padding: 0.5em;
+                margin-top: 1em;;
+            }
+           
+            .bill-table {
+                border: 1px solid #000;          
+
+                padding: 0.5em;
+                margin-top: 1em;;
+            }
+            .pay-for-bill {
+                border: 1px solid #000;          
+                padding: 0.5em;
+                margin-top: 1em;
+                text-align:right;
+
+            }
+
+            table {
+
+                width: 100%;
+                border-spacing: 0;
+                direction:rtl
+            }
+            table thead td {
+                /* text-align: center; */
+            }
+            table td {
+                padding: 5px;
+                border: 1px solid #000;
+            }
+       
+          
+    </style>
+    <title>سجل عمليات</title>
 </head>
 <body>
-    <h1>Document</h1>
+    <div class="container">
+
+        <% for (element of ops)  { %> 
+            
+        <%if ( element.type === 'فاتوره بيع' || element.type === 'فاتورة بيع'  ||  element.type === 'فاتورة مرتجع بيع' ) { %>
+            <div class="bill-table">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                    </p> 
+                </div>
+                <table class="bill">
+                    <tr>
+                        <td>المنتج</td>
+                        <td>عدد العبوات</td>
+                        <td>وزن العبوة</td>
+                        <td>سعر الكيلو</td>
+                        <td>إجمالي الوزن</td>
+                        <td>السعر الإجمالي للمنتج</td>
+
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(product of element.products) { %>
+                        <tr>
+                            <td> <%= product.productName %></td>
+                            <td> <%= product.amount %></td>
+                            <td> <%= product.weight %></td>
+                            <td> <%= product.kiloPrice %></td>
+                            <td> <%= (product.weight * product.amount) %></td>
+                            <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
+
+                           
+                        </tr>
+                        <% } %>
+                        <tr>
+                            <td colspan="1">الإجمالي</td>
+                            <td><%= element.products.reduce((total =0, product) =>{
+                                
+                               return  total + product.amount
+                            },0)
+                             %></td>
+                            <td colspan="2"></td>
+                            <td><%= element.products.reduce((total =0, product) => {
+                                return total + product.weight
+                            },0
+                                ) %></td>
+                            <td><%= element.products.reduce((total =0, product) =>{ 
+                                return total +(product.weight * product.amount * product.kiloPrice )
+                            },0) %></td>
+                        </tr>
+                        
+                    </tbody>
+            </table>
+            </div>
+
+
+        <% } else if ( element.type === 'عملية دفع مباشرة عميل') { %>
+            <div class="direct-pay">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                    </p>  
+                </div>
+                <div class="operation">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <td> المدفوع</td>
+                                <td> مدين</td>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> <%= element.paid %></td>
+                                <td> <%= element.remainAfterOp %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p >
+                        <%=element.note %>
+                    </p>
+                </div>
+
+            </div>
+        <%   } else if ( element.type === 'حساب فاتورة' || element.type === 'حساب فاتوره' ) { %>
+            <div class="pay-for-bill">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                    </p>  
+                </div>
+                <div class="operation">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td> رقم الفاتورة</td>
+                                <td> المدفوع</td>
+                                <td>مدين </td>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <td> <%= element.billId %></td>
+                                <td> <%= element.paid %></td>
+                                <td> <%= element.remainAfterOp %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p >
+                        <%=element.note %>
+                    </p>
+                </div>
+
+            </div>
+        <% }%>
+        <% }%>
+    </div>
 </body>
 </html>

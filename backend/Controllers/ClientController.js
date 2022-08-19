@@ -127,8 +127,11 @@ router.get('/print-all-ops-details/:clientId',async (req, res)=> {
   const clientId = req.params.clientId;
   const result = await printClientAllOpDetails(clientId);
   try {
+    // res.send(
+    //   returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { op: result })
+    // );
     res.send(
-      returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { op: result })
+     result
     );
   }catch (error) {}
 })
