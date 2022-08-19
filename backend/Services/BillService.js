@@ -2,7 +2,7 @@ const  {Bill} = require('../Models/Bill')
 const Sequelize = require('Sequelize')
 const Op = Sequelize.Op;
 const {app} = require('electron')
-
+const {createLog} = require('./LogService')
 const  {Client} = require('../Models/Client')
 const  {Product} = require('../Models/Product')
 const  {BillItem} = require('../Models/BillItem')
@@ -22,7 +22,7 @@ const getAllBills = async() => {
         })
 }
 const getClientBills =async(clientId) => {
-     return await Bill.findAll({where: {enabled: true,clientId:clientId}})
+     return await Bill.findAll({where: {enabled: true,clientId:clientId,type: 'فاتورة بيع'}})
      .then( async(bills)=> {
         const container =[]
         // get products for individual bill
@@ -93,7 +93,7 @@ const addBill = async (clientId,billData,productsDetails,options) => {
        oldClientTotalBalance = client.totalBalance
        //client changes
        const bill = await client.createBill({cost:billData.cost,clientId:clientId,type:billData.type,paid:billData.paid,date:billData.date})
-       if (billData.type ==='فاتوره مرتجع بيع'){
+       if (billData.type ==='فاتورة مرتجع بيع'){
 
            
            console.log("in rag3");
@@ -145,7 +145,7 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                              //console.log("here",billProducts);
                             console.log("وربنا شغال");
                             // order handling
-                            if (billData.type !=='فاتوره مرتجع بيع'){
+                            if (billData.type !=='فاتورة مرتجع بيع'){
 
                                 if (billData.orderId !== null){
                                     console.log("in order section");
@@ -156,10 +156,17 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                                 }
                             }
                                 //weights handling
-                                if (billData.type ==='فاتوره مرتجع بيع'){
+                                if (billData.type ==='فاتورة مرتجع بيع'){
                                     
                                     WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                                        // temps for log 
+                                        // date,name,reason,weight,oldAmount,newAmount,delta
+                                        const oldAmount = item.amount
+                                    
                                         item.amount += Number(amount);
+                                        console.log("here in mortaga3");
+                                        console.log(item.amount, oldAmount);
+                                        createLog(billData.date,product.productName,billData.type,weight,oldAmount,item.amount,(Number(amount)) )
                                         product.totalAmount += Number(amount);
                                         product.totalWeight += (Number(weight) * Number(amount)); 
                                         item.save()
@@ -169,7 +176,14 @@ const addBill = async (clientId,billData,productsDetails,options) => {
                                 }else {
 
                                     WeightAndAmount.findOne({where: {productName:product.productName,enabled:true, weight:weight}}).then((item)=>{
+                                        //temps for log
+                                        // date,name,reason,weight,oldAmount,newAmount,delta
+
+                                        const oldAmount = item.amount
+                                        
                                         item.amount -= Number(amount);
+                                        
+                                        createLog(billData.date,product.productName,billData.type,weight,oldAmount,item.amount,(- Number(amount)))
                                         product.totalAmount -= Number(amount);
                                         product.totalWeight -= (Number(weight) * Number(amount)); 
                                         item.save()

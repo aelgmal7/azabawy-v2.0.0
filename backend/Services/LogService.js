@@ -3,9 +3,9 @@ Log
 } = require('../Models/Log')
 
 
-const createLog = async (date,name,weight,oldAmount,newAmount,delta) => {
+const createLog = async (date,name,reason,weight,oldAmount,newAmount,delta) => {
     const log = await  Log.create(  {
-        date,name,weight,oldAmount,newAmount,delta
+        date,name,reason,weight,oldAmount,newAmount,delta
     })
     return log
 
