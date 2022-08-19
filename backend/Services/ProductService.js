@@ -1,6 +1,7 @@
 const {ProductModel} = require("../Classes/Product")
 const {Product} = require("../Models/Product")
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
+const {createLog} = require("./LogService")
 
 const createProduct = async({
     productName,
@@ -112,6 +113,9 @@ const addNewWeightToProduct = async (productId,weight,amount) => {
     }).then(async(weightAndAmount) => {
         const p = await Product.findOne({where: {enabled: true,id: productId}})
         console.log(weightAndAmount)
+         
+        //date,name,reason,weight,oldAmount,newAmount,delta
+        await createLog(new Date(),p.productName,"اضافة وزن جديد",weight,0,amount,amount)
         p.totalAmount += Number(weightAndAmount.amount);
         p.totalWeight += (Number(weightAndAmount.weight) * Number(weightAndAmount.amount));
         console.log(p.totalAmount,p.totalWeight)
@@ -155,7 +159,11 @@ const changeAmountOfWeight = async(productId,weight,newAmount) => {
         }
     }
     try {
+        // log 
+        const oldAmount = w.amount
         w.amount += Number(newAmount)
+
+        await createLog(new Date(),p.productName,"تغير كميه الوزن",weight,oldAmount,w.amount,newAmount)
         p.totalAmount += Number(newAmount);
         p.totalWeight += (Number(newAmount) * Number(weight))
         w.save();
