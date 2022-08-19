@@ -11,7 +11,7 @@ const createLog = async (date,name,reason,weight,oldAmount,newAmount,delta) => {
 
 }
 const getAllLogs = async() => {
-    const logs =await Log.findAll()
+    const logs =await Log.findAll({order:[['date','DESC']]})
     return logs
 }
 module.exports = {

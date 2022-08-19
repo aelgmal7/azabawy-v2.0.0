@@ -39,6 +39,8 @@ const createProduct = async({
     );
     return Product.create(product).then((product) => {
         return weightsAndAmounts.map(e => {
+            createLog(new Date(),product.productName,"اضافة وزن جديد",e.w,0,e.a,e.a)
+
             return product.createWeightAndAmount({weight:e.w,amount:e.a,productName:product.productName})
         })
     })
