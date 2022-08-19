@@ -324,6 +324,10 @@ export class NewBillComponent implements OnInit {
       this.billType.value == 'بيع'
         ? (paid = form.controls.paid.value)
         : (paid = null);
+      let orderId;
+      form.controls.orderName.value?.id
+        ? (orderId = form.controls.orderName.value.id)
+        : (orderId = null);
       const bill = {
         options: {
           printable: true,
@@ -333,7 +337,7 @@ export class NewBillComponent implements OnInit {
           cost: this.totalPrice,
           paid: paid,
           date: form.controls.date.value,
-          orderId: form.controls.orderName.value.id,
+          orderId: orderId,
           type: type,
         },
         productsDetails: this.orderedProducts,
@@ -358,23 +362,25 @@ export class NewBillComponent implements OnInit {
     });
   }
   addDirectSanad(form) {
+    let id;
+    form.controls.clientName.value?.id
+      ? (id = form.controls.clientName.value?.id)
+      : (id = null);
     const sanad = {
       printable: false,
       date: form.controls.date.value,
       cash: form.controls.amountPaid.value,
       note: form.controls.notes.value,
     };
-    this._billsService
-      .addDirectPay(sanad, form.controls.clientName.value.id)
-      .subscribe((r) => {
-        console.log(r);
-        if (Object.values(r)[1] === true) {
-          Swal.fire('تم إضافة سند القبض بنجاح!', '', 'success');
-          this.router.navigate(['/']);
-        } else {
-          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
-        }
-      });
+    this._billsService.addDirectPay(sanad, id).subscribe((r) => {
+      console.log(r);
+      if (Object.values(r)[1] === true) {
+        Swal.fire('تم إضافة سند القبض بنجاح!', '', 'success');
+        this.router.navigate(['/']);
+      } else {
+        Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+      }
+    });
   }
 
   printDirectSanad(form) {

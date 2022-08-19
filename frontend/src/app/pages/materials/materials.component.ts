@@ -281,20 +281,23 @@ export class MaterialsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-      if (typeof result === 'object') {
-        this.ELEMENT_DATA.push(result);
-        this.dataSource.data = this.ELEMENT_DATA;
-        Swal.fire('تم إضافة المادة الخام بنجاح!', '', 'success');
-      } else {
-        // Swal.fire('تم الإلغاء!', '', 'error');
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'تم الإلغاء!',
-          showConfirmButton: false,
-          timer: 800,
-        });
-      }
+      this._materialsService.getAllMaterials().subscribe((response) => {
+        console.log(response);
+        this.dataSource.data = response;
+      });
+      // if (typeof result === 'object') {
+      //   this.ELEMENT_DATA.push(result);
+      //   this.dataSource.data = this.ELEMENT_DATA;
+      //   Swal.fire('تم إضافة المادة الخام بنجاح!', '', 'success');
+      // } else {
+      //   Swal.fire({
+      //     position: 'center',
+      //     icon: 'error',
+      //     title: 'تم الإلغاء!',
+      //     showConfirmButton: false,
+      //     timer: 800,
+      //   });
+      // }
     });
   }
   editDialog(prod, i) {

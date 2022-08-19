@@ -102,7 +102,7 @@ export class AddMaterialsComponent implements OnInit {
     const mat = {} as IMaterials;
     mat.materialName = form.controls.materialName?.value;
     // mat.supplierId = '45';
-    // mat.supplierId = form.controls.supplierId?.value.id;
+    mat.supplierId = form.controls.supplierId?.value.id;
     mat.alarm = form.controls.alarm?.value;
     mat.unit = form.controls.unit?.value;
     mat.kiloPrice = form.controls.kiloPrice?.value;
@@ -111,8 +111,8 @@ export class AddMaterialsComponent implements OnInit {
     console.log(form);
     console.log(mat);
     this._materialsService.addNewMaterial(mat).subscribe((response) => {
-      console.log(response);
-      if (Object.keys(response)[0] === '0') {
+      console.log(response['succeeded']);
+      if (response['succeeded'] === true) {
         Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
         this._dialogRef.close();
       } else {

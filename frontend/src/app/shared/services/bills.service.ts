@@ -19,7 +19,7 @@ export class BillsService {
     return this.http.post<any>(PostURL, bill);
   }
   addDirectPay(bill, id): Observable<any> {
-    const PostURL = `http://localhost:3000/directPay/add-directPay/${id}`;
+    const PostURL = `http://localhost:3000/directPay/add-directPay/?clientId=${id}`;
     return this.http.post<any>(PostURL, bill);
   }
   addOrderPay(bill, id, clientId): Observable<any> {

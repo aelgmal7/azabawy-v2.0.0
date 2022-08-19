@@ -30,7 +30,7 @@
       </ng-container>
       <ng-container matColumnDef="total">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>قيمة العملية</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.billCost }}</td>
+        <td mat-cell *matCellDef="let operation">{{ operation.billCost ? operation.billCost : '--' }}</td>
       </ng-container>
       <ng-container matColumnDef="paid">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>المدفوع</th>
@@ -38,7 +38,8 @@
       </ng-container>
       <ng-container matColumnDef="remain">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>المتبقي</th>
-        <td mat-cell *matCellDef="let operation">{{ operation.paid? operation.billCost - operation.paid : '--'}}</td>
+        <td mat-cell *matCellDef="let operation">{{ operation.paid && operation.billCost? operation.billCost -
+          operation.paid : '--'}}</td>
       </ng-container>
       <ng-container matColumnDef="remainAfterOp">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>مديونية العميل بعد الفاتورة</th>
