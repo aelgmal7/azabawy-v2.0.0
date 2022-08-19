@@ -14,6 +14,7 @@ export class LogsComponent implements OnInit {
   swalWithBootstrapButtons;
   operations: log[] = [];
   loading: boolean;
+  value;
 
   columnsToDisplay = [
     'id',
@@ -38,21 +39,11 @@ export class LogsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.dataSource.data = [
-    //   {
-    //     id: 5,
-    //     date: 20,
-    //     name: 'اسمنت',
-    //     reason: 'اسمنتاسمنت',
-    //     weight: 50,
-    //     oldAmount: 40,
-    //     newAmount: 30,
-    //     delta: 20,
-    //   },
-    // ];
     this.logsService.getAllLogs().subscribe((response) => {
-      console.log(response.result.response);
-      this.dataSource.data = response.result.response;
+      console.log(response.result);
+      this.dataSource.data = response.result.result;
+      this.value = this.dataSource.data.forEach((k) => Math.abs(k.delta));
+      this.value;
     });
   }
   applyFilter(event: Event) {

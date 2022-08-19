@@ -1,6 +1,6 @@
 <div class="container1">
   <div class="header">
-    <h1>إنتاج منتج</h1>
+    <h1>إنتاج كمية من منتج</h1>
   </div>
   <div class="bg-white p-5 rounded-3 mat-elevation-z8">
     <form [formGroup]="form" class="d-flex justify-content-between">
@@ -9,7 +9,7 @@
           filterBy="materialName" [showClear]="true" placeholder="إسم المادة الخام" formControlName="materialName">
           <ng-template pTemplate="selectedItem">
             <div class="country-item country-item-value" *ngIf="selectedMaterial">
-              <div>{{selectedMaterial.productName}}</div>
+              <div>{{selectedMaterial.materialName}}</div>
             </div>
           </ng-template>
           <ng-template let-material pTemplate="item">
@@ -19,39 +19,39 @@
           </ng-template>
         </p-dropdown>
         <div class="d-flex justify-content-between">
-          <p-dropdown [options]="weights" [(ngModel)]="selectedWeight" optionLabel="weight" [filter]="true"
-            filterBy="weight" [showClear]="true" placeholder="وزن الكرتونة" formControlName="materialWight"
-            class="w-49">
+          <p-dropdown [options]="materialWeights" [(ngModel)]="materialSelectedWeight" optionLabel="w" [filter]="true"
+            filterBy="w" [showClear]="true" placeholder="وزن العبوة" formControlName="materialWeight" class="w-49">
             <ng-template pTemplate="selectedItem">
-              <div class="country-item country-item-value" *ngIf="selectedWeight">
-                <div>{{selectedWeight.weight}}</div>
+              <div class="country-item country-item-value" *ngIf="materialSelectedWeight">
+                <div>{{materialSelectedWeight.w}}</div>
               </div>
             </ng-template>
             <ng-template let-weight pTemplate="item">
               <div class="country-item">
-                <div>{{weight.weight}}</div>
+                <div>{{weight.w}}</div>
               </div>
             </ng-template>
           </p-dropdown>
 
-          <!-- <mat-form-field class="w-49" appearance="outline">
-            <mat-label>عدد الكراتين</mat-label>
+          <mat-form-field class="w-49" appearance="outline">
+            <mat-label>عدد العبوات</mat-label>
             <input type="number" matInput formControlName="materialAmount" [readonly]="!materialWeight.value ">
-            <mat-hint *ngIf="amount">عدد الكراتين المتاحة <strong> {{amount}}</strong></mat-hint>
-          </mat-form-field> -->
+            <mat-hint *ngIf="amount">عدد العبوات المتاحة <strong> {{amount}}</strong></mat-hint>
+          </mat-form-field>
         </div>
         <button mat-raised-button color="primary" class=" mt-1 w-100"
           [disabled]="materialAmount.invalid || !materialAmount.value || !materialWeight.value"
-          (click)="addProduct(materialName.value, materialWeight.value, materialAmount.value)">أضف
-          منتج</button>
+          (click)="addMaterial(materialName.value, materialWeight.value, materialAmount.value)">أضف
+          مادة خام</button>
         <div *ngIf="myMaterials">
           <ul *ngFor="let material of myMaterials; let i = index" class="ps-0">
             <li class="position-relative order">
               <p class="mb-0">
-                {{material.amount * material.weight}} كجم {{material.name}}
+                المادة <strong>{{material.materialName}}</strong> الوزن <strong>{{material.weight}}</strong> عدد العبوات
+                <strong>{{material.amount}}</strong>
               </p>
               <button mat-icon-button class="position-absolute top-0 start-0"
-                [swal]="['تم حذف الوزن بنجاح!', '', 'error']" (click)="deleteProduct(i)">
+                [swal]="['تم حذف الوزن بنجاح!', '', 'error']" (click)="deleteMaterial(i)">
                 <mat-icon mat-raised-button>cancel</mat-icon>
               </button>
             </li>
@@ -76,12 +76,12 @@
           </ng-template>
         </p-dropdown>
         <div class="d-flex justify-content-between">
-          <p-dropdown [options]="weights" [(ngModel)]="selectedWeight" optionLabel="weight" [filter]="true"
-            filterBy="weight" [showClear]="true" placeholder="وزن الكرتونة" formControlName="productWeight"
-            class="w-49">
+          <p-dropdown [options]="productWeights" [(ngModel)]="productSelectedWeight" optionLabel="weight"
+            [filter]="true" filterBy="weight" [showClear]="true" placeholder="وزن الكرتونة"
+            formControlName="productWeight" class="w-49">
             <ng-template pTemplate="selectedItem">
-              <div class="country-item country-item-value" *ngIf="selectedWeight">
-                <div>{{selectedWeight.weight}}</div>
+              <div class="country-item country-item-value" *ngIf="productSelectedWeight">
+                <div>{{productSelectedWeight.weight}}</div>
               </div>
             </ng-template>
             <ng-template let-weight pTemplate="item">
@@ -94,10 +94,30 @@
           <mat-form-field class="w-49" appearance="outline">
             <mat-label>عدد الكراتين</mat-label>
             <input type="number" matInput formControlName="productAmount" [readonly]="!productWeight.value ">
-            <mat-hint *ngIf="amount">عدد الكراتين المتاحة <strong> {{amount}}</strong></mat-hint>
+            <!-- <mat-hint *ngIf="amount">عدد الكراتين المتاحة <strong> {{amount}}</strong></mat-hint> -->
           </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary" class=" mt-1 w-100"
+          [disabled]="productAmount.invalid || !productAmount.value || !productWeight.value"
+          (click)="addProduct(productName.value, productWeight.value, productAmount.value)">أضف
+          منتج</button>
+        <div *ngIf="addProductWeights">
+          <ul *ngFor="let product of addProductWeights; let i = index" class="ps-0">
+            <li class="position-relative order">
+              <p class="mb-0">
+                المنتج <strong>{{productName.value.productName}}</strong> الوزن <strong>{{product.weight}}</strong> عدد
+                الكراتين <strong>{{product.amount}}</strong>
+              </p>
+              <button mat-icon-button class="position-absolute top-0 start-0"
+                [swal]="['تم حذف الوزن بنجاح!', '', 'error']" (click)="deleteProduct(i)">
+                <mat-icon mat-raised-button>cancel</mat-icon>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </form>
+    <button mat-raised-button color="primary" class=" mt-5 w-100" [disabled]="!productInfo || !myMaterials"
+      (click)="submit()">تأكيد</button>
   </div>
 </div>

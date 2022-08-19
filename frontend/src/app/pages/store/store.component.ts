@@ -153,14 +153,14 @@ export class StoreComponent implements OnInit {
       .subscribe((response) => {
         console.log(response);
         if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
           this._storeService.getAllProducts().subscribe((prod) => {
             this.x = Object.values(prod.result);
             this.dataSource.data = this.x[0];
           });
         } else {
           Swal.fire(
-            'لم يتم تعديل المنتج!',
+            'لم يتم تعديل الكمية!',
             Object.values(response)[1].message,
             'error'
           );
@@ -174,14 +174,14 @@ export class StoreComponent implements OnInit {
       .subscribe((response) => {
         console.log(response);
         if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل المنتج بنجاح!', '', 'success');
+          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
           this._storeService.getAllProducts().subscribe((prod) => {
             this.x = Object.values(prod.result);
             this.dataSource.data = this.x[0];
           });
         } else {
           Swal.fire(
-            'لم يتم تعديل المنتج!',
+            'لم يتم تعديل الكمية!',
             Object.values(response)[1].message,
             'error'
           );

@@ -13,3 +13,11 @@ table {
   width: 100%;
   background-color: white;
 }
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+.btn-success {
+  color: #fff;
+  background-color: #198754;
+}

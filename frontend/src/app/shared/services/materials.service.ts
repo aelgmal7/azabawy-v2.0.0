@@ -25,4 +25,22 @@ export class MaterialsService {
   addNewMaterial(newMaterial: IMaterials): Observable<IMaterials> {
     return this.http.post<IMaterials>(this.PostURL, newMaterial);
   }
+  deleteMaterial(id: number): Observable<number> {
+    const deleteURL = `http://localhost:3000/material/${id}`;
+    return this.http.delete<number>(deleteURL);
+  }
+  updateMaterial(id: number, material: any): Observable<any> {
+    const UpdateURL = `http://localhost:3000/material/${id}`;
+
+    return this.http.put<any>(UpdateURL, material);
+  }
+  updateAmount(id: number, amount: number, weight: number): Observable<any> {
+    const UpdateURL = `http://localhost:3000/material/changeAmountOfWeight/${id}?weight=${weight}&amount=${amount}`;
+
+    return this.http.put<any>(UpdateURL, null);
+  }
+  deleteWeight(productId: number, weightId: number): Observable<number> {
+    const deleteURL = `http://localhost:3000/material/deleteMaterialWeight/${productId}?weight=${weightId}`;
+    return this.http.delete<number>(deleteURL);
+  }
 }

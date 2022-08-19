@@ -16,18 +16,18 @@ export class VerticalNavbarComponent implements OnInit {
       text: 'الرئيسية',
       link: '/.',
     },
-    {
-      text: 'فاتورة جديدة',
-      link: '/new-bill',
-    },
+    // {
+    //   text: 'فاتورة جديدة',
+    //   link: '/new-bill',
+    // },
     {
       text: 'سجل السحب',
       link: '/logs',
     },
-    {
-      text: 'عملية على الخزنة',
-      link: '/new-operation',
-    },
+    // {
+    //   text: 'عملية على الخزنة',
+    //   link: '/new-operation',
+    // },
     {
       text: 'إدارة الطلبيات',
       link: '/orders-management',
@@ -36,10 +36,10 @@ export class VerticalNavbarComponent implements OnInit {
       text: 'الحسابات',
       isNavItemOpen: 'accounting',
       children: [
-        {
-          text: 'سجل المعاملات',
-          link: '/1',
-        },
+        // {
+        //   text: 'سجل المعاملات',
+        //   link: '/1',
+        // },
         {
           text: 'العملاء',
           link: '/clients',
@@ -48,12 +48,12 @@ export class VerticalNavbarComponent implements OnInit {
           text: 'الموردين',
           link: '/suppliers',
         },
+        // {
+        //   text: 'الخزنة',
+        //   link: '/3',
+        // },
         {
-          text: 'الخزنة',
-          link: '/3',
-        },
-        {
-          text: 'الكل',
+          text: 'جميع العمليات',
           link: './accounting',
         },
       ],
@@ -71,12 +71,8 @@ export class VerticalNavbarComponent implements OnInit {
           link: 'store',
         },
         {
-          text: 'سجل المخزن',
-          link: '/6',
-        },
-        {
-          text: 'الكل',
-          link: '/5',
+          text: 'إنتاج كمية من منتج',
+          link: '/produce-product',
         },
       ],
     },
