@@ -2,6 +2,7 @@ const {  Material } = require("../Models/Material");
 const {  Supplier } = require("../Models/Supplier");
 const {  WeightAndAmountMat } = require("../Models/WeightAndAmountMat");
 const { MaterialModel } = require("../Classes/Material");
+const {createLog} =require("./LogService")
 
 const createMaterial =async ({
     materialName,
@@ -52,6 +53,7 @@ const createMaterial =async ({
     
     const temp = await  weightsAndAmountsMat.map(async(e) => {
         const a =  await material.createWeightAndAmountMat({weight:e.w,amount:e.a,materialName:material.materialName})
+            createLog(new Date(),material.materialName,"إضافه ماده خام جديده",e.w,0,e.a,e.a)
         return  Promise.resolve(a)
     })
     
