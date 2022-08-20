@@ -19,7 +19,8 @@ export class OperationsService {
     return this.http.get<any>(getURL);
   }
   getIndividual(op): Observable<any> {
+    console.log(op);
     const getURL = `http://localhost:3000/accounting/individual/`;
-    return this.http.get<any>(getURL);
+    return this.http.post<any>(getURL,op);
   }
 }
