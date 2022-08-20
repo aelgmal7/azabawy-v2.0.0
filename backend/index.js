@@ -27,6 +27,7 @@ const  {sequelize} = require('./DataBase/index')
  const {directPayRouter} = require('./Controllers/DirectPayController')
  const {accountingRouter} = require('./Controllers/GeneralAccountingController')
  const {logRouter} = require('./Controllers/LogController')
+ const {loginRouter} = require('./Controllers/LoginController')
  const {convertMat} = require('./Controllers/convertMatIntoProdController')
  
  temp.sayHi()
@@ -49,6 +50,7 @@ const  {sequelize} = require('./DataBase/index')
     app.use('/accounting',accountingRouter)
     app.use('/log',logRouter)
     app.use('/convertMat',convertMat)
+    app.use('/login',loginRouter)
    // console.log(Client === sequelize.models.Client); // true
    
 
