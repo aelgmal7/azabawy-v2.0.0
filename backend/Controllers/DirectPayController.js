@@ -31,7 +31,7 @@ router.get("/", async (req, res) => {
 router.post("/add-directPay/", async (req, res) => {
   const clientId = req.query.clientId;
   console.log(clientId);
-  const { money, date, note } = req.body;
+  const { cash:money, date, note } = req.body;
   let result ;
   if ( clientId == 'null'){
 
