@@ -111,7 +111,7 @@ const clientAllOP = async (clientId) => {
         billCost: temp.cost,
         type: temp.type,
         products:products.map(p => p.dataValues),
-        text: `فاتورة ${temp.type =='فاتوره مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
+        text: `فاتورة ${temp.type =='فاتورة مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
 
       }
 
@@ -159,7 +159,7 @@ const clientAllOP = async (clientId) => {
   return all
 }
 const sendIndividualBill = async (type,id) => {
-  if(type== "فاتورة بيع" || type== 'فاتوره مرتجع بيع'){
+  if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
 
     return returnBill(id)
   }else if(type==  "حساب فاتورة"){
