@@ -2,7 +2,7 @@ const {Product} = require('../Models/Product')
 const { Material} = require('../Models/Material')
 const {WeightAndAmount} = require("../Models/WeightAndAmount")
 const {WeightAndAmountMat} = require("../Models/WeightAndAmountMat")
-
+const {createLog} = require('./LogService')
 
 const convertMat = async(materialInfo,productInfo) => {
     const materials = await Material.findAll({where: {enabled: true}})
@@ -14,10 +14,13 @@ const convertMat = async(materialInfo,productInfo) => {
             return null
         }else {
             const mat = materials.find(m => m.id === material.id)
+            //for logs
+            const oldAmount = item.amount
             item.amount -= material.amount
             item.save();
             mat.totalAmount -= Number(material.amount);
             mat.totalWeight -= (Number(material.amount) * Number(material.weight))
+            createLog(new Date(),material.materialName,"عملية تحويل مادة خام ل منتج" ,item.weight,oldAmount,item.amount,(item.amount - oldAmount))
             mat.save()
             return mat
         }
@@ -34,10 +37,13 @@ const convertMat = async(materialInfo,productInfo) => {
         if (item == null ) {
             return null
         }else {
+            const oldAmount = item.amount
         item.amount += weightAmount.amount;
         item.save();
         prod.totalAmount += Number(weightAmount.amount);
         prod.totalWeight += (Number(weightAmount.amount) * Number(weightAmount.weight))
+        createLog(new Date(),prod.productName,"انتاج المنتج" ,item.weight,oldAmount,item.amount,(item.amount - oldAmount))
+
         prod.save()
         return prod
         }

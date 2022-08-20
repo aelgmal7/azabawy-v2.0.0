@@ -113,10 +113,14 @@ export class AddMaterialsComponent implements OnInit {
     this._materialsService.addNewMaterial(mat).subscribe((response) => {
       console.log(response['succeeded']);
       if (response['succeeded'] === true) {
-        Swal.fire('تم إضافة المنتج بنجاح!', '', 'success');
+        Swal.fire('تم إضافة المادة الخام بنجاح!', '', 'success');
         this._dialogRef.close();
       } else {
-        Swal.fire('لم يتم حفظ المنتج!', Object.values(response)[0], 'error');
+        Swal.fire(
+          'لم يتم حفظ المادة الخام!',
+          Object.values(response)[0],
+          'error'
+        );
       }
     });
     // this._storeService.addNewProduct(prod).subscribe((response) => {

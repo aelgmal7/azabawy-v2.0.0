@@ -13,6 +13,9 @@
                 margin-bottom:-5px;
 
             }
+            h3 {
+                margin-bottom: 10px !important;
+            }
             .container { 
                 width:90%;
                 margin:auto;
@@ -130,7 +133,7 @@
                         <p>الرصيد السابق للعميل</p>
                         <span><%= oldClientTotalBalance %></span>
                     </div>
-                    <% if (billType !== 'فاتوره مرتجع بيع') { %>
+                    <% if (billType !== 'فاتورة مرتجع بيع') { %>
                     <div>
                         <p>المبلغ المدفوع</p>
                         <span> <%=bill.paid %> جنيه</span>

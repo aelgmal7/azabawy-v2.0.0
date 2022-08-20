@@ -108,10 +108,10 @@ const addBill = async (clientId,billData,productsDetails,options) => {
             client.remain += billData.cost - billData.paid
             await client.save()
             
+        }
             //bill changes
             bill.remainAfterOp = client.remain
             await bill.save()
-        }
             
             // product work 
             const products = await Product.findAll({where :{ id:{[Op.or] :productsIds}}})

@@ -24,7 +24,7 @@ const getAllOp =async() => {
           clientId: temp.ClientId,
           billCost: temp.cost,
           type: temp.type,
-          text: `فاتورة ${temp.type =='فاتوره مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
+          text: `فاتورة ${temp.type =='فاتورة مرتجع بيع' ? 'مرتجع بيع':'بيع' } برقم ${temp.id}`
   
         }
       })
@@ -42,7 +42,7 @@ const getAllOp =async() => {
           remainAfterOp: temp.remainAfterOp,
           billId: temp.billId,
           clientId: temp.clientId,
-          text: ` دفع علي حساب فاتوره رقم ${ temp.BillId}`,
+          text: ` دفع علي حساب فاتورة رقم ${ temp.BillId}`,
           type: "حساب فاتورة"
         }
        
@@ -84,7 +84,7 @@ const getAllOp =async() => {
 }
 
 const openIndividual = async (id,type) => {
-    if(type== "فاتورة بيع" || type== 'فاتوره مرتجع بيع'){
+    if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
 
         returnBill(id)
       }else if(type==  "حساب فاتورة"){

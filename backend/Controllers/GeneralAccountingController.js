@@ -18,7 +18,7 @@ router.get("/",async (req, res)=> {
     }catch(err){}
 })
 
-router.get('/individual',async (req, res)=>{
+router.post('/individual',async (req, res)=>{
     const {id,type} = req.body
     const result = openIndividual(id,type)
     res.send(
