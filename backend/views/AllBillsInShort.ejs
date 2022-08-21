@@ -94,10 +94,23 @@
                 flex-wrap: wrap;   
              }
              .virt h4 {
-                margin-bottom: 1.6em;
+                margin-bottom: 1em;
              }
-       
-          
+             .info {
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .info p {
+                margin-bottom:.5em;
+            }
+            .inner-header {
+                display: flex;
+                justify-content: space-around;
+                align-items:  center;
+            }
+           
     </style>
     <title>سجل عمليات</title>
 </head>
@@ -135,11 +148,49 @@
                 <div class="inner-header">
                     <p>
                         <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                         <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                     </p> 
                 </div>
-                
+                <table>
+                    <thead>
+                        <tr>
+
+                            <td> تكلفة الفاتورة</td>
+                            <% if (element.paid) { %>
+                            <td> المبلغ المدفوع</td>
+                            <%} %>
+                            <td> مديونية العميل بعد الفاتوره</td>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> <%= element.billCost %></td>
+                            <% if (element.paid) { %>
+                                <td> <%= element.paid %></td>
+                                <%} %>
+                            <td> <%= element.remainAfterOp %></td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                <!-- <div class="info">
+                    <div>
+                        <p>
+                            تكلفة الفاتورة
+                        </p>
+                        <span><%= element.billCost %></span>
+                    </div>
+                    <div>
+                        <p>المبلغ المدفوع</p>
+                        <span> <%=element.paid %> جنيه</span>
+                    </div>
+                    <div>
+                        <p> مديونية العميل بعد الفاتوره</p>
+                        <span><%= element.remainAfterOp %></span>
+                    </div>
+                </div> -->
             </div>
 
 
@@ -148,8 +199,8 @@
                 <div class="inner-header">
                     <p>
                         <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                         <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                     </p>  
                 </div>
                 <div class="operation">
@@ -170,6 +221,8 @@
                         </tbody>
                     </table>
                     <p >
+                        <span> ملاحظات:</span>
+
                         <%=element.note %>
                     </p>
                 </div>
@@ -180,8 +233,8 @@
                 <div class="inner-header">
                     <p>
                         <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                         <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
                     </p>  
                 </div>
                 <div class="operation">
@@ -203,6 +256,7 @@
                         </tbody>
                     </table>
                     <p >
+                        <span> ملاحظات:</span>
                         <%=element.note %>
                     </p>
                 </div>
