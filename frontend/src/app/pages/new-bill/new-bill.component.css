@@ -14,6 +14,9 @@
 .w-14 {
   width: 14rem;
 }
+.w-16 {
+  width: 16rem;
+}
 .btn-danger {
   color: #fff;
   background-color: #dc3545;
