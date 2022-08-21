@@ -74,6 +74,37 @@
                 padding: 5px;
                 border: 1px solid #000;
             }
+            .client-conc {
+                /* display: flex; */
+                /* margin-bottom: -2em; */
+                text-align:center;
+                justify-content: center;
+            }
+            .conc {
+                margin-top: 1em !important;
+                display:flex;
+                justify-content:space-around;
+                width:40%;
+                margin:auto;
+                /* border: 1px solid #000; */
+            }
+            .virt {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;   
+             }
+             .virt h4 {
+                margin-bottom: 1em;
+             }
+             .info {
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .info p {
+                margin-bottom:.5em;
+            }
        
           
     </style>
@@ -81,7 +112,31 @@
 </head>
 <body>
     <div class="container">
+        <div class="client-conc">
+            <h2>
+                السيد:/ <%=client.clientName %> 
+            </h2>
+            <div class="conc">
+                <div class="virt">
+                    <h4> حساب العميل الاجمالي </h4>
+                    <span> <%= client.totalBalance %></span>
+                </div>
+                <div class="virt">
+                    <h4>مدين</h4>
+                    <span> <%= client.remain %></span>
 
+                </div>
+                <div class="virt">
+                    <h4>مدفوع</h4>
+                    <span> <%= client.paid %></span>
+                    
+                </div>
+            </div>
+            </div>
+        
+       <div class="all-op container">
+
+       </div>
         <% for (element of ops)  { %> 
             
         <%if ( element.type === 'فاتوره بيع' || element.type === 'فاتورة بيع'  ||  element.type === 'فاتورة مرتجع بيع' ) { %>
@@ -94,49 +149,66 @@
                     </p> 
                 </div>
                 <table class="bill">
-                    <tr>
-                        <td>المنتج</td>
-                        <td>عدد العبوات</td>
-                        <td>وزن العبوة</td>
-                        <td>سعر الكيلو</td>
-                        <td>إجمالي الوزن</td>
-                        <td>السعر الإجمالي للمنتج</td>
-
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for(product of element.products) { %>
+                    <thead>
                         <tr>
-                            <td> <%= product.productName %></td>
-                            <td> <%= product.amount %></td>
-                            <td> <%= product.weight %></td>
-                            <td> <%= product.kiloPrice %></td>
-                            <td> <%= (product.weight * product.amount) %></td>
-                            <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
+                            <td>المنتج</td>
+                            <td>عدد العبوات</td>
+                            <td>وزن العبوة</td>
+                            <td>سعر الكيلو</td>
+                            <td>إجمالي الوزن</td>
+                            <td>السعر الإجمالي للمنتج</td>
 
-                           
+                            
                         </tr>
-                        <% } %>
-                        <tr>
-                            <td colspan="1">الإجمالي</td>
-                            <td><%= element.products.reduce((total =0, product) =>{
-                                
-                               return  total + product.amount
-                            },0)
-                             %></td>
-                            <td colspan="2"></td>
-                            <td><%= element.products.reduce((total =0, product) => {
-                                return total + product.weight
-                            },0
-                                ) %></td>
-                            <td><%= element.products.reduce((total =0, product) =>{ 
-                                return total +(product.weight * product.amount * product.kiloPrice )
-                            },0) %></td>
-                        </tr>
-                        
-                    </tbody>
-            </table>
+                     </thead>
+                    <tbody>
+                        <% for(product of element.products) { %>
+                            <tr>
+                                <td> <%= product.productName %></td>
+                                <td> <%= product.amount %></td>
+                                <td> <%= product.weight %></td>
+                                <td> <%= product.kiloPrice %></td>
+                                <td> <%= (product.weight * product.amount) %></td>
+                                <td> <%= (product.weight * product.amount * product.kiloPrice) %></td>
+
+                            
+                            </tr>
+                            <% } %>
+                            <tr>
+                                <td colspan="1">الإجمالي</td>
+                                <td><%= element.products.reduce((total =0, product) =>{
+                                    
+                                return  total + product.amount
+                                },0)
+                                %></td>
+                                <td colspan="2"></td>
+                                <td><%= element.products.reduce((total =0, product) => {
+                                    return total + product.weight
+                                },0
+                                    ) %></td>
+                                <td><%= element.products.reduce((total =0, product) =>{ 
+                                    return total +(product.weight * product.amount * product.kiloPrice )
+                                },0) %></td>
+                            </tr>
+                            
+                        </tbody>
+                </table>
+                <div class="info">
+                    <div>
+                        <p>
+                            تكلفة الفاتورة
+                        </p>
+                        <span><%= element.billCost %></span>
+                    </div>
+                    <div>
+                        <p>المبلغ المدفوع</p>
+                        <span> <%=element.paid %> جنيه</span>
+                    </div>
+                    <div>
+                        <p> مديونية العميل بعد الفاتوره</p>
+                        <span><%= element.remainAfterOp %></span>
+                    </div>
+                </div>
             </div>
 
 
@@ -167,6 +239,8 @@
                         </tbody>
                     </table>
                     <p >
+                        <span> ملاحظات:</span>
+
                         <%=element.note %>
                     </p>
                 </div>
@@ -200,6 +274,7 @@
                         </tbody>
                     </table>
                     <p >
+                        <span> ملاحظات:</span>
                         <%=element.note %>
                     </p>
                 </div>

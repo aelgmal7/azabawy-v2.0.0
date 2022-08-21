@@ -4,9 +4,266 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <style>
+         *{
+                margin: 0;
+                direction:rtl;
+            }
+            .header {
+                text-align: center;
+            }
+            h1,h2,.tax-date,h3,h4,table,p{
+                margin-top:1em !important;
+                margin-bottom:-5px;
+
+            }
+            .container { 
+                width:90%;
+                margin:auto;
+                margin-top:0px;
+                height: 90%;
+            }
+            .tax-date {
+
+                width:40%;
+                margin:auto;
+                display:flex;
+                justify-content:space-around;
+            }
+            .bill-container {
+                /* width:90%; */
+                margin:auto;
+                text-align: right;
+                direction:rtl;
+            }
+            .container .header h3 {
+                text-align: right;
+                
+            }
+            .direct-pay {
+                border: 1px solid #000;         
+                padding: 0.5em;
+                margin-top: 1em;;
+            }
+           
+            .bill-table {
+                border: 1px solid #000;          
+
+                padding: 0.5em;
+                margin-top: 1em;;
+            }
+            .pay-for-bill {
+                border: 1px solid #000;          
+                padding: 0.5em;
+                margin-top: 1em;
+                text-align:right;
+
+            }
+
+            table {
+
+                width: 100%;
+                border-spacing: 0;
+                direction:rtl
+            }
+            table thead td {
+                /* text-align: center; */
+            }
+            table td {
+                padding: 5px;
+                border: 1px solid #000;
+            }
+            .client-conc {
+                /* display: flex; */
+                /* margin-bottom: -2em; */
+                text-align:center;
+                justify-content: center;
+            }
+            .conc {
+                margin-top: 1em !important;
+                display:flex;
+                justify-content:space-around;
+                width:40%;
+                margin:auto;
+                /* border: 1px solid #000; */
+            }
+            .virt {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;   
+             }
+             .virt h4 {
+                margin-bottom: 1em;
+             }
+             .info {
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                margin-top: 20px;
+            }
+            .info p {
+                margin-bottom:.5em;
+            }
+            .inner-header {
+                display: flex;
+                justify-content: space-around;
+                align-items:  center;
+            }
+           
+    </style>
+    <title>سجل عمليات</title>
 </head>
 <body>
-    <h1>Document</h1>
+    <div class="container">
+        <div class="client-conc">
+            <h2>
+                السيد:/ <%=client.clientName %> 
+            </h2>
+            <div class="conc">
+                <div class="virt">
+                    <h4> حساب العميل الاجمالي </h4>
+                    <span> <%= client.totalBalance %></span>
+                </div>
+                <div class="virt">
+                    <h4>مدين</h4>
+                    <span> <%= client.remain %></span>
+
+                </div>
+                <div class="virt">
+                    <h4>مدفوع</h4>
+                    <span> <%= client.paid %></span>
+                    
+                </div>
+            </div>
+            </div>
+        
+       <div class="all-op container">
+
+       </div>
+        <% for (element of ops)  { %> 
+            
+        <%if ( element.type === 'فاتوره بيع' || element.type === 'فاتورة بيع'  ||  element.type === 'فاتورة مرتجع بيع' ) { %>
+            <div class="bill-table">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                    </p> 
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+
+                            <td> تكلفة الفاتورة</td>
+                            <% if (element.paid) { %>
+                            <td> المبلغ المدفوع</td>
+                            <%} %>
+                            <td> مديونية العميل بعد الفاتوره</td>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td> <%= element.billCost %></td>
+                            <% if (element.paid) { %>
+                                <td> <%= element.paid %></td>
+                                <%} %>
+                            <td> <%= element.remainAfterOp %></td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                <!-- <div class="info">
+                    <div>
+                        <p>
+                            تكلفة الفاتورة
+                        </p>
+                        <span><%= element.billCost %></span>
+                    </div>
+                    <div>
+                        <p>المبلغ المدفوع</p>
+                        <span> <%=element.paid %> جنيه</span>
+                    </div>
+                    <div>
+                        <p> مديونية العميل بعد الفاتوره</p>
+                        <span><%= element.remainAfterOp %></span>
+                    </div>
+                </div> -->
+            </div>
+
+
+        <% } else if ( element.type === 'عملية دفع مباشرة عميل') { %>
+            <div class="direct-pay">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                    </p>  
+                </div>
+                <div class="operation">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <td> المدفوع</td>
+                                <td> مدين</td>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> <%= element.paid %></td>
+                                <td> <%= element.remainAfterOp %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p >
+                        <span> ملاحظات:</span>
+
+                        <%=element.note %>
+                    </p>
+                </div>
+
+            </div>
+        <%   } else if ( element.type === 'حساب فاتورة' || element.type === 'حساب فاتوره' ) { %>
+            <div class="pay-for-bill">
+                <div class="inner-header">
+                    <p>
+                        <h4>رقم العملية : <%=element.id %></h4>
+                        <h4>نوع العملية : <%= element.type %></h4>
+                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
+                    </p>  
+                </div>
+                <div class="operation">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td> رقم الفاتورة</td>
+                                <td> المدفوع</td>
+                                <td>مدين </td>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <td> <%= element.billId %></td>
+                                <td> <%= element.paid %></td>
+                                <td> <%= element.remainAfterOp %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p >
+                        <span> ملاحظات:</span>
+                        <%=element.note %>
+                    </p>
+                </div>
+
+            </div>
+        <% }%>
+        <% }%>
+    </div>
 </body>
 </html>

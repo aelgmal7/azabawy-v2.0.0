@@ -185,7 +185,7 @@ const returnBill = async (id) => {
   // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","فواتير"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -207,7 +207,7 @@ const returnDirectPAy = async (id) => {
   // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -228,7 +228,7 @@ const returnBillPAy = async (id) => {
   // console.log(typeof process.env.PROD);
   if(process.env.PROD == "true"){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -264,7 +264,7 @@ const printCore = async (client,ops,details)=> {
 
   }
   // TODO remove return 
-  return printable
+  //  return printable
   // console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
@@ -274,9 +274,21 @@ const printCore = async (client,ops,details)=> {
       const pdfPath =`${client.clientName}/-${client.clientName}-${(new Date()).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
       // console.log("PDF Buffer:-", pdfBuffer);
       if(process.env.PROD == "true"){
-          const fwaterDirProd = `${path.join(app.getPath('userData'),"حسابات")}`
-          const clientDirProd = `${path.join(app.getPath('userData'),"حسابات",client.clientName)}`
+        const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
+          const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات")}`
+          const clientDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات",client.clientName)}`
 
+          try {
+              // first check if directory already exists
+              if (!fs.existsSync(dataContainer)) {
+                  fs.mkdirSync(dataContainer);
+                  // console.log("Directory is created.");
+              } else {
+                  // console.log("Directory already exists.");
+              }
+          } catch (err) {
+              // console.log(err);
+          }
           try {
               // first check if directory already exists
               if (!fs.existsSync(fwaterDirProd)) {
@@ -300,7 +312,7 @@ const printCore = async (client,ops,details)=> {
           } catch (err) {
               // console.log(err);
           }
-              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"حسابات"),pdfPath)}`,pdfBuffer,err => {
+              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","حسابات"),pdfPath)}`,pdfBuffer,err => {
                   if(err) {
                       // console.log(err)
                       // er = err
@@ -308,7 +320,7 @@ const printCore = async (client,ops,details)=> {
                   }
                 
                           
-                          require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"حسابات"),pdfPath)}"`);
+                          require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","حسابات"),pdfPath)}"`);
                       
               });
       }else {
@@ -348,6 +360,7 @@ const printCore = async (client,ops,details)=> {
       }
 
   })
+  return printable
 }
 module.exports = {
   createClient: createClient,
