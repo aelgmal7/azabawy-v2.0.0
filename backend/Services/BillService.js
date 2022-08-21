@@ -266,9 +266,21 @@ const printPay = async(client,bill) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
         if(process.env.PROD == "true"){
-            const fwaterDirProd = `${path.join(app.getPath('userData'),"مدفوعات")}`
-            const clientDirProd = `${path.join(app.getPath('userData'),"مدفوعات",client.clientName)}`
+        const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
+            const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات")}`
+            const clientDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات",client.clientName)}`
 
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(dataContainer)) {
+                    fs.mkdirSync(dataContainer);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
             try {
                 // first check if directory already exists
                 if (!fs.existsSync(fwaterDirProd)) {
@@ -292,14 +304,14 @@ const printPay = async(client,bill) => {
             } catch (err) {
                 console.log(err);
             }
-                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}`,pdfBuffer,err => {
+                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}`,pdfBuffer,err => {
                     if(err) {
                         console.log(err)
                         // er = err
                         return err
                     }
 
-                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
+                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}"`);
                 });
         }else {
             const dir = `${path.join("backend","views","مدفوعات",client.clientName)}`
