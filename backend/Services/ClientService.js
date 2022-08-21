@@ -10,10 +10,11 @@ const html_to_pdf = require('html-pdf-node');
 const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
+const {prodState} = require('../Common/index')
+
 
 require('dotenv').config();
 const {app} = require('electron')
- require('dotenv').config();
 
 const createClient = async({
   clientName,
@@ -183,7 +184,7 @@ const returnBill = async (id) => {
   const client = await Client.findOne({where: {enabled: true,id:bill.ClientId}})
   const billPath = `${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
   // console.log(typeof process.env.PROD);
-  if(process.env.PROD == "true"){
+    if(prodState()){
     // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","فواتير"),billPath)}"`);
 
@@ -203,9 +204,10 @@ const returnDirectPAy = async (id) => {
     }
   }
   const client = await Client.findOne({where: {enabled: true,id:directPay.ClientId}})
+  
   const billPath = `${client.clientName}/${directPay.id}-${client.clientName}-${(new Date(directPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
   // console.log(typeof process.env.PROD);
-  if(process.env.PROD == "true"){
+  if(prodState()){
     // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
@@ -226,7 +228,7 @@ const returnBillPAy = async (id) => {
   const client = await Client.findOne({where: {enabled: true,id:billPay.ClientId}})
   const billPath = `${client.clientName}/${billPay.id}-${client.clientName}-${(new Date(billPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
   // console.log(typeof process.env.PROD);
-  if(process.env.PROD == "true"){
+   if(prodState()){
     // console.log("here")
     require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
@@ -273,7 +275,7 @@ const printCore = async (client,ops,details)=> {
   html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
       const pdfPath =`${client.clientName}/-${client.clientName}-${(new Date()).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
       // console.log("PDF Buffer:-", pdfBuffer);
-      if(process.env.PROD == "true"){
+       if(prodState()){
         const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
           const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات")}`
           const clientDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات",client.clientName)}`

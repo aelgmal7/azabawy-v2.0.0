@@ -4,6 +4,9 @@ const html_to_pdf = require('html-pdf-node');
 const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
+const {app} = require('electron')
+const {prodState} = require('../Common/index')
+
 require('dotenv').config();
 
 
@@ -41,7 +44,7 @@ const addDirectPayOperations = async(clientId,money , date , note= null) => {
 
 const printDirectPay = async(client,bill) => {
 
-    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","directPay.ejs")}`,{bill:bill,client})
+    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","directPay.ejs")}`,{pay:bill,client})
 
     let options = { format: 'A4' };
     // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
@@ -49,11 +52,13 @@ const printDirectPay = async(client,bill) => {
     html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
-        if(process.env.PROD == "true"){
-            const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
+        console.log(prodState());
+        if(prodState()){
+             const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
 
             const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات")}`
             const clientDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات",client.clientName)}`
+            console.log("i am here in pro");
 
             try {
                 // first check if directory already exists

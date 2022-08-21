@@ -4,6 +4,8 @@ const html_to_pdf = require('html-pdf-node');
 const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
+const {app} = require('electron')
+const {prodState} = require('../Common/index')
 require('dotenv').config();
 
 const getAllPayOperations = async() => {
@@ -25,7 +27,7 @@ const addPayOperations = async(money , date , note= null) => {
 
 const printPay = async(bill) => {
 
-  const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","emptyPay.ejs")}`,{bill:bill})
+  const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","emptyPay.ejs")}`,{pay:bill})
 
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
@@ -33,10 +35,10 @@ const printPay = async(bill) => {
   html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
       const pdfPath =`${bill.id}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
       console.log("PDF Buffer:-", pdfBuffer);
-      if(process.env.PROD == "true"){
+       if(prodState()){
         const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
 
-          const fwaterDirProd = `${path.join(app.getPath('userData',"UserData"),"مدفوعات")}`
+          const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات")}`
 
           try {
               // first check if directory already exists
@@ -105,9 +107,9 @@ const returnPay =async (id) => {
   }
   const pdfPath =`${pay.id}-${(new Date(pay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
   console.log(typeof process.env.PROD);
-  if(process.env.PROD == "true"){
+      if(prodState()){
     console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}"`);
 
   }else{
     console.log("there");

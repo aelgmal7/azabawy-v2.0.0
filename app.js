@@ -14,6 +14,7 @@ function initWindow() {
     width: 1600,
     height: 1000,
     webPreferences: {
+      // devTools: false,
       nodeIntegration: true,
       contextIsolation: false,
     },

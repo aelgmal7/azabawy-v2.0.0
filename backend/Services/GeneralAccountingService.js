@@ -60,7 +60,7 @@ const getAllOp =async() => {
           remainAfterOp: temp.remainAfterOp,
           clientId: temp.clientId,
           text: temp.note,
-          type: "عملية دفع مباشرة"
+          type:"عملية دفع مباشرة عميل"
         }
       })
 

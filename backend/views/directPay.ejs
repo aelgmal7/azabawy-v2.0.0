@@ -6,103 +6,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>paying</title>
     <style>
+        *{
+               margin: 0;
+               direction:rtl !important;
+           }
+           .header {
+               text-align: center;
+           }
+           h1,h2,.tax-date,h3,h4,table,p{
+               margin-top:1em !important;
+               margin-bottom:-5px;
 
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Amiri', serif;
-            min-height: 100vh;
-            max-width: 90%;
-            margin: auto;
-        }
-        p {
-            font-weight: 700;
-        }
-        /* Start Header */
-        header {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        header h2 {
-            margin: 0.8rem 0 0.5rem;
-        }
-        header h3{
-            font-size: 0.9rem;
-        }
-        header div {
-            min-width: 40%;
-            display: flex;
-            justify-content: space-between;
-        }
-        header p span {
-            font-weight: 400;
-        }
-        /* End Header */
-        
-        /* Start Table */
-        table {
-            width: 100%;
-            border-spacing: 0;
-        }
-        table caption {
-            text-align: start;
-        }
-        table thead td {
-            text-align: center;
-        }
-        table td {
-            padding: 10px;
-            border: 1px solid #000;
-        }
-        /* End Table */
-        
-        /* Start Info */
-        .info {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin-top: 20px;
-        }
-        /* End Info */
-        
-        /* Start Footer */
-        footer p:first-child {
-            margin: 30px;
-            text-align: center;
-        }
-        footer p:last-child {
-            text-align: end;
-        }
-        /* End Footer */
-        
-                </style>
+           }
+           .container { 
+               width:90%;
+               margin:auto;
+               margin-top:0px;
+               height: 90%;
+           }
+           .tax-date {
+
+               width:40%;
+               margin:auto;
+               display:flex;
+               justify-content:space-around;
+           }
+           .bill-container {
+               /* width:90%; */
+               margin:auto;
+               text-align: right;
+               direction:rtl;
+           }
+           .container .header h3 {
+               text-align: right;
+               
+           }
+           .direct-pay {
+               border: 1px solid #000;         
+               padding: 0.5em;
+               margin-top: 1em;;
+           }
+          
+           .bill-table {
+               border: 1px solid #000;          
+
+               padding: 0.5em;
+               margin-top: 1em;;
+           }
+           .pay-for-bill {
+               border: 1px solid #000;          
+               padding: 0.5em;
+               margin-top: 1em;
+               text-align:right;
+
+           }
+
+           table {
+
+               width: 100%;
+               border-spacing: 0;
+               direction:rtl
+           }
+           table thead td {
+               /* text-align: center; */
+           }
+           table td {
+               padding: 5px;
+               border: 1px solid #000;
+           }
+           .client-conc {
+               /* display: flex; */
+               /* margin-bottom: -2em; */
+               text-align:center;
+               justify-content: center;
+           }
+           .conc {
+               margin-top: 1em !important;
+               display:flex;
+               justify-content:space-around;
+               width:40%;
+               margin:auto;
+               /* border: 1px solid #000; */
+           }
+           .virt {
+               display: flex;
+               flex-direction: column;
+               flex-wrap: wrap;   
+            }
+            .virt h4 {
+               margin-bottom: 1em;
+            }
+            .info {
+               display: flex;
+               justify-content: space-around;
+               text-align: center;
+               margin-top: 20px;
+           }
+           .info p {
+               margin-bottom:.5em;
+           }
+      
+         
+   </style>
 </head>
 <body>
-    <header> 
-        <h3>مصنع حلويات العزباوي</h3>
-        <h2>عملية دفع مباشر رقم  <%= bill.id %> </h2>
+
+    <div class="container">
+
+        <div class="client-conc"> 
+            <h3>مصنع حلويات العزباوي</h3>
+        <h2>عملية سداد فاتورة بيع رقم  <%= pay.id %> </h2>
         <div>       
             <p>الرقم الضريبي: <span>028-966-723</span></p>
-            <p>التاريخ: <span><%= (new Date(bill.date)).toLocaleDateString('en-US') %></span></p>
+            <p>التاريخ: <span><%= (new Date(pay.date)).toLocaleDateString('en-US') %></span></p>
         </div>
-    </header>
+      </div>
     
 
-    <table>
+    
         <caption>السادة: <span><%=client.clientName %></span></caption>
+        <div class="pay-for-bill">
+            <div class="operation">
+                <table>
+                    <thead>
+                        <tr>
+                            <td> المدفوع</td>
+                            <td>مدين </td>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr >
+                            <td> <%= pay.money %></td>
+                            <td> <%= pay.remainAfterOp %></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p >
+                    <span> ملاحظات:</span>
+                    <%=pay.note %>
+                </p>
+            </div>
+
+        </div>
 
 
-    </table>
     <footer>
-        <p>إستلمت البضاعة الموضّحة بعاليه في حاله جيدة و تحت مسؤوليتي وأتعهد بدفع قيمه البضاعة لأمر الشركة أو لمن تؤول إليه و التقاضي بالجهة التي ترغبها الشركة .</p>
         <p>توقيع المستلم</p>
     </footer>
+</div>
 </body>
 </html>
