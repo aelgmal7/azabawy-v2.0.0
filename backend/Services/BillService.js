@@ -13,6 +13,8 @@ const html_to_pdf = require('html-pdf-node');
 const ejs = require('ejs')
 const path = require('path')
 const fs = require('fs')
+const {prodState} = require('../Common/index')
+
 
 require('dotenv').config();
 
@@ -265,22 +267,23 @@ const printPay = async(client,bill) => {
     html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
-        if(process.env.PROD == "true"){
-        const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
-            const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات")}`
-            const clientDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات",client.clientName)}`
+        if(prodState()){
+        // const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
+            const fwaterDirProd = `${path.join(app.getPath('userData'),"مدفوعات")}`
+            const clientDirProd = `${path.join(app.getPath('userData'),"مدفوعات",client.clientName)}`
+            console.log("in prod");
 
-            try {
-                // first check if directory already exists
-                if (!fs.existsSync(dataContainer)) {
-                    fs.mkdirSync(dataContainer);
-                    console.log("Directory is created.");
-                } else {
-                    console.log("Directory already exists.");
-                }
-            } catch (err) {
-                console.log(err);
-            }
+            // try {
+            //     // first check if directory already exists
+            //     if (!fs.existsSync(dataContainer)) {
+            //         fs.mkdirSync(dataContainer);
+            //         console.log("Directory is created.");
+            //     } else {
+            //         console.log("Directory already exists.");
+            //     }
+            // } catch (err) {
+            //     console.log(err);
+            // }
             try {
                 // first check if directory already exists
                 if (!fs.existsSync(fwaterDirProd)) {
@@ -304,14 +307,14 @@ const printPay = async(client,bill) => {
             } catch (err) {
                 console.log(err);
             }
-                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}`,pdfBuffer,err => {
+                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}`,pdfBuffer,err => {
                     if(err) {
                         console.log(err)
                         // er = err
                         return err
                     }
 
-                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}"`);
+                    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
                 });
         }else {
             const dir = `${path.join("backend","views","مدفوعات",client.clientName)}`
@@ -358,7 +361,7 @@ const coreFn = async (temp,name,client,bill,option) => {
     html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
-        if(process.env.PROD == "true"){
+        if(prodState()){
             const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
             const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
 
