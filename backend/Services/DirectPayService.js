@@ -41,7 +41,7 @@ const addDirectPayOperations = async(clientId,money , date , note= null) => {
 
 const printDirectPay = async(client,bill) => {
 
-    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","directPay.ejs")}`,{bill:bill,client})
+    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","directPay.ejs")}`,{pay:bill,client})
 
     let options = { format: 'A4' };
     // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`

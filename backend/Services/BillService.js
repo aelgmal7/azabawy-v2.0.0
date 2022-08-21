@@ -256,8 +256,8 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
 } 
 
 const printPay = async(client,bill) => {
-
-    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","pay.ejs")}`,{bill:bill,client})
+    console.log(client,bill);
+    const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","pay.ejs")}`,{pay:bill,client})
 
     let options = { format: 'A4' };
     // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
