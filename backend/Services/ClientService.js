@@ -264,7 +264,7 @@ const printCore = async (client,ops,details)=> {
 
   }
   // TODO remove return 
-  return printable
+   return printable
   // console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
@@ -348,6 +348,7 @@ const printCore = async (client,ops,details)=> {
       }
 
   })
+  return printable
 }
 module.exports = {
   createClient: createClient,
