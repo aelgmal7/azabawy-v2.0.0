@@ -342,21 +342,23 @@ export class NewBillComponent implements OnInit {
         },
         productsDetails: this.orderedProducts,
       };
-      this._billsService.addNewBill(bill, id).subscribe((response) => {
-        console.log(response);
-        if (Object.values(response)[0] === true) {
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'جاري طباعة الفاتورة',
-            showConfirmButton: false,
-            timer: 3000,
-          });
-          this.router.navigate(['/']);
-        } else {
-          Swal.fire('لم يتم إضافة الفاتورة!', '', 'error');
-        }
-      });
+      if (result) {
+        this._billsService.addNewBill(bill, id).subscribe((response) => {
+          console.log(response);
+          if (Object.values(response)[0] === true) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'جاري طباعة الفاتورة',
+              showConfirmButton: false,
+              timer: 3000,
+            });
+            this.router.navigate(['/']);
+          } else {
+            Swal.fire('لم يتم إضافة الفاتورة!', '', 'error');
+          }
+        });
+      }
       console.log(form);
       console.log(bill);
     });
@@ -384,29 +386,32 @@ export class NewBillComponent implements OnInit {
   }
 
   printDirectSanad(form) {
+    let id;
+    form.controls.clientName.value?.id
+      ? (id = form.controls.clientName.value?.id)
+      : (id = null);
     const sanad = {
       printable: true,
       date: form.controls.date.value,
       cash: form.controls.amountPaid.value,
       note: form.controls.notes.value,
     };
-    this._billsService
-      .addDirectPay(sanad, form.controls.clientName.value.id)
-      .subscribe((r) => {
-        console.log(r);
-        if (Object.values(r)[1] === true) {
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'جاري طباعة سند القبض',
-            showConfirmButton: false,
-            timer: 3000,
-          });
-          this.router.navigate(['/']);
-        } else {
-          Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
-        }
-      });
+    console.log('id :>> ', id);
+    this._billsService.addDirectPay(sanad, id).subscribe((r) => {
+      console.log(r);
+      if (r['succeeded'] === true) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'جاري طباعة سند القبض',
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        this.router.navigate(['/']);
+      } else {
+        Swal.fire('لم يتم إضافة سند القبض!', '', 'error');
+      }
+    });
   }
 
   addBillSanad(form) {

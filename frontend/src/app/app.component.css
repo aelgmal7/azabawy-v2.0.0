@@ -4,6 +4,7 @@ app-root {
   flex-direction: row;
   justify-content: space-between;
   background-color: snow;
+  /* font-size: 3rem; */
 }
 
 router-outlet {
@@ -30,4 +31,7 @@ app-vertical-navbar {
   background-color: beige;
   overflow: auto;
   box-shadow: inset 20px 0px 20px 0px #b6a2a229;
+}
+::ng-deep .mat-paginator-range-label {
+  direction: ltr;
 }

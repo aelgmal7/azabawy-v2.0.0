@@ -83,7 +83,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .container1 {
-  margin: 0 10rem;
+  margin: 0 6%;
 }
 .header {
   display: flex;

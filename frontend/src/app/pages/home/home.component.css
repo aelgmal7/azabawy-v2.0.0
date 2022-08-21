@@ -24,3 +24,6 @@ app-icon-btn {
   height: 18vh;
   margin-bottom: 0.5rem;
 }
+button {
+  font-size: 3rem;
+}
