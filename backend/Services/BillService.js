@@ -362,9 +362,21 @@ const coreFn = async (temp,name,client,bill,option) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}-${name}.pdf`
         console.log("PDF Buffer:-", pdfBuffer);
         if(prodState()){
-            const fwaterDirProd = `${path.join(app.getPath('userData'),"فواتير")}`
-            const clientDirProd = `${path.join(app.getPath('userData'),"فواتير",client.clientName)}`
+         const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
+            const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","فواتير")}`
+            const clientDirProd = `${path.join(app.getPath('userData'),"UserData","فواتير",client.clientName)}`
 
+            try {
+                // first check if directory already exists
+                if (!fs.existsSync(dataContainer)) {
+                    fs.mkdirSync(dataContainer);
+                    console.log("Directory is created.");
+                } else {
+                    console.log("Directory already exists.");
+                }
+            } catch (err) {
+                console.log(err);
+            }
             try {
                 // first check if directory already exists
                 if (!fs.existsSync(fwaterDirProd)) {
@@ -388,7 +400,7 @@ const coreFn = async (temp,name,client,bill,option) => {
             } catch (err) {
                 console.log(err);
             }
-                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}`,pdfBuffer,err => {
+                fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","فواتير"),pdfPath)}`,pdfBuffer,err => {
                     if(err) {
                         console.log(err)
                         // er = err
@@ -398,7 +410,7 @@ const coreFn = async (temp,name,client,bill,option) => {
 
                         if ((option.type== 1 && name == "مسعره")||(option.type== 2 && name == "رقم-ضريبي")||(option.type== 3 && name == "مسعره-برقم-ضريبي")||(option.type== 4 && name == "خاليه")){
                             
-                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),pdfPath)}"`);
+                            require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","فواتير"),pdfPath)}"`);
                         }
                     }
                 });
