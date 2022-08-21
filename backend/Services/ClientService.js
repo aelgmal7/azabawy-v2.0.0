@@ -186,7 +186,7 @@ const returnBill = async (id) => {
   // console.log(typeof process.env.PROD);
     if(prodState()){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"فواتير"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","فواتير"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -204,11 +204,12 @@ const returnDirectPAy = async (id) => {
     }
   }
   const client = await Client.findOne({where: {enabled: true,id:directPay.ClientId}})
+  
   const billPath = `${client.clientName}/${directPay.id}-${client.clientName}-${(new Date(directPay.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`
   // console.log(typeof process.env.PROD);
   if(prodState()){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -229,7 +230,7 @@ const returnBillPAy = async (id) => {
   // console.log(typeof process.env.PROD);
    if(prodState()){
     // console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),billPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),billPath)}"`);
 
   }else{
     // console.log("there");
@@ -276,8 +277,8 @@ const printCore = async (client,ops,details)=> {
       // console.log("PDF Buffer:-", pdfBuffer);
        if(prodState()){
         const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
-          const fwaterDirProd = `${path.join(app.getPath('userData'),"حسابات")}`
-          const clientDirProd = `${path.join(app.getPath('userData'),"حسابات",client.clientName)}`
+          const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات")}`
+          const clientDirProd = `${path.join(app.getPath('userData'),"UserData","حسابات",client.clientName)}`
 
           try {
               // first check if directory already exists
@@ -313,7 +314,7 @@ const printCore = async (client,ops,details)=> {
           } catch (err) {
               // console.log(err);
           }
-              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"حسابات"),pdfPath)}`,pdfBuffer,err => {
+              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","حسابات"),pdfPath)}`,pdfBuffer,err => {
                   if(err) {
                       // console.log(err)
                       // er = err
@@ -321,7 +322,7 @@ const printCore = async (client,ops,details)=> {
                   }
                 
                           
-                          require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"حسابات"),pdfPath)}"`);
+                          require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","حسابات"),pdfPath)}"`);
                       
               });
       }else {
