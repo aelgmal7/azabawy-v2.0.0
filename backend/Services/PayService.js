@@ -38,7 +38,7 @@ const printPay = async(bill) => {
        if(prodState()){
         const dataContainer =  `${path.join(app.getPath('userData'),"UserData")}`
 
-          const fwaterDirProd = `${path.join(app.getPath('userData',"UserData"),"مدفوعات")}`
+          const fwaterDirProd = `${path.join(app.getPath('userData'),"UserData","مدفوعات")}`
 
           try {
               // first check if directory already exists
@@ -64,14 +64,14 @@ const printPay = async(bill) => {
           }
 
          
-              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}`,pdfBuffer,err => {
+              fs.writeFile(`${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}`,pdfBuffer,err => {
                   if(err) {
                       console.log(err)
                       // er = err
                       return err
                   }
 
-                  require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
+                  require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}"`);
               });
       }else {
           const fwater = `${path.join("backend","views","مدفوعات")}`
@@ -109,7 +109,7 @@ const returnPay =async (id) => {
   console.log(typeof process.env.PROD);
       if(prodState()){
     console.log("here")
-    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"مدفوعات"),pdfPath)}"`);
+    require('child_process').exec(`explorer.exe "${path.join(path.join(app.getPath('userData'),"UserData","مدفوعات"),pdfPath)}"`);
 
   }else{
     console.log("there");
