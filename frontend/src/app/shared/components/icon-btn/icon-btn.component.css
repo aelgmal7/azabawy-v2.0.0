@@ -1,7 +1,7 @@
 button {
   display: inline-block;
   padding: 25px 30px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   background-color: #858f67;
   box-shadow: 0 0 20px 5px rgb(0 0 0 / 15%);
   border: none;
@@ -23,7 +23,7 @@ button:active {
 }
 
 button p {
-  font-size: 2rem;
+  font-size: 1.5rem;
   text-align: center;
 }
 
