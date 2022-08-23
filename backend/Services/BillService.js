@@ -354,7 +354,7 @@ const printPay = async(client,bill) => {
 
 
 const coreFn = async (temp,name,client,bill,option) => {
-
+    console.log(client);
     let options = { format: 'A4' };
     // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
     let file = { content: temp };
@@ -456,6 +456,7 @@ const coreFn = async (temp,name,client,bill,option) => {
 }
 
 const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType) => {
+    console.log(client);
     // console.log('client :>> ', client.dataValues);
     const billProducts = []
     const bill = await Bill.findOne({where: {enabled: true,id: bill1.id}})

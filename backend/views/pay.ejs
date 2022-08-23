@@ -130,24 +130,24 @@
                 <table>
                     <thead>
                         <tr>
+                            <td> رقم الفاتورة</td>
                             <td> المدفوع</td>
                             <td>مدين </td>
-                            <td> رقم الفاتورة</td>
                             
                         </tr>
                     </thead>
                     <tbody>
                         <tr >
+                            <td> <%= pay.BillId %></td>
                             <td> <%= pay.money %></td>
                             <td> <%= pay.remainAfterOp %></td>
-                            <td> <%= pay.BillId %></td>
                         </tr>
                     </tbody>
                 </table>
                 <p >
                     <span>  مديونية العميل قبل الفاتوره:</span>
 
-                    <%=element.remainBeforeOp %>
+                    <%=pay.remainBeforeOp %>
                 </p>
                 <p >
                     <span> ملاحظات:</span>
