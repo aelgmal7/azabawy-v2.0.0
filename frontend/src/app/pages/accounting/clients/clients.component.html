@@ -78,9 +78,9 @@
                   <td>{{operation.id}}</td>
                   <td>{{operation.date | date:'short'}}</td>
                   <td>{{operation.type}}</td>
-                  <td>{{operation.billCost}}</td>
-                  <td>{{operation.paid}}</td>
-                  <td>{{operation.billCost - operation.paid}}</td>
+                  <td>{{operation.billCost ? operation.billCost : '--'}}</td>
+                  <td>{{operation.paid ? operation.paid : '--'}}</td>
+                  <td>{{operation.billCost ? operation.billCost - operation.paid : '--'}}</td>
                   <td>{{operation.remainAfterOp}}</td>
                   <td><button mat-icon-button class="text-center w-100" matTooltip="عرض العملية"
                       (click)="show(operation)">

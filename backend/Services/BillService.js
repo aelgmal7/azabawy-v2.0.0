@@ -94,7 +94,7 @@ const addBill = async (clientId,billData,productsDetails,options) => {
        const client = await Client.findByPk(clientId)
        oldClientTotalBalance = client.totalBalance
        //client changes
-       const bill = await client.createBill({cost:billData.cost,clientId:clientId,type:billData.type,paid:billData.paid,date:billData.date})
+       const bill = await client.createBill({cost:billData.cost,clientId:clientId,type:billData.type,paid:billData.paid,date:billData.date,remainBeforeOp:client.remain})
        if (billData.type ==='فاتورة مرتجع بيع'){
 
            
@@ -244,7 +244,7 @@ const payForBill = async(billId,clientId,date, money,note=null) =>{
             client.remain -= money
             client.save()
             bill.save()
-            return bill.createBillPay({money:money,note:note,date:date,ClientId:Number(clientId)}).then(pay => {
+            return bill.createBillPay({money:money,note:note,date:date,remainBeforeOp:client.remain,ClientId:Number(clientId)}).then(pay => {
                 pay.remainAfterOp = client.remain
                 pay.save()
                 return pay

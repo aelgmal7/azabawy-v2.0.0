@@ -23,6 +23,11 @@ Bill.init({
         allowNull: true,
         defaultValue: 0.0
     },
+    remainBeforeOp : {
+        type:Sequelize.FLOAT,
+        allowNull: false,
+        defaultValue:0.0
+    },
     remainAfterOp : {
         type:Sequelize.FLOAT,
         allowNull: false,

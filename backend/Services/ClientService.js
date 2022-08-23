@@ -107,6 +107,7 @@ const clientAllOP = async (clientId) => {
         id: temp.id,
         paid: temp.paid,
         date: temp.date,
+        remainBeforeOp: temp.remainBeforeOp,
         remainAfterOp: temp.remainAfterOp,
         clientId: temp.ClientId,
         billCost: temp.cost,
@@ -121,11 +122,13 @@ const clientAllOP = async (clientId) => {
   const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
       const temp = pay.dataValues
+      console.log(temp);
       return {
         id: temp.id,
         paid: temp.money,
         date: temp.date,
         note: temp.note,
+        remainBeforeOp: temp.remainBeforeOp,
         remainAfterOp: temp.remainAfterOp,
         billId: temp.BillId,
         clientId: temp.ClientId,
@@ -138,11 +141,13 @@ const clientAllOP = async (clientId) => {
   const directPay =await DirectPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
       const temp = pay.dataValues
+      console.log(temp);
       return {
         id: temp.id,
         paid: temp.money,
         date: temp.date,
         note: temp.note,
+        remainBeforeOp: temp.remainBeforeOp,
         remainAfterOp: temp.remainAfterOp,
         clientId: temp.ClientId,
         text: temp.note,
@@ -266,7 +271,7 @@ const printCore = async (client,ops,details)=> {
 
   }
   // TODO remove return 
-  //  return printable
+  // return printable
   // console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`

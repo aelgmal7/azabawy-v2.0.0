@@ -27,10 +27,10 @@
     </mat-form-field>
 
     <mat-form-field class="example-full-width" appearance="outline">
-      <mat-label>المتبقي</mat-label>
+      <mat-label>مدين</mat-label>
       <input type="number" matInput formControlName="remain" min="0" [(ngModel)]="remainValue">
       <mat-error *ngIf="form.get('remain')!.hasError('required')">
-        المتبقي <strong>مطلوب</strong>
+        مدين <strong>مطلوب</strong>
       </mat-error>
     </mat-form-field>
   </form>

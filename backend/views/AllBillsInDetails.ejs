@@ -84,7 +84,7 @@
                 margin-top: 1em !important;
                 display:flex;
                 justify-content:space-around;
-                width:40%;
+                width:70%;
                 margin:auto;
                 /* border: 1px solid #000; */
             }
@@ -114,8 +114,12 @@
     <div class="container">
         <div class="client-conc">
             <h2>
-                السيد:/ <%=client.clientName %> 
+                حساب اجمالي للسيد :/ <%=client.clientName %> 
             </h2>
+            <h3>
+                بتاريخ :  
+                <%= (new Date()).toLocaleDateString('en-US') %>
+            </h3>
             <div class="conc">
                 <div class="virt">
                     <h4> حساب العميل الاجمالي </h4>
@@ -132,9 +136,10 @@
                     
                 </div>
             </div>
+            <hr style="margin-top:.2em">
             </div>
         
-       <div class="all-op container">
+       <div class="all-op ">
 
        </div>
         <% for (element of ops)  { %> 
@@ -227,7 +232,7 @@
                             <tr>
 
                                 <td> المدفوع</td>
-                                <td> مدين</td>
+                                <td>  مديونية العميل بعد الفاتوره</td>
                                 
                             </tr>
                         </thead>
@@ -238,6 +243,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p >
+                        <span>  مديونية العميل قبل الفاتوره:</span>
+
+                        <%=element.remainBeforeOp %>
+                    </p>
                     <p >
                         <span> ملاحظات:</span>
 
@@ -261,7 +271,7 @@
                             <tr>
                                 <td> رقم الفاتورة</td>
                                 <td> المدفوع</td>
-                                <td>مدين </td>
+                                <td> مديونية العميل بعد الفاتوره </td>
                                 
                             </tr>
                         </thead>
@@ -273,6 +283,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p >
+                        <span>  مديونية العميل قبل الفاتوره:</span>
+
+                        <%=element.remainBeforeOp %>
+                    </p>
                     <p >
                         <span> ملاحظات:</span>
                         <%=element.note %>

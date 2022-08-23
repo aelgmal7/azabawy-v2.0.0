@@ -29,8 +29,8 @@ const fullDate = (d = null) => {
 };
 
 const prodState = () => {
-  return false;
-};
+    return false
+}
 
 module.exports = {
   convertToArabicNumbers: ConvertToArabicNumbers,

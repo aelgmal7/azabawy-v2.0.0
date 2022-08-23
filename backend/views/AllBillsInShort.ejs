@@ -73,6 +73,11 @@
             table td {
                 padding: 5px;
                 border: 1px solid #000;
+                text-align:center
+            }
+            table th {
+                padding: 5px;
+                border: 1px solid #000;
             }
             .client-conc {
                 /* display: flex; */
@@ -84,7 +89,7 @@
                 margin-top: 1em !important;
                 display:flex;
                 justify-content:space-around;
-                width:40%;
+                width:80%;
                 margin:auto;
                 /* border: 1px solid #000; */
             }
@@ -118,8 +123,12 @@
     <div class="container">
         <div class="client-conc">
             <h2>
-                السيد:/ <%=client.clientName %> 
+                حساب اجمالي للسيد :/ <%=client.clientName %> 
             </h2>
+            <h3>
+                بتاريخ :  
+                <%= (new Date()).toLocaleDateString('en-US') %>
+            </h3>
             <div class="conc">
                 <div class="virt">
                     <h4> حساب العميل الاجمالي </h4>
@@ -136,134 +145,58 @@
                     
                 </div>
             </div>
+            <hr style="margin-top:.2em">
             </div>
-        
-       <div class="all-op container">
-
-       </div>
-        <% for (element of ops)  { %> 
-            
-        <%if ( element.type === 'فاتوره بيع' || element.type === 'فاتورة بيع'  ||  element.type === 'فاتورة مرتجع بيع' ) { %>
-            <div class="bill-table">
-                <div class="inner-header">
-                    <p>
-                        <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>نوع العملية : <%= element.type %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
-                    </p> 
-                </div>
-                <table>
-                    <thead>
+        <div class="all-op ">
+            <table>
+                <theead>
+                    <tr>
+                        <th>رقم العملية </th>
+                        <th>تاريخ  العملية</th>
+                        <th>نوع العملية</th>
+                        <th>رقم الفاتورة</th>
+                        <th>قيمه العملية</th>
+                        <th> الدين قبل العملية</th>
+                        <th> مدفوع</th>
+                        <th> الدين بعد العملية</th>
+                    </tr>
+                </theead>
+                <tbody>
+                    <% for (element of ops)  { %> 
                         <tr>
+                            <td>
+                                <%= element.id %>
+                            </td>
+                            <td>
+                                <%= (new Date(element.date)).toLocaleDateString('en-US') %>
+                            </td>
+                            <td>
+                                <%= element.type %>
+                            </td>
+                            <td>
+                                <%= (element.billId)? element.billId : (element.type == "فاتورة بيع" || element.type == 'فاتورة مرتجع بيع')? element.id : ' ----' %>
 
-                            <td> تكلفة الفاتورة</td>
-                            <% if (element.paid) { %>
-                            <td> المبلغ المدفوع</td>
-                            <%} %>
-                            <td> مديونية العميل بعد الفاتوره</td>
-                            
+                            </td>
+                            <td>
+                                <%= (element.billCost)? element.billCost : ' ----' %>
+                            </td>
+                            <td>
+                                <%= element.remainBeforeOp %>
+                            </td>
+                            <td>
+                                <%= element.paid %>
+                            </td>
+                            <td>
+                                <%= element.remainAfterOp %>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td> <%= element.billCost %></td>
-                            <% if (element.paid) { %>
-                                <td> <%= element.paid %></td>
-                                <%} %>
-                            <td> <%= element.remainAfterOp %></td>
-                        </tr>
-                    </tbody>
-                </table>
-               
-                <!-- <div class="info">
-                    <div>
-                        <p>
-                            تكلفة الفاتورة
-                        </p>
-                        <span><%= element.billCost %></span>
-                    </div>
-                    <div>
-                        <p>المبلغ المدفوع</p>
-                        <span> <%=element.paid %> جنيه</span>
-                    </div>
-                    <div>
-                        <p> مديونية العميل بعد الفاتوره</p>
-                        <span><%= element.remainAfterOp %></span>
-                    </div>
-                </div> -->
-            </div>
 
+                    <% } %>
 
-        <% } else if ( element.type === 'عملية دفع مباشرة عميل') { %>
-            <div class="direct-pay">
-                <div class="inner-header">
-                    <p>
-                        <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>نوع العملية : <%= element.type %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
-                    </p>  
-                </div>
-                <div class="operation">
-                    <table>
-                        <thead>
-                            <tr>
-
-                                <td> المدفوع</td>
-                                <td> مدين</td>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td> <%= element.paid %></td>
-                                <td> <%= element.remainAfterOp %></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p >
-                        <span> ملاحظات:</span>
-
-                        <%=element.note %>
-                    </p>
-                </div>
-
-            </div>
-        <%   } else if ( element.type === 'حساب فاتورة' || element.type === 'حساب فاتوره' ) { %>
-            <div class="pay-for-bill">
-                <div class="inner-header">
-                    <p>
-                        <h4>رقم العملية : <%=element.id %></h4>
-                        <h4>نوع العملية : <%= element.type %></h4>
-                        <h4>تاريخ العملية : <%= (new Date(element.date)).toLocaleDateString('en-US') %></h4>
-                    </p>  
-                </div>
-                <div class="operation">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td> رقم الفاتورة</td>
-                                <td> المدفوع</td>
-                                <td>مدين </td>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr >
-                                <td> <%= element.billId %></td>
-                                <td> <%= element.paid %></td>
-                                <td> <%= element.remainAfterOp %></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p >
-                        <span> ملاحظات:</span>
-                        <%=element.note %>
-                    </p>
-                </div>
-
-            </div>
-        <% }%>
-        <% }%>
+                </tbody>
+            </table>
+        </div>
+     
     </div>
 </body>
 </html>
