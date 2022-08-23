@@ -25,11 +25,11 @@ const addDirectPayOperations = async(clientId,money , date , note= null) => {
                 message: `no client with id ${clientId}`,
                 code: 404,
             }
-        }
+        }let oldRemain = client.remain
         client.paid += money
         client.remain -= money
         client.save()
-        return client.createDirectPay({money:money,date:date,note:note}).then(pay => {
+        return client.createDirectPay({money:money,date:date,note:note,remainBeforeOp:oldRemain}).then(pay => {
             pay.remainAfterOp = client.remain
             pay.save()
             return pay 

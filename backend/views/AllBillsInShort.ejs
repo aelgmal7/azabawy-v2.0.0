@@ -123,8 +123,12 @@
     <div class="container">
         <div class="client-conc">
             <h2>
-                السيد:/ <%=client.clientName %> 
+                حساب اجمالي للسيد :/ <%=client.clientName %> 
             </h2>
+            <h3>
+                بتاريخ :  
+                <%= (new Date()).toLocaleDateString('en-US') %>
+            </h3>
             <div class="conc">
                 <div class="virt">
                     <h4> حساب العميل الاجمالي </h4>
@@ -141,6 +145,7 @@
                     
                 </div>
             </div>
+            <hr style="margin-top:.2em">
             </div>
         <div class="all-op ">
             <table>
@@ -151,6 +156,7 @@
                         <th>نوع العملية</th>
                         <th>رقم الفاتورة</th>
                         <th>قيمه العملية</th>
+                        <th> الدين قبل العملية</th>
                         <th> مدفوع</th>
                         <th> الدين بعد العملية</th>
                     </tr>
@@ -173,6 +179,9 @@
                             </td>
                             <td>
                                 <%= (element.billCost)? element.billCost : ' ----' %>
+                            </td>
+                            <td>
+                                <%= element.remainBeforeOp %>
                             </td>
                             <td>
                                 <%= element.paid %>

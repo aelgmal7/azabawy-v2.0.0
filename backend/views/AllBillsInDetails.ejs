@@ -114,8 +114,12 @@
     <div class="container">
         <div class="client-conc">
             <h2>
-                السيد:/ <%=client.clientName %> 
+                حساب اجمالي للسيد :/ <%=client.clientName %> 
             </h2>
+            <h3>
+                بتاريخ :  
+                <%= (new Date()).toLocaleDateString('en-US') %>
+            </h3>
             <div class="conc">
                 <div class="virt">
                     <h4> حساب العميل الاجمالي </h4>
@@ -132,6 +136,7 @@
                     
                 </div>
             </div>
+            <hr style="margin-top:.2em">
             </div>
         
        <div class="all-op ">
@@ -227,7 +232,7 @@
                             <tr>
 
                                 <td> المدفوع</td>
-                                <td> مدين</td>
+                                <td>  مديونية العميل بعد الفاتوره</td>
                                 
                             </tr>
                         </thead>
@@ -238,6 +243,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p >
+                        <span>  مديونية العميل قبل الفاتوره:</span>
+
+                        <%=element.remainBeforeOp %>
+                    </p>
                     <p >
                         <span> ملاحظات:</span>
 
@@ -261,7 +271,7 @@
                             <tr>
                                 <td> رقم الفاتورة</td>
                                 <td> المدفوع</td>
-                                <td>مدين </td>
+                                <td> مديونية العميل بعد الفاتوره </td>
                                 
                             </tr>
                         </thead>
@@ -273,6 +283,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p >
+                        <span>  مديونية العميل قبل الفاتوره:</span>
+
+                        <%=element.remainBeforeOp %>
+                    </p>
                     <p >
                         <span> ملاحظات:</span>
                         <%=element.note %>

@@ -20,6 +20,11 @@ BillPay.init({
         allowNull: false,
         defaultValue: new Date()
     },
+    remainBeforeOp : {
+        type:Sequelize.FLOAT,
+        allowNull: false,
+        defaultValue:0.0
+    },
     remainAfterOp : {
         type:Sequelize.FLOAT,
         allowNull: false,

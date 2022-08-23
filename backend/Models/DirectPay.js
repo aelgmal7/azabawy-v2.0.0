@@ -15,6 +15,11 @@ DirectPay.init({
         type:Sequelize.STRING,
         allowNull: true
     },
+    remainBeforeOp : {
+        type:Sequelize.FLOAT,
+        allowNull: false,
+        defaultValue:0.0
+    },
     remainAfterOp : {
         type:Sequelize.FLOAT,
         allowNull: false,
