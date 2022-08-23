@@ -24,7 +24,7 @@ const fullDate = (d=null) => {
 
 
 const prodState = () => {
-    return true
+    return false
 }
 
 module.exports = {

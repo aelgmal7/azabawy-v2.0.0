@@ -121,6 +121,7 @@ const clientAllOP = async (clientId) => {
   const payForBill = await BillPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
       const temp = pay.dataValues
+      console.log(temp);
       return {
         id: temp.id,
         paid: temp.money,
@@ -138,6 +139,7 @@ const clientAllOP = async (clientId) => {
   const directPay =await DirectPay.findAll({where: {enabled: true,ClientId: clientId}}).then(pays=> {
     return pays.map(pay =>{
       const temp = pay.dataValues
+      console.log(temp);
       return {
         id: temp.id,
         paid: temp.money,
@@ -266,7 +268,7 @@ const printCore = async (client,ops,details)=> {
 
   }
   // TODO remove return 
-  //  return printable
+  // return printable
   // console.log(ops);
   let options = { format: 'A4' };
   // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
