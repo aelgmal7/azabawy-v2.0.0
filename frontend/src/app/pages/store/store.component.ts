@@ -146,47 +146,60 @@ export class StoreComponent implements OnInit {
   }
 
   updateAmountMin(amount, weight, id) {
-    amount = -amount;
+    amount = Number(amount);
     console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
-    this._storeService
-      .updateAmount(id, amount, weight)
-      .subscribe((response) => {
-        console.log(response);
-        if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-          this._storeService.getAllProducts().subscribe((prod) => {
-            this.x = Object.values(prod.result);
-            this.dataSource.data = this.x[0];
-          });
-        } else {
-          Swal.fire(
-            'لم يتم تعديل الكمية!',
-            Object.values(response)[1].message,
-            'error'
-          );
-        }
-      });
+    if (amount > 0) {
+      amount = -amount;
+
+      this._storeService
+        .updateAmount(id, amount, weight)
+        .subscribe((response) => {
+          console.log(response);
+          if (Object.values(response)[0] == true) {
+            Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+            this._storeService.getAllProducts().subscribe((prod) => {
+              this.x = Object.values(prod.result);
+              this.dataSource.data = this.x[0];
+            });
+          } else {
+            Swal.fire(
+              'لم يتم تعديل الكمية!',
+              Object.values(response)[1].message,
+              'error'
+            );
+          }
+        });
+    } else {
+      Swal.fire('أدخل الكمية من فضلك !', '', 'error');
+    }
   }
   updateAmountAdd(amount, weight, id) {
+    amount = Number(amount);
+
     console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
-    this._storeService
-      .updateAmount(id, amount, weight)
-      .subscribe((response) => {
-        console.log(response);
-        if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-          this._storeService.getAllProducts().subscribe((prod) => {
-            this.x = Object.values(prod.result);
-            this.dataSource.data = this.x[0];
-          });
-        } else {
-          Swal.fire(
-            'لم يتم تعديل الكمية!',
-            Object.values(response)[1].message,
-            'error'
-          );
-        }
-      });
+
+    if (amount > 0) {
+      this._storeService
+        .updateAmount(id, amount, weight)
+        .subscribe((response) => {
+          console.log(response);
+          if (Object.values(response)[0] == true) {
+            Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+            this._storeService.getAllProducts().subscribe((prod) => {
+              this.x = Object.values(prod.result);
+              this.dataSource.data = this.x[0];
+            });
+          } else {
+            Swal.fire(
+              'لم يتم تعديل الكمية!',
+              Object.values(response)[1].message,
+              'error'
+            );
+          }
+        });
+    } else {
+      Swal.fire('أدخل الكمية من فضلك !', '', 'error');
+    }
   }
 
   addDialog() {
