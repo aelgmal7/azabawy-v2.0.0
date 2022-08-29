@@ -14,6 +14,10 @@ export class OperationsService {
     this.dataStore = { bills: [] };
   }
 
+  deleteOperation(op:any): Observable<any>{
+    const url = `http://localhost:3000/accounting/?opType=${op.type}&opId=${op.id}`;
+    return this.http.delete(url)
+  }
   getAllOperations(): Observable<any> {
     const getURL = `http://localhost:3000/accounting/`;
     return this.http.get<any>(getURL);

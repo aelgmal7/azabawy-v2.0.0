@@ -491,14 +491,18 @@ const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType)
         coreFn(priceWithTax,"مسعره-برقم-ضريبي",client,bill,option)
         coreFn(empty,"خاليه",client,bill,option)
        
-    })
-  
-        
+    })        
+    }
+
+    const deleteBill =async (billId) => {
+        const bill = await Bill.findOne({id: billId,enabled: true})
+
     }
     module.exports = {
     addBill: addBill,
     getAllBills:getAllBills,
     getClientBills:getClientBills,
     getBillById:getBillById,
-    payForBill:payForBill
+    payForBill:payForBill,
+    deleteBill:deleteBill
 }

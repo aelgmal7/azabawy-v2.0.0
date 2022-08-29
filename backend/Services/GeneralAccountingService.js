@@ -9,6 +9,9 @@ const {
     returnDirectPAy
 } = require('./ClientService')
 const {returnPay} =require('./PayService')
+const {
+  deleteBill,
+} = require('./BillService')
 
 const getAllOp =async() => {
     let bills = await Bill.findAll({where: {enabled: true}})
@@ -83,10 +86,26 @@ const getAllOp =async() => {
      return total
 }
 
+const deleteOperation = async(type,id) => {
+  if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
+
+    returnBill(id)
+  }else if(type==  "حساب فاتورة"){
+    returnBillPAy(id)
+  }else if(type== "عملية دفع مباشرة عميل"){
+    returnDirectPAy(id)
+  }else if(type== "عملية دفع مباشرة"){
+    console.log("www");
+    returnPay(id)
+}
+return "done"
+
+}
+
 const openIndividual = async (id,type) => {
     if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
 
-        returnBill(id)
+      deleteBill(id)
       }else if(type==  "حساب فاتورة"){
         returnBillPAy(id)
       }else if(type== "عملية دفع مباشرة عميل"){

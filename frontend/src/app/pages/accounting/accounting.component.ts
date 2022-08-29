@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { BillsService } from 'src/app/shared/services/bills.service';
 import { operation } from './clients/clients.component';
 import { OperationsService } from 'src/app/shared/services/operations.service';
+import { response } from 'express';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accounting',
@@ -31,12 +33,16 @@ export class AccountingComponent implements OnInit {
     'remain',
     'remainAfterOp',
     'actions',
+    // 'delete',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _operationsService: OperationsService) {
+  constructor(private _operationsService: OperationsService,
+    public router: Router,
+    ) {
     this.dataSource = new MatTableDataSource();
+    
   }
 
   ngAfterViewInit() {
@@ -59,6 +65,20 @@ export class AccountingComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  deleteOperation(op:operation){
+    const {type,id}= op
+    this._operationsService.deleteOperation({type,id}).subscribe(response =>{
+      if (Object.values(response)[0] === true) {
+        Swal.fire('تم حذف العملية بنجاح!', '', 'success');
+        this.router.navigate(['/accounting']);
+      } else {
+        Swal.fire('لم يتم حذف العملية!', '', 'error');
+      }
+      console.log(response);
+    })
+
+
   }
   show(op) {
     const bill = {

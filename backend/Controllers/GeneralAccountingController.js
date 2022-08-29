@@ -26,6 +26,12 @@ router.post('/individual',async (req, res)=>{
       );
 })
 
+router.delete('/',async (req, res)=>{
+  const {opType,opId}= req.query
+  console.log(opType,opId);
+  res.send(returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { operation: {type: 'delete'} }))
+})
+
 module.exports = {
     accountingRouter:router
 }
