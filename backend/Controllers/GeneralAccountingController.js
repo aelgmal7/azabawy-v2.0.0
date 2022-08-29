@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const {
   getAllOp,
-  openIndividual
+  openIndividual,
+  deleteOperation
 } = require("../Services/GeneralAccountingService");
 const { returnedResult } = require("../Payload/ReturnedResult");
 const HTTP_STATUS_CODES = require("../Payload/statusCode.ts");
@@ -29,6 +30,7 @@ router.post('/individual',async (req, res)=>{
 router.delete('/',async (req, res)=>{
   const {opType,opId}= req.query
   console.log(opType,opId);
+  const result = await deleteOperation(opType,opId)
   res.send(returnedResult(HTTP_STATUS_CODES["CODE_200"], true, { operation: {type: 'delete'} }))
 })
 

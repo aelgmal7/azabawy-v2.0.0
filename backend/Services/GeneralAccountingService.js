@@ -89,7 +89,7 @@ const getAllOp =async() => {
 const deleteOperation = async(type,id) => {
   if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
 
-    returnBill(id)
+    deleteBill(id)
   }else if(type==  "حساب فاتورة"){
     returnBillPAy(id)
   }else if(type== "عملية دفع مباشرة عميل"){
@@ -105,7 +105,7 @@ return "done"
 const openIndividual = async (id,type) => {
     if(type== "فاتورة بيع" || type== 'فاتورة مرتجع بيع'){
 
-      deleteBill(id)
+        returnBill(id)
       }else if(type==  "حساب فاتورة"){
         returnBillPAy(id)
       }else if(type== "عملية دفع مباشرة عميل"){
@@ -120,5 +120,6 @@ const openIndividual = async (id,type) => {
 }
 module.exports = {
     getAllOp,
-    openIndividual
+    openIndividual,
+    deleteOperation
 }

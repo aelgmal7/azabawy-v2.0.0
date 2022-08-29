@@ -495,9 +495,39 @@ const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType)
     }
 
     const deleteBill =async (billId) => {
-        const bill = await Bill.findOne({id: billId,enabled: true})
+        // prepare required parameters
+        const bill = await Bill.findOne({where: {id: billId,enabled: true}})
+        if (bill === null) {
+            return {
+                message: `لا يوجد فاتوره بهذه الرقم`,
+                code: 404
+            }
+        }
+        const products = await bill.getProducts()
+        console.log(products);
+        const client = await Client.findOne({where: {enabled: true,id:bill.ClientId}})
+        if(client === null) {
+            return {
+                message: ' لا يوجد عميل بهذا الرد',
+                code: 404
+            }
+        }
+        ////////////////////////////////////////////
+        if(bill.type === 'فاتورة مرتجع بيع'){
+            //client part
+            client.totalBalance += bill.cost
+            client.remain += bill.cost
+            client.save();
 
+
+
+        }else if(bill.type === 'فاتورة بيع') {
+
+        }
+        
+        bill.enabled = false
     }
+    
     module.exports = {
     addBill: addBill,
     getAllBills:getAllBills,
