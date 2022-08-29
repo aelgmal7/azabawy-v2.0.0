@@ -226,45 +226,55 @@ export class MaterialsComponent implements OnInit {
   }
 
   updateAmountAdd(amount, weight, id) {
+    amount = Number(amount);
     console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
-    this._materialsService
-      .updateAmount(id, amount, weight)
-      .subscribe((response) => {
-        console.log(response);
-        if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-          this._materialsService.getAllMaterials().subscribe((response) => {
-            this.dataSource.data = response;
-          });
-        } else {
-          Swal.fire(
-            'لم يتم تعديل الكمية!',
-            response['result'].result.message,
-            'error'
-          );
-        }
-      });
+    if (amount > 0) {
+      this._materialsService
+        .updateAmount(id, amount, weight)
+        .subscribe((response) => {
+          console.log(response);
+          if (Object.values(response)[0] == true) {
+            Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+            this._materialsService.getAllMaterials().subscribe((response) => {
+              this.dataSource.data = response;
+            });
+          } else {
+            Swal.fire(
+              'لم يتم تعديل الكمية!',
+              response['result'].result.message,
+              'error'
+            );
+          }
+        });
+    } else {
+      Swal.fire('أدخل الكمية من فضلك !', '', 'error');
+    }
   }
   updateAmountMin(amount, weight, id) {
-    amount = -amount;
-    console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
-    this._materialsService
-      .updateAmount(id, amount, weight)
-      .subscribe((response) => {
-        console.log(response);
-        if (Object.values(response)[0] == true) {
-          Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
-          this._materialsService.getAllMaterials().subscribe((response) => {
-            this.dataSource.data = response;
-          });
-        } else {
-          Swal.fire(
-            'لم يتم تعديل الكمية!',
-            response['result'].result.message,
-            'error'
-          );
-        }
-      });
+    amount = Number(amount);
+    if (amount > 0) {
+      amount = -amount;
+      console.log('Weight:', weight, 'Amount:', amount, 'ID:', id);
+      this._materialsService
+        .updateAmount(id, amount, weight)
+        .subscribe((response) => {
+          console.log(response);
+          if (Object.values(response)[0] == true) {
+            Swal.fire('تم تعديل الكمية بنجاح!', '', 'success');
+            this._materialsService.getAllMaterials().subscribe((response) => {
+              this.dataSource.data = response;
+            });
+          } else {
+            Swal.fire(
+              'لم يتم تعديل الكمية!',
+              response['result'].result.message,
+              'error'
+            );
+          }
+        });
+    } else {
+      Swal.fire('أدخل الكمية من فضلك !', '', 'error');
+    }
   }
   addDialog() {
     let dialogRef = this.dialog.open(AddMaterialsComponent, {
