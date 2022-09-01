@@ -82,7 +82,7 @@
                     
                     <p>الرقم الضريبي: <span>028-966-723</span></p>
                     <% } %>
-                    <p>التاريخ: <span><%= (new Date(bill.date)).toLocaleDateString('en-US') %></span></p>
+                    <p>التاريخ: <span><%= (new Date(bill.date)).toLocaleDateString('en-GB') %></span></p>
                 </div>
             </div>
             <div class="bill-container">
@@ -130,8 +130,8 @@
 
                 <div class="info">
                     <div>
-                        <p> اجمالي الرصيد السابق للعميل</p>
-                        <span><%= oldClientTotalBalance %></span>
+                        <p>  المديونية السابقة للعميل</p>
+                        <span><%= bill.remainBeforeOp %></span>
                     </div>
                     <% if (billType !== 'فاتورة مرتجع بيع') { %>
                     <div>
@@ -140,8 +140,8 @@
                     </div>
                     <% }%>
                     <div>
-                        <p> اجمالي رصيد العميل بعد الفاتوره</p>
-                        <span><%= client.totalBalance %></span>
+                        <p>  المديونية العميل بعد الفاتوره</p>
+                        <span><%= bill.remainAfterOp %></span>
                     </div>
                 </div>
             <% } %>
