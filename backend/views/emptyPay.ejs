@@ -1,146 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>paying</title>
     <style>
-        *{
-               margin: 0;
-               direction:rtl !important;
-           }
-           .header {
-               text-align: center;
-           }
-           h1,h2,.tax-date,h3,h4,table,p{
-               margin-top:1em !important;
-               margin-bottom:-5px;
+        * {
+            margin: 0;
+            direction: rtl !important;
+        }
 
-           }
-           .container { 
-               width:90%;
-               margin:auto;
-               margin-top:0px;
-               height: 90%;
-           }
-           .tax-date {
+        .header {
+            text-align: center;
+        }
 
-               width:40%;
-               margin:auto;
-               display:flex;
-               justify-content:space-around;
-           }
-           .bill-container {
-               /* width:90%; */
-               margin:auto;
-               text-align: right;
-               direction:rtl;
-           }
-           .container .header h3 {
-               text-align: right;
-               
-           }
-           .direct-pay {
-               border: 1px solid #000;         
-               padding: 0.5em;
-               margin-top: 1em;;
-           }
-          
-           .bill-table {
-               border: 1px solid #000;          
+        h1,
+        h2,
+        .tax-date,
+        h3,
+        h4,
+        table,
+        p {
+            margin-top: 1em !important;
+            margin-bottom: -5px;
 
-               padding: 0.5em;
-               margin-top: 1em;;
-           }
-           .pay-for-bill {
-               border: 1px solid #000;          
-               padding: 0.5em;
-               margin-top: 1em;
-               text-align:right;
+        }
 
-           }
+        .container {
+            width: 90%;
+            margin: auto;
+            margin-top: 0px;
+            height: 90%;
+        }
 
-           table {
+        .tax-date {
 
-               width: 100%;
-               border-spacing: 0;
-               direction:rtl
-           }
-           table thead td {
-               /* text-align: center; */
-           }
-           table td {
-               padding: 5px;
-               border: 1px solid #000;
-           }
-           .client-conc {
-               /* display: flex; */
-               /* margin-bottom: -2em; */
-               text-align:center;
-               justify-content: center;
-           }
-           .conc {
-               margin-top: 1em !important;
-               display:flex;
-               justify-content:space-around;
-               width:40%;
-               margin:auto;
-               /* border: 1px solid #000; */
-           }
-           .virt {
-               display: flex;
-               flex-direction: column;
-               flex-wrap: wrap;   
-            }
-            .virt h4 {
-               margin-bottom: 1em;
-            }
-            .info {
-               display: flex;
-               justify-content: space-around;
-               text-align: center;
-               margin-top: 20px;
-           }
-           .info p {
-               margin-bottom:.5em;
-           }
-      
-         
-   </style>
+            width: 40%;
+            margin: auto;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .bill-container {
+            /* width:90%; */
+            margin: auto;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .container .header h3 {
+            text-align: right;
+
+        }
+
+        .direct-pay {
+            border: 1px solid #000;
+            padding: 0.5em;
+            margin-top: 1em;
+            ;
+        }
+
+        .bill-table {
+            border: 1px solid #000;
+
+            padding: 0.5em;
+            margin-top: 1em;
+            ;
+        }
+
+        .pay-for-bill {
+            border: 1px solid #000;
+            padding: 0.5em;
+            margin-top: 1em;
+            text-align: right;
+
+        }
+
+        table {
+
+            width: 100%;
+            border-spacing: 0;
+            direction: rtl
+        }
+
+        table thead td {
+            /* text-align: center; */
+        }
+
+        table td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+
+        .client-conc {
+            /* display: flex; */
+            /* margin-bottom: -2em; */
+            text-align: center;
+            justify-content: center;
+        }
+
+        .conc {
+            margin-top: 1em !important;
+            display: flex;
+            justify-content: space-around;
+            width: 40%;
+            margin: auto;
+            /* border: 1px solid #000; */
+        }
+
+        .virt {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+        }
+
+        .virt h4 {
+            margin-bottom: 1em;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .info p {
+            margin-bottom: .5em;
+        }
+    </style>
 </head>
+
 <body>
 
     <div class="container">
 
-        <div class="client-conc"> 
+        <div class="client-conc">
             <h3>مصنع حلويات العزباوي</h3>
-        <h2>عملية سداد فاتورة بيع رقم  <%= pay.id %> </h2>
-        <div>       
-            <p>الرقم الضريبي: <span>028-966-723</span></p>
-            <p>التاريخ: <span><%= (new Date(pay.date)).toLocaleDateString('en-US') %></span></p>
+            <h2>عملية سداد فاتورة بيع رقم <%= pay.id %>
+            </h2>
+            <div>
+                <p>الرقم الضريبي: <span>028-966-723</span></p>
+                <p>التاريخ: <span>
+                        <%= (new Date(pay.date)).toLocaleDateString('en-GB') %>
+                    </span></p>
+            </div>
         </div>
-      </div>
-    
 
-    
+
+
         <div class="pay-for-bill">
             <div class="operation">
                 <table>
                     <thead>
                         <tr>
                             <td> المدفوع</td>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
-                        <tr >
-                            <td> <%= pay.money %></td>
+                        <tr>
+                            <td>
+                                <%= pay.money %>
+                            </td>
 
                         </tr>
                     </tbody>
                 </table>
-                <p >
+                <p>
                     <span> ملاحظات:</span>
                     <%=pay.note %>
                 </p>
@@ -149,9 +178,10 @@
         </div>
 
 
-    <footer>
-        <p>توقيع المستلم</p>
-    </footer>
-</div>
+        <footer>
+            <p>توقيع المستلم</p>
+        </footer>
+    </div>
 </body>
+
 </html>

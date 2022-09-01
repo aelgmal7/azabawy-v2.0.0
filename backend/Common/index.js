@@ -22,7 +22,7 @@ const fullDate = (d = null) => {
     day: "numeric",
   };
   return date.toLocaleDateString(
-    // 'en-US'
+    // 'en-GB'
     "ar-SA",
     options
   );

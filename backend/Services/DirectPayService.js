@@ -47,7 +47,7 @@ const printDirectPay = async(client,bill) => {
     const pay = await  ejs.renderFile(`${path.join(__dirname,'..',"views","directPay.ejs")}`,{pay:bill,client})
 
     let options = { format: 'A4' };
-    // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
+    // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-GB')} .pdf`
     let file = { content: pay };
     html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {
         const pdfPath =`${client.clientName}/${bill.id}-${client.clientName}-${(new Date(bill.date)).toLocaleDateString("nl",{year:"2-digit",month:"2-digit", day:"2-digit"})}.pdf`

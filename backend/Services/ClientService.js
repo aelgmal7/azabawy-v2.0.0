@@ -274,7 +274,7 @@ const printCore = async (client,ops,details)=> {
   // return printable
   // console.log(ops);
   let options = { format: 'A4' };
-  // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-US')} .pdf`
+  // `${bill.id} ${client.clientName} ${(new Date(bill.date)).toLocaleDateString('en-GB')} .pdf`
   let file = { content: printable };
   const name = "حساب"
   html_to_pdf.generatePdf(file, options).then(async(pdfBuffer) => {

@@ -20,7 +20,7 @@ const getAllOp =async() => {
         const temp = bill.dataValues
         return {
           id: temp.id,
-          clientName:clients.find(c => c.id === temp.ClientId).clientName,
+          clientName:(clients.find(c => c.id === temp.ClientId))? clients.find(c => c.id === temp.ClientId).clientName  : null,
           paid: temp.paid,
           date: temp.date,
           remainAfterOp: temp.remainAfterOp,
@@ -56,7 +56,7 @@ const getAllOp =async() => {
         const temp = pay.dataValues
         return {
           id: temp.id,
-          clientName:clients.find(c => c.id === temp.ClientId).clientName,
+          clientName:(clients.find(c => c.id === temp.ClientId))? clients.find(c => c.id === temp.ClientId).clientName  : null,
           paid: temp.money,
           date: temp.date,
           note: temp.note,
