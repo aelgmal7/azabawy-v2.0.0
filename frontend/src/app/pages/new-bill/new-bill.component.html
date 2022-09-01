@@ -283,7 +283,7 @@
         class="d-flex justify-content-between">
         <mat-form-field class="w-49" appearance="outline" id="totalPrice">
           <mat-label>السعر الإجمالي</mat-label>
-          <input type="number" matInput formControlName="totalPrice" min="0" [value]="totalPrice">
+          <input type="number" matInput formControlName="totalPrice" min="0"  [(ngModel)]="totalPrice">
           <mat-error *ngIf="form.get('totalPrice')!.hasError('required')">
             السعر الإجمالي <strong>مطلوب</strong>
           </mat-error>

@@ -31,6 +31,7 @@ const getClientBills =async(clientId) => {
         for (let index = 0; index < bills.length; index++) {
 
             const element = await bills[index].getProducts();
+            console.log(element);
             // console.log(element);
             container.push(await element)
             
@@ -42,7 +43,7 @@ const getClientBills =async(clientId) => {
         // console.log(container.length);
         return container
         .map(bill => {
-
+            console.log("adsfdgf",bill);
             // reformat products object 
             const billId= bill[0].billItem.BillId
             if(billId == 1){
@@ -456,7 +457,7 @@ const coreFn = async (temp,name,client,bill,option) => {
 }
 
 const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType) => {
-    console.log(client);
+    console.log(bill1);
     // console.log('client :>> ', client.dataValues);
     const billProducts = []
     const bill = await Bill.findOne({where: {enabled: true,id: bill1.id}})
@@ -473,12 +474,12 @@ const printBill = async(bill1,client,oldClientTotalBalance=null,option,billType)
 
         let totalAmount =0 
         let totalWeight =0 
-        let totalCost =0 
+        let totalCost =bill1.cost
          billProducts.map(product =>{
             
             totalAmount += Number(product.amount)
             totalWeight += (Number(product.weight) * Number(product.amount))
-            totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
+            // totalCost += (Number(product.weight) * Number(product.amount) * Number(product.kiloPrice))
         }) 
        
         const priced = await  ejs.renderFile(`${path.join(__dirname,'..',"views","bill.ejs")}`,{bill:bill,products:billProducts,client,totalWeight,totalAmount,totalCost,oldClientTotalBalance,type:1,billType})
