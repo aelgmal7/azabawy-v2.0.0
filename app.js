@@ -14,7 +14,7 @@ function initWindow() {
     width: 1600,
     height: 1000,
     webPreferences: {
-      // devTools: false,
+      devTools: false,
       nodeIntegration: true,
       contextIsolation: false,
     },
@@ -50,6 +50,18 @@ app.on("activate", function () {
   }
 })
 
+const gotTheLock = app.requestSingleInstanceLock()
+    
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (appWindow) {
+      if (appWindow.isMinimized()) appWindow.restore()
+      appWindow.focus()
+    }
+  })
 // Close when all windows are closed.
 app.on("window-all-closed", function () {
   // On macOS specific close process
@@ -57,7 +69,7 @@ app.on("window-all-closed", function () {
     app.quit()
   }
 })
-
+}
 // before quitting the app, kill all node instances to close the backend
 app.on("quit", function () {
   executeCommand("taskkill /f /im node.exe", (output) => {
